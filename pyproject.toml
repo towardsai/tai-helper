@@ -1,0 +1,39 @@
+[project]
+name = "tai-helper"
+version = "0.1.0"
+description = "Public Towards AI course-selection helper chatbot"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "google-genai",
+    "opik",
+    "pydantic",
+    "python-dotenv",
+    "requests",
+    "uvicorn",
+]
+
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "httpx",
+    "pytest",
+    "ruff",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+markers = [
+    "live: tests that call the deployed Hugging Face Space",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.setuptools.packages.find]
+include = ["tai_helper*"]

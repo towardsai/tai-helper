@@ -1,0 +1,48 @@
+{
+  "academy_sitemap_url": "https://academy.towardsai.net/sitemap.xml",
+  "towardsai_page_sitemap_url": "https://towardsai.net/page-sitemap1.xml",
+  "academy_urls": [
+    "https://academy.towardsai.net/",
+    "https://academy.towardsai.net/collections",
+    "https://academy.towardsai.net/collections/products",
+    "https://academy.towardsai.net/collections/developers",
+    "https://academy.towardsai.net/collections/professionals",
+    "https://academy.towardsai.net/courses/beginner-to-advanced-llm-dev",
+    "https://academy.towardsai.net/courses/agent-engineering",
+    "https://academy.towardsai.net/courses/llm-primer",
+    "https://academy.towardsai.net/courses/python-for-genai",
+    "https://academy.towardsai.net/bundles/tai-mentorship",
+    "https://academy.towardsai.net/courses/ai-business-professionals",
+    "https://academy.towardsai.net/products/digital_downloads/agents-cheatsheet",
+    "https://academy.towardsai.net/products/digital_downloads/anti-slop-framework",
+    "https://academy.towardsai.net/bundles/get-it-all",
+    "https://academy.towardsai.net/courses/buildingllmsforproduction",
+    "https://academy.towardsai.net/bundles/10-hour-crash-course-into-llm-developer-expert",
+    "https://academy.towardsai.net/bundles/from-coding-novice-to-advanced-llm-developer",
+    "https://academy.towardsai.net/pages/agent-course-landing-page",
+    "https://academy.towardsai.net/pages/towards-ai-insider",
+    "https://academy.towardsai.net/pages/agent-course-new-page-cro",
+    "https://academy.towardsai.net/pages/webinar",
+    "https://academy.towardsai.net/pages/new-home-page",
+    "https://academy.towardsai.net/pages/landing-page-free-email-course",
+    "https://academy.towardsai.net/pages/contact-us",
+    "https://academy.towardsai.net/pages/about-us",
+    "https://academy.towardsai.net/pages/affiliate",
+    "https://academy.towardsai.net/pages/choose-your-course",
+    "https://academy.towardsai.net/pages/free-resources"
+  ],
+  "selected_towardsai_pages": [
+    "https://towardsai.net/",
+    "https://towardsai.net/towards-ai-resource-library",
+    "https://towardsai.net/book",
+    "https://towardsai.net/community",
+    "https://towardsai.net/b2b",
+    "https://towardsai.net/let-us-transform-your-team-into-ai-first-employees-to-stay-ahead-of-competitors"
+  ],
+  "extra_external_urls": [
+    "https://www.youtube.com/channel/UCQNjFuhOJM1YqFTPY1Q_kYQ",
+    "https://towardsai.net/towards-ai-resource-library",
+    "https://towardsai.net/book",
+    "https://www.amazon.com/s?k=Towards+AI+Building+LLMs+for+Production"
+  ]
+}

@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_live_chat:
+        description: "Run the live /chat smoke test against the deployed Space"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+  schedule:
+    - cron: "41 */6 * * *"
+
+jobs:
+  fast-tests:
+    name: Fast Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Ruff
+        run: uv run ruff check .
+
+      - name: Widget syntax
+        run: node --check static/widget.js
+
+      - name: Pytest
+        run: uv run pytest -m "not live" -p no:cacheprovider tests
+
+  live-smoke:
+    name: Live HF Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+
+    env:
+      LIVE_SPACE_BASE_URL: ${{ vars.LIVE_SPACE_BASE_URL || 'https://towardsai-tutors-tai-helper.hf.space' }}
+      RUN_LIVE_CHAT_SMOKE: ${{ github.event.inputs.run_live_chat || 'false' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Live smoke tests
+        run: uv run pytest -m live -p no:cacheprovider tests/test_live_smoke.py

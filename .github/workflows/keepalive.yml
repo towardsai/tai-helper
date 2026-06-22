@@ -1,0 +1,24 @@
+name: HF Space Keepalive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "29 */12 * * *"
+
+env:
+  SPACE_BASE_URL: https://towardsai-tutors-tai-helper.hf.space
+
+jobs:
+  ping:
+    name: Ping HF Space
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Health check
+        run: |
+          curl --fail --show-error --silent --max-time 180 "$SPACE_BASE_URL/healthz"
+
+      - name: Widget check
+        run: |
+          curl --fail --show-error --silent --max-time 60 "$SPACE_BASE_URL/widget.js" | grep -q "Towards AI Helper"

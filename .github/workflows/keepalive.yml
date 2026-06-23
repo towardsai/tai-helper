@@ -6,7 +6,7 @@ on:
     - cron: "29 */12 * * *"
 
 env:
-  SPACE_BASE_URL: https://towardsai-tutors-tai-helper.hf.space
+  SPACE_BASE_URL: https://towardsai-tutors-thinkific-tutor-api.hf.space
 
 jobs:
   ping:
@@ -21,4 +21,4 @@ jobs:
 
       - name: Widget check
         run: |
-          curl --fail --show-error --silent --max-time 60 "$SPACE_BASE_URL/widget.js" | grep -q "Towards AI Helper"
+          curl --fail --show-error --silent --max-time 60 "$SPACE_BASE_URL/helper-widget.js" | grep -q "Towards AI Helper"

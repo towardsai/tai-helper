@@ -7,6 +7,9 @@ import pytest
 import requests
 
 LIVE_BASE_URL = os.getenv("LIVE_SPACE_BASE_URL", "").rstrip("/")
+LIVE_HELPER_WIDGET_PATH = "/" + os.getenv(
+    "LIVE_HELPER_WIDGET_PATH", "/helper-widget.js"
+).strip("/")
 RUN_LIVE_CHAT = os.getenv("RUN_LIVE_CHAT_SMOKE", "").lower() in {
     "1",
     "true",
@@ -42,7 +45,9 @@ def test_live_health_widget_and_config() -> None:
     base_url = require_live_base_url()
 
     health, health_seconds = timed_request("GET", f"{base_url}/healthz", timeout=120)
-    widget, widget_seconds = timed_request("GET", f"{base_url}/widget.js", timeout=120)
+    widget, widget_seconds = timed_request(
+        "GET", f"{base_url}{LIVE_HELPER_WIDGET_PATH}", timeout=120
+    )
     config, config_seconds = timed_request(
         "GET", f"{base_url}/api/helper/config", timeout=120
     )

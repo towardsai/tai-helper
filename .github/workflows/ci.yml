@@ -54,7 +54,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
 
     env:
-      LIVE_SPACE_BASE_URL: ${{ vars.LIVE_SPACE_BASE_URL || 'https://towardsai-tutors-tai-helper.hf.space' }}
+      LIVE_SPACE_BASE_URL: ${{ vars.LIVE_SPACE_BASE_URL || 'https://towardsai-tutors-thinkific-tutor-api.hf.space' }}
+      LIVE_HELPER_WIDGET_PATH: ${{ vars.LIVE_HELPER_WIDGET_PATH || '/helper-widget.js' }}
       RUN_LIVE_CHAT_SMOKE: ${{ github.event.inputs.run_live_chat || 'false' }}
 
     steps:

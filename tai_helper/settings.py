@@ -59,42 +59,34 @@ class Settings:
             "academy.towardsai.net,towardsai.net,www.towardsai.net",
         )
     )
-    openrouter_api_key: str = field(
-        default_factory=lambda: os.getenv("OPENROUTER_API_KEY", "").strip()
+    deepseek_api_key: str = field(
+        default_factory=lambda: os.getenv("DEEPSEEK_API_KEY", "").strip()
     )
-    openrouter_base_url: str = field(
+    deepseek_base_url: str = field(
         default_factory=lambda: (
             os.getenv(
-                "OPENROUTER_BASE_URL",
-                "https://openrouter.ai/api/v1",
+                "DEEPSEEK_BASE_URL",
+                "https://api.deepseek.com",
             )
             .strip()
             .rstrip("/")
-            or "https://openrouter.ai/api/v1"
+            or "https://api.deepseek.com"
         )
     )
-    openrouter_site_url: str = field(
+    deepseek_thinking_type: str = field(
         default_factory=lambda: os.getenv(
-            "OPENROUTER_SITE_URL",
-            "https://towardsai.net",
+            "HELPER_DEEPSEEK_THINKING",
+            "disabled",
         ).strip()
-    )
-    openrouter_app_title: str = field(
-        default_factory=lambda: (
-            os.getenv(
-                "OPENROUTER_APP_TITLE",
-                "Towards AI Helper",
-            ).strip()
-            or "Towards AI Helper"
-        )
+        or "disabled"
     )
     primary_model_name: str = field(
         default_factory=lambda: (
             os.getenv(
                 "HELPER_PRIMARY_MODEL",
-                os.getenv("HELPER_MODEL", "deepseek/deepseek-v4-flash"),
+                os.getenv("HELPER_MODEL", "deepseek-v4-flash"),
             ).strip()
-            or "deepseek/deepseek-v4-flash"
+            or "deepseek-v4-flash"
         )
     )
     gemini_api_key: str = field(

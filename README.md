@@ -16,7 +16,7 @@ It is deliberately separate from the Thinkific lesson tutor:
 - This helper appears only on public, sitemap-discoverable pages.
 - It hides when a visitor appears signed in.
 - The first message must be one of the fixed prompt buttons.
-- It uses DeepSeek V4 Flash through OpenRouter first, then falls back to
+- It uses DeepSeek V4 Flash through the DeepSeek API first, then falls back to
   Gemini 2.5 Flash if the primary provider fails.
 - It does not answer general AI questions or give away course lesson content.
 
@@ -32,7 +32,7 @@ uv run uvicorn tai_helper.api:app --host 0.0.0.0 --port 8001
 Required model secrets:
 
 ```bash
-OPENROUTER_API_KEY=...
+DEEPSEEK_API_KEY=...
 GEMINI_API_KEY=...
 ```
 

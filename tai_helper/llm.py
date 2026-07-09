@@ -11,7 +11,7 @@ from google import genai
 from .catalog import assistant_notes
 from .settings import settings
 
-OPENROUTER_PROVIDER = "openrouter"
+DEEPSEEK_PROVIDER = "deepseek"
 GEMINI_PROVIDER = "google_genai"
 DEFAULT_TEMPERATURE = 0.2
 logger = logging.getLogger(__name__)
@@ -100,7 +100,7 @@ def _clean_usage(usage: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in usage.items() if value is not None}
 
 
-def _text_from_openrouter_content(content: Any) -> str:
+def _text_from_chat_content(content: Any) -> str:
     if isinstance(content, str):
         return content
     if isinstance(content, list):
@@ -114,49 +114,46 @@ def _text_from_openrouter_content(content: Any) -> str:
     return str(content or "")
 
 
-def _openrouter_headers() -> dict[str, str]:
-    headers = {
-        "Authorization": f"Bearer {settings.openrouter_api_key}",
+def _deepseek_headers() -> dict[str, str]:
+    return {
+        "Authorization": f"Bearer {settings.deepseek_api_key}",
         "Content-Type": "application/json",
     }
-    if settings.openrouter_site_url:
-        headers["HTTP-Referer"] = settings.openrouter_site_url
-    if settings.openrouter_app_title:
-        headers["X-OpenRouter-Title"] = settings.openrouter_app_title
-    return headers
 
 
-def _generate_openrouter_answer(prompt: str) -> LLMResult:
-    if not settings.openrouter_api_key:
-        raise RuntimeError("OPENROUTER_API_KEY is not configured")
+def _generate_deepseek_answer(prompt: str) -> LLMResult:
+    if not settings.deepseek_api_key:
+        raise RuntimeError("DEEPSEEK_API_KEY is not configured")
 
     response = requests.post(
-        f"{settings.openrouter_base_url}/chat/completions",
-        headers=_openrouter_headers(),
+        f"{settings.deepseek_base_url}/chat/completions",
+        headers=_deepseek_headers(),
         json={
             "model": settings.primary_model_name,
             "messages": [
                 {"role": "system", "content": SYSTEM_INSTRUCTION},
                 {"role": "user", "content": prompt},
             ],
+            "thinking": {"type": settings.deepseek_thinking_type},
             "temperature": DEFAULT_TEMPERATURE,
             "max_tokens": settings.max_output_tokens,
+            "stream": False,
         },
         timeout=settings.llm_request_timeout_seconds,
     )
     if response.status_code >= 400:
         details = response.text.strip()[:500]
         raise RuntimeError(
-            f"OpenRouter request failed with HTTP {response.status_code}: {details}"
+            f"DeepSeek request failed with HTTP {response.status_code}: {details}"
         )
 
     payload = response.json()
     choices = payload.get("choices") or []
     if not choices:
-        raise RuntimeError("OpenRouter response did not include any choices")
+        raise RuntimeError("DeepSeek response did not include any choices")
 
     message = choices[0].get("message") or {}
-    answer = _text_from_openrouter_content(message.get("content")).strip()
+    answer = _text_from_chat_content(message.get("content")).strip()
     raw_usage = payload.get("usage") or {}
     usage = _clean_usage(
         {
@@ -165,7 +162,7 @@ def _generate_openrouter_answer(prompt: str) -> LLMResult:
             "output_tokens": raw_usage.get("completion_tokens")
             or raw_usage.get("output_tokens"),
             "total_tokens": raw_usage.get("total_tokens"),
-            "provider": OPENROUTER_PROVIDER,
+            "provider": DEEPSEEK_PROVIDER,
             "model": settings.primary_model_name,
         }
     )
@@ -216,26 +213,26 @@ def generate_answer(prompt: str) -> LLMResult:
     started = time.monotonic()
     primary_error: Exception | None = None
 
-    if settings.openrouter_api_key:
+    if settings.deepseek_api_key:
         try:
-            result = _generate_openrouter_answer(prompt)
+            result = _generate_deepseek_answer(prompt)
             return _with_latency(result, started)
         except Exception as exc:
             primary_error = exc
             logger.warning(
-                "OpenRouter generation failed; falling back to Gemini.",
+                "DeepSeek generation failed; falling back to Gemini.",
                 exc_info=True,
             )
 
     try:
         result = _generate_gemini_answer(
             prompt,
-            fallback_from=OPENROUTER_PROVIDER if primary_error else "",
+            fallback_from=DEEPSEEK_PROVIDER if primary_error else "",
         )
         return _with_latency(result, started)
     except Exception as fallback_error:
         if primary_error is not None:
             raise RuntimeError(
-                "OpenRouter primary and Gemini fallback generation both failed"
+                "DeepSeek primary and Gemini fallback generation both failed"
             ) from fallback_error
         raise

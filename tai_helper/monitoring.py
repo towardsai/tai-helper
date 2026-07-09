@@ -120,8 +120,8 @@ class HelperMonitor:
             },
             "tags": tags,
             "project_name": self.configured.opik_project_name,
-            "model": self.configured.model_name,
-            "provider": "google_genai",
+            "model": self.usage.get("model") or self.configured.model_name,
+            "provider": self.usage.get("provider") or "unknown",
             "flush": True,
         }
         with opik.start_as_current_span(**span_kwargs) as span:

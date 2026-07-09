@@ -1,13 +1,20 @@
 from __future__ import annotations
 
+import logging
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
+import requests
 from google import genai
 
 from .catalog import assistant_notes
 from .settings import settings
+
+OPENROUTER_PROVIDER = "openrouter"
+GEMINI_PROVIDER = "google_genai"
+DEFAULT_TEMPERATURE = 0.2
+logger = logging.getLogger(__name__)
 
 
 SYSTEM_INSTRUCTION = """You are Towards AI Helper, a concise public assistant for anonymous prospective students.
@@ -89,18 +96,93 @@ Answer now. Include links only when directly useful. Do not mention internal rou
 """
 
 
-def generate_answer(prompt: str) -> LLMResult:
+def _clean_usage(usage: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in usage.items() if value is not None}
+
+
+def _text_from_openrouter_content(content: Any) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for item in content:
+            if isinstance(item, dict):
+                parts.append(str(item.get("text", "")))
+            else:
+                parts.append(str(item))
+        return "".join(parts)
+    return str(content or "")
+
+
+def _openrouter_headers() -> dict[str, str]:
+    headers = {
+        "Authorization": f"Bearer {settings.openrouter_api_key}",
+        "Content-Type": "application/json",
+    }
+    if settings.openrouter_site_url:
+        headers["HTTP-Referer"] = settings.openrouter_site_url
+    if settings.openrouter_app_title:
+        headers["X-OpenRouter-Title"] = settings.openrouter_app_title
+    return headers
+
+
+def _generate_openrouter_answer(prompt: str) -> LLMResult:
+    if not settings.openrouter_api_key:
+        raise RuntimeError("OPENROUTER_API_KEY is not configured")
+
+    response = requests.post(
+        f"{settings.openrouter_base_url}/chat/completions",
+        headers=_openrouter_headers(),
+        json={
+            "model": settings.primary_model_name,
+            "messages": [
+                {"role": "system", "content": SYSTEM_INSTRUCTION},
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": DEFAULT_TEMPERATURE,
+            "max_tokens": settings.max_output_tokens,
+        },
+        timeout=settings.llm_request_timeout_seconds,
+    )
+    if response.status_code >= 400:
+        details = response.text.strip()[:500]
+        raise RuntimeError(
+            f"OpenRouter request failed with HTTP {response.status_code}: {details}"
+        )
+
+    payload = response.json()
+    choices = payload.get("choices") or []
+    if not choices:
+        raise RuntimeError("OpenRouter response did not include any choices")
+
+    message = choices[0].get("message") or {}
+    answer = _text_from_openrouter_content(message.get("content")).strip()
+    raw_usage = payload.get("usage") or {}
+    usage = _clean_usage(
+        {
+            "input_tokens": raw_usage.get("prompt_tokens")
+            or raw_usage.get("input_tokens"),
+            "output_tokens": raw_usage.get("completion_tokens")
+            or raw_usage.get("output_tokens"),
+            "total_tokens": raw_usage.get("total_tokens"),
+            "provider": OPENROUTER_PROVIDER,
+            "model": settings.primary_model_name,
+        }
+    )
+    return LLMResult(answer=answer, usage=usage)
+
+
+def _generate_gemini_answer(prompt: str, *, fallback_from: str = "") -> LLMResult:
     if not settings.gemini_api_key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
 
-    started = time.monotonic()
     client = genai.Client(api_key=settings.gemini_api_key)
     response = client.models.generate_content(
-        model=settings.model_name,
+        model=settings.fallback_model_name,
         contents=prompt,
         config={
             "system_instruction": SYSTEM_INSTRUCTION,
-            "temperature": 0.2,
+            "temperature": DEFAULT_TEMPERATURE,
             "max_output_tokens": settings.max_output_tokens,
         },
     )
@@ -112,8 +194,48 @@ def generate_answer(prompt: str) -> LLMResult:
             "output_tokens": getattr(usage_metadata, "candidates_token_count", None),
             "total_tokens": getattr(usage_metadata, "total_token_count", None),
         }
+    usage.update(
+        {
+            "provider": GEMINI_PROVIDER,
+            "model": settings.fallback_model_name,
+        }
+    )
+    if fallback_from:
+        usage["fallback_from"] = fallback_from
     return LLMResult(
         answer=(getattr(response, "text", "") or "").strip(),
-        usage={key: value for key, value in usage.items() if value is not None},
-        latency_ms=int((time.monotonic() - started) * 1000),
+        usage=_clean_usage(usage),
     )
+
+
+def _with_latency(result: LLMResult, started: float) -> LLMResult:
+    return replace(result, latency_ms=int((time.monotonic() - started) * 1000))
+
+
+def generate_answer(prompt: str) -> LLMResult:
+    started = time.monotonic()
+    primary_error: Exception | None = None
+
+    if settings.openrouter_api_key:
+        try:
+            result = _generate_openrouter_answer(prompt)
+            return _with_latency(result, started)
+        except Exception as exc:
+            primary_error = exc
+            logger.warning(
+                "OpenRouter generation failed; falling back to Gemini.",
+                exc_info=True,
+            )
+
+    try:
+        result = _generate_gemini_answer(
+            prompt,
+            fallback_from=OPENROUTER_PROVIDER if primary_error else "",
+        )
+        return _with_latency(result, started)
+    except Exception as fallback_error:
+        if primary_error is not None:
+            raise RuntimeError(
+                "OpenRouter primary and Gemini fallback generation both failed"
+            ) from fallback_error
+        raise

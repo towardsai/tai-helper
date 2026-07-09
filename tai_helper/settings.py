@@ -28,6 +28,16 @@ def _int_env(name: str, default: int) -> int:
         return default
 
 
+def _float_env(name: str, default: float) -> float:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        return float(raw)
+    except ValueError:
+        return default
+
+
 def _bool_env(name: str, default: bool = False) -> bool:
     raw = os.getenv(name)
     if raw is None:
@@ -49,15 +59,61 @@ class Settings:
             "academy.towardsai.net,towardsai.net,www.towardsai.net",
         )
     )
-    model_name: str = field(
-        default_factory=lambda: os.getenv("HELPER_MODEL", "gemini-2.5-flash").strip()
-        or "gemini-2.5-flash"
+    openrouter_api_key: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_API_KEY", "").strip()
+    )
+    openrouter_base_url: str = field(
+        default_factory=lambda: (
+            os.getenv(
+                "OPENROUTER_BASE_URL",
+                "https://openrouter.ai/api/v1",
+            )
+            .strip()
+            .rstrip("/")
+            or "https://openrouter.ai/api/v1"
+        )
+    )
+    openrouter_site_url: str = field(
+        default_factory=lambda: os.getenv(
+            "OPENROUTER_SITE_URL",
+            "https://towardsai.net",
+        ).strip()
+    )
+    openrouter_app_title: str = field(
+        default_factory=lambda: (
+            os.getenv(
+                "OPENROUTER_APP_TITLE",
+                "Towards AI Helper",
+            ).strip()
+            or "Towards AI Helper"
+        )
+    )
+    primary_model_name: str = field(
+        default_factory=lambda: (
+            os.getenv(
+                "HELPER_PRIMARY_MODEL",
+                os.getenv("HELPER_MODEL", "deepseek/deepseek-v4-flash"),
+            ).strip()
+            or "deepseek/deepseek-v4-flash"
+        )
     )
     gemini_api_key: str = field(
         default_factory=lambda: os.getenv("GEMINI_API_KEY", "").strip()
     )
+    fallback_model_name: str = field(
+        default_factory=lambda: (
+            os.getenv(
+                "HELPER_FALLBACK_MODEL",
+                "gemini-2.5-flash",
+            ).strip()
+            or "gemini-2.5-flash"
+        )
+    )
     max_output_tokens: int = field(
         default_factory=lambda: _int_env("HELPER_MAX_OUTPUT_TOKENS", 420)
+    )
+    llm_request_timeout_seconds: float = field(
+        default_factory=lambda: _float_env("HELPER_LLM_REQUEST_TIMEOUT_SECONDS", 20.0)
     )
     max_body_bytes: int = field(
         default_factory=lambda: _int_env("HELPER_MAX_BODY_BYTES", 64 * 1024)
@@ -97,6 +153,10 @@ class Settings:
 
     def cors_origins(self) -> list[str]:
         return list(self.allowed_origins)
+
+    @property
+    def model_name(self) -> str:
+        return self.primary_model_name
 
 
 settings = Settings()

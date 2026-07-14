@@ -268,15 +268,28 @@
 
   function isBlockedPath() {
     var path = normalizePath(window.location.pathname);
-    return /^(courses\/take|enroll|order|checkout|cart|users|account|admin)/.test(
-      path.replace(/^\//, ""),
-    );
+    var privatePath = [
+      "courses/take", "enroll", "order", "checkout", "cart", "users", "account",
+      "admin", "wp-admin", "wp-login", "wp-json", "wp-content", "wp-includes",
+      "xmlrpc.php",
+    ].some(function (prefix) {
+      return path.replace(/^\//, "").indexOf(prefix) === 0;
+    });
+    return privatePath || new URLSearchParams(window.location.search).has("preview");
   }
 
   function pageAllowed(config) {
     if (!config || isSignedIn() || isBlockedPath()) return false;
     var host = window.location.hostname.toLowerCase();
     var path = normalizePath(window.location.pathname);
+    if (
+      Array.isArray(config.siteWideHosts) &&
+      config.siteWideHosts
+        .map(function (item) { return item.toLowerCase(); })
+        .indexOf(host) !== -1
+    ) {
+      return true;
+    }
     var paths = config.allowedPathsByHost && config.allowedPathsByHost[host];
     if (!paths && host.indexOf("www.") === 0) {
       paths = config.allowedPathsByHost && config.allowedPathsByHost[host.slice(4)];

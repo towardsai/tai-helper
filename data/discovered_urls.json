@@ -1,6 +1,7 @@
 {
   "academy_sitemap_url": "https://academy.towardsai.net/sitemap.xml",
   "towardsai_page_sitemap_url": "https://towardsai.net/page-sitemap1.xml",
+  "towardsai_com_page_sitemap_url": "https://towardsai.com/page-sitemap.xml",
   "academy_urls": [
     "https://academy.towardsai.net/",
     "https://academy.towardsai.net/collections",
@@ -38,6 +39,29 @@
     "https://towardsai.net/community",
     "https://towardsai.net/b2b",
     "https://towardsai.net/let-us-transform-your-team-into-ai-first-employees-to-stay-ahead-of-competitors"
+  ],
+  "reviewed_towardsai_com_pages": [
+    "https://towardsai.com/",
+    "https://towardsai.com/enterpriseenablement/",
+    "https://towardsai.com/valuecreation/",
+    "https://towardsai.com/webinars/agentengineering/",
+    "https://towardsai.com/academy/",
+    "https://towardsai.com/academy/full-stack-ai-engineering/",
+    "https://towardsai.com/academy/agentic-ai-engineering/",
+    "https://towardsai.com/academy/llm-primer/",
+    "https://towardsai.com/academy/python-for-ai-engineering/",
+    "https://towardsai.com/academy/ai-for-work/",
+    "https://towardsai.com/academy/membership/",
+    "https://towardsai.com/academy/about/",
+    "https://towardsai.com/academy/contact/",
+    "https://towardsai.com/academy/affiliate/",
+    "https://towardsai.com/enterprise/software-developer-to-ai-engineer/",
+    "https://towardsai.com/enterprise/agentic-developer-conversion/",
+    "https://towardsai.com/academy/free-lesson-offer/",
+    "https://towardsai.com/academy/free-lesson-offer-2/",
+    "https://towardsai.com/academy/bundles/10-hour-crash-course-into-llm-developer-expert/",
+    "https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/",
+    "https://towardsai.com/academy/bundles/get-it-all/"
   ],
   "extra_external_urls": [
     "https://www.youtube.com/channel/UCQNjFuhOJM1YqFTPY1Q_kYQ",

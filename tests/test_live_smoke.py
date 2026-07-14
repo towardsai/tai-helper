@@ -16,7 +16,7 @@ RUN_LIVE_CHAT = os.getenv("RUN_LIVE_CHAT_SMOKE", "").lower() in {
     "yes",
     "on",
 }
-HEADERS = {"Origin": "https://academy.towardsai.net"}
+HEADERS = {"Origin": "https://towardsai.com"}
 FIRST_PROMPT = "I want help deciding which course to take."
 
 
@@ -63,7 +63,15 @@ def test_live_health_widget_and_config() -> None:
     assert config.status_code == 200
     payload = config.json()
     assert FIRST_PROMPT in payload["forcedPrompts"]
-    assert "/courses/agent-engineering" in payload["allowedPathsByHost"]["academy.towardsai.net"]
+    assert "towardsai.com" in payload["siteWideHosts"]
+    assert (
+        "/academy/agentic-ai-engineering"
+        in payload["allowedPathsByHost"]["towardsai.com"]
+    )
+    assert (
+        "/courses/agent-engineering"
+        in payload["allowedPathsByHost"]["academy.towardsai.net"]
+    )
     assert config_seconds <= max_seconds("LIVE_SMOKE_MAX_CONFIG_SECONDS", 30)
 
 
@@ -82,7 +90,7 @@ def test_live_chat_returns_concise_answer() -> None:
             "selectedPrompt": FIRST_PROMPT,
             "visitorId": "github-action-smoke",
             "context": {
-                "url": "https://academy.towardsai.net/courses/agent-engineering",
+                "url": "https://towardsai.com/academy/agentic-ai-engineering/",
                 "pageTitle": "Agent course",
                 "signedIn": False,
             },

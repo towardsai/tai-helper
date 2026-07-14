@@ -50,13 +50,26 @@ class Settings:
     allowed_origins: tuple[str, ...] = field(
         default_factory=lambda: _csv_env(
             "HELPER_ALLOWED_ORIGINS",
-            "https://academy.towardsai.net,https://towardsai.net,https://www.towardsai.net",
+            (
+                "https://towardsai.com,https://www.towardsai.com,"
+                "https://academy.towardsai.net,https://towardsai.net,"
+                "https://www.towardsai.net"
+            ),
         )
     )
     allowed_hosts: tuple[str, ...] = field(
         default_factory=lambda: _csv_env(
             "HELPER_ALLOWED_HOSTS",
-            "academy.towardsai.net,towardsai.net,www.towardsai.net",
+            (
+                "towardsai.com,www.towardsai.com,academy.towardsai.net,"
+                "towardsai.net,www.towardsai.net"
+            ),
+        )
+    )
+    site_wide_hosts: tuple[str, ...] = field(
+        default_factory=lambda: _csv_env(
+            "HELPER_SITE_WIDE_HOSTS",
+            "towardsai.com,www.towardsai.com",
         )
     )
     deepseek_api_key: str = field(
@@ -74,11 +87,13 @@ class Settings:
         )
     )
     deepseek_thinking_type: str = field(
-        default_factory=lambda: os.getenv(
-            "HELPER_DEEPSEEK_THINKING",
-            "disabled",
-        ).strip()
-        or "disabled"
+        default_factory=lambda: (
+            os.getenv(
+                "HELPER_DEEPSEEK_THINKING",
+                "disabled",
+            ).strip()
+            or "disabled"
+        )
     )
     primary_model_name: str = field(
         default_factory=lambda: (
@@ -133,11 +148,13 @@ class Settings:
         default_factory=lambda: os.getenv("OPIK_WORKSPACE", "").strip()
     )
     opik_project_name: str = field(
-        default_factory=lambda: os.getenv(
-            "OPIK_PROJECT_NAME",
-            "towards-ai-helper",
-        ).strip()
-        or "towards-ai-helper"
+        default_factory=lambda: (
+            os.getenv(
+                "OPIK_PROJECT_NAME",
+                "towards-ai-helper",
+            ).strip()
+            or "towards-ai-helper"
+        )
     )
     opik_max_text_chars: int = field(
         default_factory=lambda: _int_env("OPIK_MAX_TEXT_CHARS", 4000)

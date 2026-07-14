@@ -17,35 +17,42 @@
     "For coupon code requests, do not provide a code. If the user insists, tell them to email louis@towardsai.net with context and what they need.",
     "For eager learners who want broad access, recommend the Get it all bundle as the strongest value option."
   ],
+  "catalog_hubs": [
+    {
+      "name": "Towards AI Academy",
+      "url": "https://towardsai.com/academy/",
+      "when_to_recommend": "Use this as the central comparison page for the five main courses. Bundle choices are not collected on this page, so link to the relevant bundle directly."
+    }
+  ],
   "course_routing": [
     {
-      "name": "Get it all! From Novice to Expert",
-      "url": "https://academy.towardsai.net/bundles/get-it-all",
+      "name": "Get It All: Every Course, One Bundle",
+      "url": "https://towardsai.com/academy/bundles/get-it-all/",
       "when_to_recommend": "Best value for motivated learners who want broad access across the academy or are serious about going from fundamentals to advanced AI engineering."
     },
     {
-      "name": "Python for GenAI / Become a LLM Developer and Python Pro",
-      "url": "https://academy.towardsai.net/courses/python-for-genai",
+      "name": "Beginner Python for AI Engineering",
+      "url": "https://towardsai.com/academy/python-for-ai-engineering/",
       "when_to_recommend": "Best first step for beginners, non-coders, or people who need Python foundations before building LLM products."
     },
     {
-      "name": "Full Stack AI Engineering / Beginner to Advanced LLM Dev",
-      "url": "https://academy.towardsai.net/courses/beginner-to-advanced-llm-dev",
+      "name": "Full Stack AI Engineering",
+      "url": "https://towardsai.com/academy/full-stack-ai-engineering/",
       "when_to_recommend": "Best for builders who want to ship LLM products with RAG, context engineering, deployment, and product-oriented AI engineering."
     },
     {
-      "name": "Agent Engineering: Building Multi-Agent Systems",
-      "url": "https://academy.towardsai.net/courses/agent-engineering",
+      "name": "Agent Engineering",
+      "url": "https://towardsai.com/academy/agentic-ai-engineering/",
       "when_to_recommend": "Best for intermediate to advanced engineers who know Python/APIs and want production-grade autonomous agents, evaluation, monitoring, and deployment."
     },
     {
-      "name": "No-Code AI Mastery for Businesses and Professionals",
-      "url": "https://academy.towardsai.net/courses/ai-business-professionals",
+      "name": "Master AI for Work",
+      "url": "https://towardsai.com/academy/ai-for-work/",
       "when_to_recommend": "Best for business users, operators, founders, and professionals who want practical AI workflows without heavy coding."
     },
     {
       "name": "10-Hours LLM Fundamentals",
-      "url": "https://academy.towardsai.net/courses/llm-primer",
+      "url": "https://towardsai.com/academy/llm-primer/",
       "when_to_recommend": "Best quick primer for LLM fundamentals before taking a deeper course."
     },
     {
@@ -54,9 +61,26 @@
       "when_to_recommend": "Best for learners who want production LLM engineering concepts connected to the Towards AI book/resources."
     },
     {
-      "name": "Towards AI Mentorship",
-      "url": "https://academy.towardsai.net/bundles/tai-mentorship",
+      "name": "Towards AI Membership",
+      "url": "https://towardsai.com/academy/membership/",
       "when_to_recommend": "Best when the user asks for mentors, personalized guidance, accountability, project feedback, or career/course direction."
+    }
+  ],
+  "bundle_routing": [
+    {
+      "name": "From Developer to Advanced AI Engineer",
+      "url": "https://towardsai.com/academy/bundles/10-hour-crash-course-into-llm-developer-expert/",
+      "when_to_recommend": "Best for developers who already code and want a path from LLM fundamentals into advanced AI engineering."
+    },
+    {
+      "name": "From Non-Coder to AI Engineer",
+      "url": "https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/",
+      "when_to_recommend": "Best for learners who need Python foundations before progressing through the AI engineering curriculum."
+    },
+    {
+      "name": "Get It All",
+      "url": "https://towardsai.com/academy/bundles/get-it-all/",
+      "when_to_recommend": "Best-value choice for learners who want every course and the broadest path from novice to expert."
     }
   ],
   "external_resources": [
@@ -67,12 +91,12 @@
     },
     {
       "name": "Towards AI Resource Library",
-      "url": "https://towardsai.net/towards-ai-resource-library",
+      "url": "https://towardsai.com/towards-ai-resource-library",
       "when_to_recommend": "Free articles, guides, and learning resources."
     },
     {
       "name": "Towards AI book resources",
-      "url": "https://towardsai.net/book",
+      "url": "https://towardsai.com/book",
       "when_to_recommend": "Book companion resources and production LLM learning path."
     },
     {
@@ -83,10 +107,12 @@
   ],
   "b2b": {
     "urls": [
-      "https://towardsai.net/b2b",
-      "https://towardsai.net/let-us-transform-your-team-into-ai-first-employees-to-stay-ahead-of-competitors"
+      "https://towardsai.com/enterpriseenablement/",
+      "https://towardsai.com/valuecreation/",
+      "https://towardsai.com/enterprise/software-developer-to-ai-engineer/",
+      "https://towardsai.com/enterprise/agentic-developer-conversion/"
     ],
     "email": "louis@towardsai.net",
-    "instruction": "Ask for company size, team background, use cases, desired training outcome, and timeline. Suggest emailing louis@towardsai.net with details or continuing in chat."
+    "instruction": "Ask for company size, team background, use cases, desired outcome, and timeline. Route software developer conversion to the AI Engineer programme; Claude Code, Codex, or coding-agent adoption to Agentic Developer Conversion; broader deployment or custom development to Value Creation; and general team training to Enterprise Enablement. Suggest emailing louis@towardsai.net with details or continuing in chat."
   }
 }

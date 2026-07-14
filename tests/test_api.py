@@ -7,8 +7,8 @@ from tai_helper.llm import LLMResult
 from tai_helper.rate_limiter import FixedWindowRateLimiter, RateLimit
 
 client = TestClient(api.app)
-HEADERS = {"Origin": "https://academy.towardsai.net"}
-PUBLIC_URL = "https://academy.towardsai.net/courses/agent-engineering"
+HEADERS = {"Origin": "https://towardsai.com"}
+PUBLIC_URL = "https://towardsai.com/academy/agentic-ai-engineering/"
 FIRST_PROMPT = "I want help deciding which course to take."
 
 
@@ -30,7 +30,9 @@ def reset_limiters() -> None:
     )
 
 
-def payload(query: str = FIRST_PROMPT, *, url: str = PUBLIC_URL, signed_in: bool = False):
+def payload(
+    query: str = FIRST_PROMPT, *, url: str = PUBLIC_URL, signed_in: bool = False
+):
     return {
         "query": query,
         "selectedPrompt": query if query == FIRST_PROMPT else FIRST_PROMPT,
@@ -52,7 +54,35 @@ def test_config_exposes_public_widget_contract() -> None:
     data = response.json()
     assert data["name"] == "Towards AI Helper"
     assert FIRST_PROMPT in data["forcedPrompts"]
-    assert "/courses/agent-engineering" in data["allowedPathsByHost"]["academy.towardsai.net"]
+    assert "towardsai.com" in data["allowedHosts"]
+    assert "towardsai.com" in data["siteWideHosts"]
+    assert (
+        "/academy/agentic-ai-engineering" in data["allowedPathsByHost"]["towardsai.com"]
+    )
+    assert (
+        "/courses/agent-engineering"
+        in data["allowedPathsByHost"]["academy.towardsai.net"]
+    )
+
+
+def test_footer_compatible_widget_path_is_served() -> None:
+    response = client.get("/helper-widget.js")
+
+    assert response.status_code == 200
+    assert "Towards AI Helper" in response.text
+
+
+def test_cors_preflight_accepts_towardsai_com() -> None:
+    response = client.options(
+        "/api/helper/chat",
+        headers={
+            "Origin": "https://towardsai.com",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "https://towardsai.com"
 
 
 def test_chat_requires_allowed_origin_public_page_signed_out_and_first_prompt() -> None:
@@ -62,7 +92,7 @@ def test_chat_requires_allowed_origin_public_page_signed_out_and_first_prompt() 
     assert (
         client.post(
             "/api/helper/chat",
-            json=payload(url="https://academy.towardsai.net/courses/take/x"),
+            json=payload(url="https://towardsai.com/wp-admin/edit.php"),
             headers=HEADERS,
         ).status_code
         == 403
@@ -110,6 +140,23 @@ def test_chat_calls_gemini_with_retrieved_sources(monkeypatch) -> None:
     assert "Agent Engineering" in prompts[0]
 
 
+def test_chat_still_accepts_legacy_net_origin(monkeypatch) -> None:
+    reset_limiters()
+    monkeypatch.setattr(
+        api.llm,
+        "generate_answer",
+        lambda _prompt: LLMResult(answer="ok"),
+    )
+
+    response = client.post(
+        "/api/helper/chat",
+        json=payload(url="https://towardsai.net/b2b"),
+        headers={"Origin": "https://towardsai.net"},
+    )
+
+    assert response.status_code == 200
+
+
 def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> None:
     reset_limiters()
 
@@ -131,7 +178,10 @@ def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> 
     second_response = client.post("/api/helper/chat", json=second, headers=HEADERS)
 
     assert first_response.status_code == 200
-    assert "Get it all bundle" in first_response.json()["answer"]
+    assert "Get It All bundle" in first_response.json()["answer"]
+    assert (
+        "towardsai.com/academy/bundles/get-it-all/" in first_response.json()["answer"]
+    )
     assert second_response.status_code == 200
     assert "louis@towardsai.net" in second_response.json()["answer"]
 

@@ -142,9 +142,13 @@ def _history_text(payload: HelperChatRequest) -> list[str]:
 
 def _validate_payload(payload: HelperChatRequest) -> None:
     if payload.context.signedIn:
-        raise HTTPException(status_code=403, detail="Helper is only for signed-out visitors.")
+        raise HTTPException(
+            status_code=403, detail="Helper is only for signed-out visitors."
+        )
     if not page_is_allowed(payload.context.url):
-        raise HTTPException(status_code=403, detail="Helper is only available on public pages.")
+        raise HTTPException(
+            status_code=403, detail="Helper is only available on public pages."
+        )
     if len(payload.query.strip()) > settings.max_query_chars:
         raise HTTPException(status_code=400, detail="Question is too long.")
     if not payload.history and payload.query.strip() not in forced_prompts():
@@ -163,7 +167,7 @@ def _fixed_coupon_answer(payload: HelperChatRequest) -> str:
         )
     return (
         "I can't provide a coupon code here. The best value option is usually the "
-        "Get it all bundle: https://academy.towardsai.net/bundles/get-it-all"
+        "Get It All bundle: https://towardsai.com/academy/bundles/get-it-all/"
     )
 
 
@@ -205,6 +209,7 @@ def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/helper-widget.js")
 @app.get("/widget.js")
 def widget() -> FileResponse:
     path = STATIC_DIR / "widget.js"
@@ -219,6 +224,7 @@ def public_config() -> dict[str, Any]:
     return {
         "name": "Towards AI Helper",
         "allowedHosts": list(settings.allowed_hosts),
+        "siteWideHosts": list(settings.site_wide_hosts),
         "allowedPathsByHost": allowed_paths_by_host(),
         "forcedPrompts": forced_prompts(),
         "rateLimits": {

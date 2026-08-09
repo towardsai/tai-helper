@@ -367,6 +367,11 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
                     target_offer_ids=target_offer_ids,
                 )
                 if grounded is None:
+                    grounded = llm.extract_enterprise_software_to_ai_engineer(
+                        query,
+                        selected_pages,
+                    )
+                if grounded is None:
                     grounded = await asyncio.to_thread(
                         llm.generate_grounded_answer,
                         prompt,

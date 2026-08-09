@@ -36,4 +36,7 @@ class HelperChatResponse(BaseModel):
     answer: str
     threadId: str
     sources: list[SourceOut]
+    status: Literal["answered", "insufficient_evidence", "out_of_scope", "policy"] = (
+        "answered"
+    )
     usage: dict[str, Any] = Field(default_factory=dict)

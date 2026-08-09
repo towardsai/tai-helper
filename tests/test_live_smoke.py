@@ -65,8 +65,7 @@ def test_live_health_widget_and_config() -> None:
     assert FIRST_PROMPT in payload["forcedPrompts"]
     assert "towardsai.com" in payload["siteWideHosts"]
     assert (
-        "/academy/agentic-ai-engineering"
-        in payload["allowedPathsByHost"]["towardsai.com"]
+        "/academy/agent-engineering" in payload["allowedPathsByHost"]["towardsai.com"]
     )
     assert (
         "/courses/agent-engineering"
@@ -90,7 +89,7 @@ def test_live_chat_returns_concise_answer() -> None:
             "selectedPrompt": FIRST_PROMPT,
             "visitorId": "github-action-smoke",
             "context": {
-                "url": "https://towardsai.com/academy/agentic-ai-engineering/",
+                "url": "https://towardsai.com/academy/agent-engineering/",
                 "pageTitle": "Agent course",
                 "signedIn": False,
             },

@@ -15,13 +15,14 @@
     "Keep answers concise and useful to control costs.",
     "For B2B, company training, and consulting leads, ask for company/team context and recommend emailing louis@towardsai.net.",
     "For coupon code requests, do not provide a code. If the user insists, tell them to email louis@towardsai.net with context and what they need.",
-    "For eager learners who want broad access, recommend the Get it all bundle as the strongest value option."
+    "For eager learners who want broad access, recommend the Get it all bundle as the strongest value option.",
+    "Never state an exact price, discount, product count, included course, access duration, refund term, or other offer detail unless that fact is explicitly present in the retrieved source text. If it is not present, say you cannot confirm it from the current public pages and link to the relevant page or contact."
   ],
   "catalog_hubs": [
     {
       "name": "Towards AI Academy",
       "url": "https://towardsai.com/academy/",
-      "when_to_recommend": "Use this as the central comparison page for the five main courses. Bundle choices are not collected on this page, so link to the relevant bundle directly."
+      "when_to_recommend": "Use this as the central overview of Towards AI learning options. For current inclusions, prices, discounts, and terms, rely only on exact text retrieved from the relevant offer page."
     }
   ],
   "course_routing": [
@@ -42,7 +43,7 @@
     },
     {
       "name": "Agent Engineering",
-      "url": "https://towardsai.com/academy/agentic-ai-engineering/",
+      "url": "https://towardsai.com/academy/agent-engineering/",
       "when_to_recommend": "Best for intermediate to advanced engineers who know Python/APIs and want production-grade autonomous agents, evaluation, monitoring, and deployment."
     },
     {
@@ -57,12 +58,12 @@
     },
     {
       "name": "Building LLMs for Production",
-      "url": "https://academy.towardsai.net/courses/buildingllmsforproduction",
+      "url": "https://towardsai.com/academy/building-llms-for-production/",
       "when_to_recommend": "Best for learners who want production LLM engineering concepts connected to the Towards AI book/resources."
     },
     {
-      "name": "Towards AI Membership",
-      "url": "https://towardsai.com/academy/membership/",
+      "name": "Towards AI Mentorship",
+      "url": "https://towardsai.com/academy/mentorship/",
       "when_to_recommend": "Best when the user asks for mentors, personalized guidance, accountability, project feedback, or career/course direction."
     }
   ],
@@ -96,7 +97,7 @@
     },
     {
       "name": "Towards AI book resources",
-      "url": "https://towardsai.com/book",
+      "url": "https://towardsai.com/academy/book/",
       "when_to_recommend": "Book companion resources and production LLM learning path."
     },
     {

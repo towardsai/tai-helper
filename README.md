@@ -21,11 +21,14 @@ It is deliberately separate from the Thinkific lesson tutor:
 - It uses DeepSeek V4 Flash through the DeepSeek API first, then falls back to
   Gemini 2.5 Flash if the primary provider fails.
 - It does not answer general AI questions or give away course lesson content.
+- It returns offer facts only after every sentence has passed exact-quote and
+  retrieved-chunk validation. Missing, stale, conflicting, or invalid evidence
+  produces an explicit “I couldn't verify that” response instead of a guess.
 
 ## Local Setup
 
 ```bash
-cd /Users/louis/Documents/GitHub/tai-helper
+cd /path/to/tai-helper
 uv sync
 cp .env.example .env
 uv run uvicorn tai_helper.api:app --host 0.0.0.0 --port 8001
@@ -76,18 +79,29 @@ API paths, and previews remain blocked.
 
 ## Knowledge Catalog
 
-The original Academy/`.net` snapshot lives in `data/pages.json`. The reviewed
-`.com` pages live in `data/towardsai_com_pages.json`, and canonical recommendation
-links live in `data/assistant_notes.json`.
+`data/towardsai_com_pages.json` is generated from every URL in the current
+`towardsai.com` page sitemap. `data/pages.json` is generated from every public
+Academy sitemap URL. Each eligible page records its canonical URL, successful
+fetch time, content hash, source authority, and heading-aware chunks. Known
+staging pages, legacy duplicates, failed fetches, and manually described links
+remain in the inventory but are explicitly ineligible as evidence.
 
-Refresh the `.com` snapshot after those pages change:
+Refresh both catalogs after public pages change:
 
 ```bash
 python scripts/build_towardsai_com_catalog.py
 ```
 
-The Academy hub is the central course comparison page. Bundles currently have
-individual pages, so the helper links directly to the relevant bundle.
+The API accepts evidence only while each page's successful fetch is within
+`HELPER_CATALOG_MAX_AGE_DAYS` (14 days by default). Canonical `.com` offer pages
+supersede lower-authority Academy mirrors for the same offer. Routing notes are
+never treated as factual evidence.
+
+For factual answers, the model must return structured sentence-level claims.
+Every claim needs a valid retrieved chunk ID and an exact contiguous quote from
+that chunk. The server independently rejects altered numbers, number words,
+prices, percentages, URLs, negation, invented quotes, malformed output, and
+uncited text before anything is shown to a visitor.
 
 ## Monitoring
 

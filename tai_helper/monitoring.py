@@ -25,9 +25,11 @@ def _import_opik() -> Any | None:
     global _OPIK_IMPORT_WARNING_EMITTED
     try:
         import opik  # type: ignore[import-not-found]
-    except Exception:
+    except ImportError:
         if not _OPIK_IMPORT_WARNING_EMITTED:
-            logger.warning("Opik monitoring is enabled but the opik package is unavailable.")
+            logger.warning(
+                "Opik monitoring is enabled but the opik package is unavailable."
+            )
             _OPIK_IMPORT_WARNING_EMITTED = True
         return None
     return opik

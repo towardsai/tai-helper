@@ -131,6 +131,9 @@ class Settings:
     max_history_turns: int = field(
         default_factory=lambda: _int_env("HELPER_MAX_HISTORY_TURNS", 8)
     )
+    catalog_max_age_days: int = field(
+        default_factory=lambda: _int_env("HELPER_CATALOG_MAX_AGE_DAYS", 14)
+    )
     rate_limit_per_minute: int = field(
         default_factory=lambda: _int_env("HELPER_RATE_LIMIT_PER_MINUTE", 3)
     )

@@ -140,6 +140,24 @@ def _history_text(payload: HelperChatRequest) -> list[str]:
     return [turn.content for turn in payload.history[-settings.max_history_turns :]]
 
 
+def _user_history_text(payload: HelperChatRequest) -> list[str]:
+    return [
+        turn.content
+        for turn in payload.history[-settings.max_history_turns :]
+        if turn.role == "user"
+    ]
+
+
+def _retrieval_query(payload: HelperChatRequest) -> str:
+    """Build search context without treating prior assistant claims as evidence."""
+    parts = [
+        payload.selectedPrompt.strip(),
+        *_user_history_text(payload),
+        payload.query,
+    ]
+    return "\n".join(dict.fromkeys(part for part in parts if part.strip()))
+
+
 def _validate_payload(payload: HelperChatRequest) -> None:
     if payload.context.signedIn:
         raise HTTPException(
@@ -166,8 +184,8 @@ def _fixed_coupon_answer(payload: HelperChatRequest) -> str:
             "email louis@towardsai.net with what you need and we will do the best possible."
         )
     return (
-        "I can't provide a coupon code here. The best value option is usually the "
-        "Get It All bundle: https://towardsai.com/academy/bundles/get-it-all/"
+        "I can't provide a coupon code here. For pricing help based on your "
+        "circumstances, email louis@towardsai.net with the relevant context."
     )
 
 
@@ -179,10 +197,11 @@ def _out_of_scope_answer() -> str:
     )
 
 
-def _fallback_answer() -> str:
+def _insufficient_evidence_answer() -> str:
     return (
-        "I can help, but I need one detail: are you learning for your own career, "
-        "building AI products, or looking for company training?"
+        "I couldn't verify that from the current Towards AI pages, so I don't want "
+        "to guess. Please check the relevant offer page or contact "
+        "louis@towardsai.net."
     )
 
 
@@ -246,37 +265,68 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
 
     query = payload.query.strip()
     thread_id = payload.threadId.strip() or uuid4().hex
-    selected_pages = retrieve(query, current_url=payload.context.url)
-    sources = sources_from_pages(selected_pages)
+    selected_pages: list[dict[str, Any]] = []
+    sources: list[dict[str, str]] = []
     usage: dict[str, Any] = {}
     latency_ms = 0
     error_message = ""
+    response_status = "insufficient_evidence"
 
     try:
         if coupon_intent(query):
             answer = _fixed_coupon_answer(payload)
+            response_status = "policy"
         elif not in_scope(query, _history_text(payload)):
             answer = _out_of_scope_answer()
+            response_status = "out_of_scope"
         else:
-            prompt = llm.build_prompt(
-                query=query,
-                selected_prompt=payload.selectedPrompt or query,
-                current_url=payload.context.url,
-                page_title=payload.context.pageTitle,
-                history=[
-                    (turn.role, turn.content)
-                    for turn in payload.history[-settings.max_history_turns :]
-                ],
-                selected_pages=selected_pages,
+            selected_pages = retrieve(
+                _retrieval_query(payload), current_url=payload.context.url
             )
-            result = await asyncio.to_thread(llm.generate_answer, prompt)
-            answer = result.answer or _fallback_answer()
-            usage = result.usage
-            latency_ms = result.latency_ms
+            if not selected_pages:
+                answer = _insufficient_evidence_answer()
+            else:
+                prompt = llm.build_prompt(
+                    query=query,
+                    selected_prompt=payload.selectedPrompt or query,
+                    current_url=payload.context.url,
+                    page_title=payload.context.pageTitle,
+                    history=[
+                        (turn.role, turn.content)
+                        for turn in payload.history[-settings.max_history_turns :]
+                    ],
+                    selected_pages=selected_pages,
+                )
+                grounded = await asyncio.to_thread(
+                    llm.generate_grounded_answer, prompt, selected_pages
+                )
+                usage = grounded.usage
+                latency_ms = grounded.latency_ms
+                if grounded.is_answered:
+                    answer = grounded.answer
+                    response_status = "answered"
+                    sources = sources_from_pages(
+                        [
+                            {
+                                "title": chunk.title,
+                                "url": chunk.url,
+                                "kind": chunk.kind,
+                            }
+                            for chunk in grounded.cited_chunks
+                        ]
+                    )
+                else:
+                    answer = _insufficient_evidence_answer()
+                    if grounded.status == "validation_failure":
+                        error_message = (
+                            "grounding validation failed: "
+                            f"{grounded.validation_error[:400]}"
+                        )
     except Exception:
         error_message = "helper generation failed"
         logger.exception("helper generation failed")
-        answer = _fallback_answer()
+        answer = _insufficient_evidence_answer()
+        sources = []
 
     monitor = HelperMonitor(
         query=query,
@@ -296,5 +346,6 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
         answer=answer,
         threadId=thread_id,
         sources=[SourceOut(**source) for source in sources],
+        status=response_status,
         usage=usage,
     )

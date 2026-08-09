@@ -43,6 +43,79 @@ class FakeGeminiClient:
         self.api_key = api_key
 
 
+def test_prompt_requires_direct_support_for_exact_offer_claims() -> None:
+    prompt = llm.build_prompt(
+        query="How many courses are included in mentorship?",
+        selected_prompt="I want to find mentors",
+        current_url="https://towardsai.com/academy/mentorship/",
+        page_title="Towards AI Mentorship",
+        history=[],
+        selected_pages=[
+            {
+                "title": "Towards AI Mentorship",
+                "kind": "mentorship",
+                "url": "https://towardsai.com/academy/mentorship/",
+                "headings": ["The curriculum comes with the team"],
+                "text": (
+                    "Towards AI Mentorship includes one course: the 10-Hour LLM "
+                    "Fundamentals video course from day one."
+                ),
+            }
+        ],
+    )
+
+    instruction = llm.SYSTEM_INSTRUCTION.lower()
+    assert "only authority for factual claims" in instruction
+    assert "number or names of included products or courses" in instruction
+    assert "do not guess" in instruction
+    assert "every factual claim must be directly supported" in prompt.lower()
+    assert "cannot confirm it" in prompt.lower()
+    assert "includes one course" in prompt
+
+
+def test_prompt_corrects_unsupported_alternatives_with_supported_table_facts() -> None:
+    prompt = llm.build_prompt(
+        query=(
+            "Does the mentorship include two courses of our choice, or only the "
+            "LLM Fundamentals course?"
+        ),
+        selected_prompt="I want to find mentors",
+        current_url="https://towardsai.com/academy/mentorship/",
+        page_title="Towards AI Mentorship",
+        history=[],
+        selected_pages=[
+            {
+                "chunk_id": "mentorship-curriculum-table",
+                "title": "Towards AI Mentorship",
+                "kind": "mentorship",
+                "url": "https://towardsai.com/academy/mentorship/",
+                "headings": ["The curriculum comes with the team"],
+                "text": (
+                    "10-Hour LLM Fundamentals video course $199 Included from "
+                    "day one Full Stack AI Engineering · Agent Engineering · "
+                    "Master AI for Work $349–499 each 25% off, always"
+                ),
+            }
+        ],
+    )
+
+    instruction = llm.SYSTEM_INSTRUCTION.lower()
+    assert "unsupported premise or alternative" in instruction
+    assert "do not return" in instruction
+    assert "merely because the visitor's proposed premise is unsupported" in instruction
+    assert 'never infer a total, use "only"' in instruction
+    prompt_lower = prompt.lower()
+    assert "correction rule" in prompt_lower
+    assert (
+        "return answered with those facts as separate extractive claims" in prompt_lower
+    )
+    assert "one table row says an item is included" in prompt_lower
+    assert 'do not infer a total or say "only"' in prompt_lower
+    assert "do not repeat or deny the visitor's unsupported premise" in prompt_lower
+    assert 'never write "not included"' in prompt_lower
+    assert 'unless those literal words occur in that claim\'s exact quote' in prompt_lower
+
+
 def test_generate_answer_uses_deepseek_primary(monkeypatch) -> None:
     request_calls = []
     monkeypatch.setattr(

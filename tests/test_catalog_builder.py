@@ -216,6 +216,63 @@ def test_chunks_are_heading_aware_bounded_and_stable() -> None:
     assert all(1_200 <= len(chunk["text"]) <= 1_800 for chunk in first)
 
 
+def test_table_rows_become_atomic_evidence_spans() -> None:
+    parser = PageParser("https://towardsai.com/academy/mentorship/")
+    parser.feed(
+        """
+        <main>
+          <h2>The curriculum comes with the team</h2>
+          <table><tbody>
+            <tr><th>10-Hour LLM Fundamentals course</th><td>$199</td>
+                <td>Included from day one</td></tr>
+            <tr><th>Full Stack AI Engineering</th><td>$349</td>
+                <td>25% off, always</td></tr>
+          </tbody></table>
+        </main>
+        """
+    )
+    parser.close()
+
+    built = build_chunks(parser.sections, parser.base_url)
+    spans = {span["text"] for chunk in built for span in chunk["evidence_spans"]}
+
+    assert "10-Hour LLM Fundamentals course $199 Included from day one" in spans
+    assert "Full Stack AI Engineering $349 25% off, always" in spans
+    assert "Included from day one" not in spans
+    assert "25% off, always" not in spans
+
+
+def test_accordion_uses_only_the_answer_as_an_atomic_evidence_span() -> None:
+    built = build_chunks(
+        [
+            {
+                "heading": "Frequently asked questions",
+                "text": (
+                    "How long does this course take to complete? + "
+                    "It is self-paced; the average completion time is 10 hours "
+                    "across five 2-hour sessions."
+                ),
+                "spans": [
+                    (
+                        "How long does this course take to complete? + "
+                        "It is self-paced; the average completion time is 10 hours "
+                        "across five 2-hour sessions."
+                    )
+                ],
+            }
+        ],
+        "https://towardsai.com/academy/llm-primer/",
+    )
+    spans = {span["text"] for chunk in built for span in chunk["evidence_spans"]}
+
+    assert "How long does this course take to complete?" not in spans
+    assert (
+        "It is self-paced; the average completion time is 10 hours across five "
+        "2-hour sessions."
+    ) in spans
+    assert not any("? +" in span for span in spans)
+
+
 def test_build_both_catalogs_records_exclusions_manual_entries_and_identity() -> None:
     fetched_at = "2026-08-08T12:00:00+00:00"
     com_sitemap = "https://towardsai.com/pages-sitemap.xml"
@@ -280,6 +337,7 @@ def test_build_both_catalogs_records_exclusions_manual_entries_and_identity() ->
         "fetched_at",
         "content_sha256",
         "content_hash",
+        "evidence_hash",
         "authority",
         "status",
         "retrieval_eligible",
@@ -313,6 +371,7 @@ def test_failed_page_is_recorded_but_never_retrieval_eligible() -> None:
     assert page["retrieval_eligible"] is False
     assert page["chunks"] == []
     assert page["content_sha256"] == page["content_hash"]
+    assert len(page["evidence_hash"]) == 64
     assert catalog["status_counts"] == {"fetch_error": 1}
 
 
@@ -360,3 +419,69 @@ def test_stale_academy_summaries_are_fetched_but_excluded_from_retrieval() -> No
         assert page["text"]
         assert page["content_hash"] != ""
         assert f"https://academy.towardsai.net{path}" in session.calls
+
+
+def test_parser_excludes_reviews_comparisons_and_simulated_conversations() -> None:
+    parser = PageParser("https://towardsai.com/academy/llm-primer/")
+    parser.feed(
+        """
+        <main>
+          <h2>Official duration</h2><p>Average completion time is 10 hours.</p>
+          <article class="ta-review"><p>The course actually has 12 hours.</p></article>
+          <div class="ta-ment-vswrap"><p>A competitor costs $500.</p></div>
+          <p class="ta-ment-vsnote">A single mentor costs $150 monthly.</p>
+          <div class="ta-ment-thread"><p>An example user says guaranteed.</p></div>
+        </main>
+        """
+    )
+    parser.close()
+    text = " ".join(section["text"] for section in parser.sections)
+
+    assert "Average completion time is 10 hours" in text
+    assert "12 hours" not in text
+    assert "competitor costs" not in text
+    assert "single mentor costs" not in text
+    assert "example user" not in text
+
+
+def test_parser_excludes_paid_course_outcomes_from_preview_evidence() -> None:
+    parser = PageParser(
+        "https://towardsai.com/academy/full-stack-ai-engineering-free-preview/"
+    )
+    parser.feed(
+        """
+        <main>
+          <section id="preview"><h2>Free preview</h2><p>No card required.</p></section>
+          <section id="outcomes">
+            <h2>The full course outcomes</h2>
+            <p>A certification that unlocks six-figure roles.</p>
+          </section>
+          <section id="cta"><p>Buy the paid course.</p></section>
+        </main>
+        """
+    )
+    parser.close()
+    text = " ".join(section["text"] for section in parser.sections)
+
+    assert "No card required" in text
+    assert "certification" not in text
+    assert "paid course" not in text
+
+
+def test_mentorship_comparison_keeps_own_features_but_drops_competitors() -> None:
+    parser = PageParser("https://towardsai.com/academy/mentorship/")
+    parser.feed(
+        """
+        <main><section id="compare">
+          <div class="inc"><p>Resume &amp; project reviews in 48–72h</p></div>
+          <div class="board"><p>A single mentor costs $150/month.</p></div>
+          <p class="sum">Bought separately: $2,000+ a month.</p>
+        </section></main>
+        """
+    )
+    parser.close()
+    text = " ".join(section["text"] for section in parser.sections)
+
+    assert "Resume & project reviews in 48–72h" in text
+    assert "single mentor" not in text
+    assert "Bought separately" not in text

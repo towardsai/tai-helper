@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -86,6 +87,7 @@ EVIDENCE_AUTHORITIES = {
     "product_detail",
 }
 MAX_FUTURE_SKEW_SECONDS = 5 * 60
+MAX_EVIDENCE_SPAN_CHARS = 320
 GENERIC_RETRIEVAL_TERMS = {
     "access",
     "academy",
@@ -129,6 +131,69 @@ GENERIC_RETRIEVAL_TERMS = {
     "eight",
     "nine",
     "ten",
+}
+
+# Explicit offer names are a hard retrieval boundary, not merely a ranking hint.
+# A truthful sentence from another course is still an unsafe answer for the
+# course the visitor named. Preview aliases intentionally resolve to a distinct
+# offer so paid-course entitlements cannot leak into preview answers.
+OFFER_QUERY_ALIASES: dict[str, tuple[str, ...]] = {
+    "full-stack-ai-engineering": (
+        "full stack ai engineering",
+        "full stack engineering",
+        "full stack",
+    ),
+    "agent-engineering": (
+        "agentic ai engineering",
+        "agent engineering",
+    ),
+    "llm-primer": (
+        "10-hour llm fundamentals",
+        "10 hour llm fundamentals",
+        "llm fundamentals",
+        "llm primer",
+    ),
+    "python-for-ai-engineering": (
+        "beginner python for ai engineering",
+        "python for ai engineering",
+        "beginner python",
+        "python course",
+    ),
+    "ai-for-work": (
+        "master ai for work",
+        "ai for work",
+    ),
+    "building-llms-for-production": (
+        "building llms for production",
+        "building llm for production",
+        "the ebook",
+        "e-book",
+        "ebook",
+    ),
+    "get-it-all": (
+        "get it all bundle",
+        "get-it-all bundle",
+        "get it all",
+    ),
+    "from-coding-novice-to-advanced-llm-developer": (
+        "from non-coder to ai engineer",
+        "from non coder to ai engineer",
+        "non-coder to ai engineer bundle",
+    ),
+    "10-hour-crash-course-into-llm-developer-expert": (
+        "from developer to advanced ai engineer",
+        "developer to advanced ai engineer bundle",
+    ),
+    "mentorship": (
+        "towards ai mentorship",
+        "mentorship",
+        "membership",
+    ),
+}
+
+PREVIEW_OFFER_IDS = {
+    "full-stack-ai-engineering": "full-stack-ai-engineering-free-preview",
+    "agent-engineering": "agent-engineering-free-preview",
 }
 
 # The helper was historically embedded on these exact towardsai.net pages. Keep
@@ -278,7 +343,11 @@ def _is_included(page: dict[str, Any]) -> bool:
 
 def _is_evidence_page(page: dict[str, Any]) -> bool:
     raw_chunks = page.get("chunks")
+    text = str(page.get("text", ""))
+    normalized_page_text = SPACE_RE.sub(" ", text).strip()
+    page_url_text = str(page.get("url", ""))
     canonical_url = str(page.get("canonical_url") or page.get("url") or "")
+    page_url = urlparse(page_url_text)
     canonical = urlparse(canonical_url)
     valid_chunks = (
         isinstance(raw_chunks, list)
@@ -287,17 +356,56 @@ def _is_evidence_page(page: dict[str, Any]) -> bool:
             isinstance(chunk, dict)
             and bool(str(chunk.get("chunk_id", "")).strip())
             and bool(str(chunk.get("text", "")).strip())
+            and isinstance(chunk.get("evidence_spans"), list)
+            and bool(chunk["evidence_spans"])
+            and all(
+                isinstance(span, dict)
+                and bool(str(span.get("span_id", "")).strip())
+                and bool(str(span.get("text", "")).strip())
+                and len(SPACE_RE.sub(" ", str(span["text"])).strip())
+                <= MAX_EVIDENCE_SPAN_CHARS
+                and SPACE_RE.sub(" ", str(span["text"])).strip()
+                in SPACE_RE.sub(" ", str(chunk["text"])).strip()
+                and SPACE_RE.sub(" ", str(span["text"])).strip() in normalized_page_text
+                for span in chunk["evidence_spans"]
+            )
+            and len({str(span["span_id"]).strip() for span in chunk["evidence_spans"]})
+            == len(chunk["evidence_spans"])
             for chunk in raw_chunks
         )
+        and len({str(chunk["chunk_id"]).strip() for chunk in raw_chunks})
+        == len(raw_chunks)
+    )
+    content_hash = str(page.get("content_hash", ""))
+    evidence_hash = str(page.get("evidence_hash", ""))
+    canonical_evidence = json.dumps(
+        {
+            key: value
+            for key, value in page.items()
+            if key not in {"catalog_generated_at", "evidence_hash"}
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
     )
     return (
         str(page.get("status", "")).lower() == EVIDENCE_STATUS
         and page.get("retrieval_eligible") is True
         and str(page.get("authority", "")).lower() in EVIDENCE_AUTHORITIES
         and page.get("http_status") == 200
+        and page_url.scheme == "https"
+        and page_url.hostname in {"towardsai.com", "academy.towardsai.net"}
         and canonical.scheme == "https"
         and canonical.hostname in {"towardsai.com", "academy.towardsai.net"}
-        and CONTENT_HASH_RE.fullmatch(str(page.get("content_hash", ""))) is not None
+        and _canonical_key(page_url_text) == _canonical_key(canonical_url)
+        and str(page.get("host", "")).lower() == (page_url.hostname or "").lower()
+        and (str(page.get("path", "")).rstrip("/") or "/")
+        == (page_url.path.rstrip("/") or "/")
+        and CONTENT_HASH_RE.fullmatch(content_hash) is not None
+        and hashlib.sha256(text.encode("utf-8")).hexdigest() == content_hash
+        and CONTENT_HASH_RE.fullmatch(evidence_hash) is not None
+        and hashlib.sha256(canonical_evidence.encode("utf-8")).hexdigest()
+        == evidence_hash
         and valid_chunks
         and _is_fresh(page)
     )
@@ -339,7 +447,20 @@ def _fresh_pages() -> tuple[dict[str, Any], ...]:
         previous = best_by_offer.get(offer_id)
         if previous is None or _page_preference(page) > _page_preference(previous):
             best_by_offer[offer_id] = page
-    return (*pages_without_offer, *best_by_offer.values())
+    candidates = (*pages_without_offer, *best_by_offer.values())
+    chunk_id_counts = Counter(
+        str(chunk["chunk_id"]).strip()
+        for page in candidates
+        for chunk in page["chunks"]
+    )
+    return tuple(
+        page
+        for page in candidates
+        if all(
+            chunk_id_counts[str(chunk["chunk_id"]).strip()] == 1
+            for chunk in page["chunks"]
+        )
+    )
 
 
 def pages() -> list[dict[str, Any]]:
@@ -365,6 +486,526 @@ def _token_list(text: str) -> list[str]:
 
 def tokenize(text: str) -> set[str]:
     return set(_token_list(text))
+
+
+def offer_ids_for_query(query: str) -> frozenset[str]:
+    """Resolve explicitly named offers into a fail-closed retrieval boundary."""
+
+    lowered = SPACE_RE.sub(" ", query.casefold().replace("–", "-")).strip()
+    if "webinar" in lowered:
+        return frozenset()
+    matches = {
+        offer_id
+        for offer_id, aliases in OFFER_QUERY_ALIASES.items()
+        if any(alias in lowered for alias in aliases)
+    }
+    preview_intent = bool(
+        re.search(r"\bpreview\b|\bfree\s+lessons?\b", lowered)
+    )
+    if preview_intent:
+        for paid_offer_id, preview_offer_id in PREVIEW_OFFER_IDS.items():
+            if paid_offer_id in matches:
+                matches.remove(paid_offer_id)
+                matches.add(preview_offer_id)
+
+    if "mentorship" in matches and len(matches) > 1:
+        compares_offers = bool(
+            re.search(r"\b(?:compare|versus|vs\.?|between)\b", lowered)
+        )
+        course_subject_includes_mentorship = bool(
+            re.search(
+                r"(?:full stack|agent(?:ic)? engineering|llm fundamentals|llm primer|"
+                r"python for ai|ai for work|building llms|get it all).{0,80}"
+                r"\b(?:include|come with|provide|offer|have)\b.{0,50}\bmentor",
+                lowered,
+            )
+        )
+        if course_subject_includes_mentorship:
+            matches.remove("mentorship")
+        elif not compares_offers:
+            # When a course is mentioned inside a mentorship access/discount/
+            # cancellation question, the mentorship page is the authority.
+            matches = {"mentorship"}
+    return frozenset(matches)
+
+
+def evidence_offer_ids_for_query(query: str) -> frozenset[str]:
+    """Return offer IDs allowed to supply evidence for this exact question."""
+
+    targets = set(offer_ids_for_query(query))
+    fields = requested_fact_fields(query)
+    if not fields:
+        return frozenset(targets)
+    evidence_targets: set[str] = set()
+    for field in fields:
+        evidence_targets.update(evidence_offer_ids_for_field(query, field))
+    return frozenset(evidence_targets)
+
+
+def evidence_offer_ids_for_field(query: str, field: str) -> frozenset[str]:
+    """Return the offers allowed to prove one requested fact field.
+
+    Evidence exceptions are deliberately field-specific. A paid course page can
+    state the size of its free preview, but that exception must never expose the
+    paid course's access entitlement to a preview access question in the same
+    visitor message.
+    """
+
+    targets = set(offer_ids_for_query(query))
+    # A paid offer page may explicitly state how many lessons its free preview
+    # contains. This is the sole preview↔parent exception; paid entitlements,
+    # certificates, prices, and refund terms remain outside the preview boundary.
+    if field == "lesson_count":
+        reverse_preview_ids = {
+            preview_id: paid_id for paid_id, preview_id in PREVIEW_OFFER_IDS.items()
+        }
+        targets.update(
+            reverse_preview_ids[offer_id]
+            for offer_id in tuple(targets)
+            if offer_id in reverse_preview_ids
+        )
+    return frozenset(targets)
+
+
+def offer_alias_tokens(offer_ids: frozenset[str] | set[str]) -> frozenset[str]:
+    """Return tokens that name the selected offers, for query relevance checks."""
+
+    result: set[str] = set()
+    reverse_preview_ids = {
+        preview_id: paid_id for paid_id, preview_id in PREVIEW_OFFER_IDS.items()
+    }
+    for offer_id in offer_ids:
+        paid_offer_id = reverse_preview_ids.get(offer_id, offer_id)
+        for alias in OFFER_QUERY_ALIASES.get(paid_offer_id, ()):
+            result.update(_token_list(alias))
+            # Query validation tokenizes without stemming, so retain the exact
+            # alias words as well as their retrieval-normalized forms.
+            result.update(WORD_RE.findall(alias.casefold()))
+        if offer_id in reverse_preview_ids:
+            result.update({"free", "preview", "lesson", "lessons"})
+    return frozenset(result)
+
+
+BUNDLE_OFFER_IDS = frozenset(
+    {
+        "get-it-all",
+        "from-coding-novice-to-advanced-llm-developer",
+        "10-hour-crash-course-into-llm-developer-expert",
+    }
+)
+
+TOTAL_LESSON_PATTERNS: dict[str, re.Pattern[str]] = {
+    "full-stack-ai-engineering": re.compile(r"\b92\s+lessons\b", re.IGNORECASE),
+    "agent-engineering": re.compile(r"\b35\s+lessons\b", re.IGNORECASE),
+    "python-for-ai-engineering": re.compile(r"\b38\s+lessons\b", re.IGNORECASE),
+    "ai-for-work": re.compile(r"\b98\s+lessons\b", re.IGNORECASE),
+    "building-llms-for-production": re.compile(
+        r"\b84\s+lessons\b", re.IGNORECASE
+    ),
+    "agent-engineering-free-preview": re.compile(
+        r"\b7\s+(?:free\s+|full\s+)?lessons\b", re.IGNORECASE
+    ),
+    "full-stack-ai-engineering-free-preview": re.compile(
+        r"\b(?:first\s+)?6\s+(?:free\s+|preview\s+)?lessons\b", re.IGNORECASE
+    ),
+}
+
+DURATION_PATTERNS: dict[str, re.Pattern[str]] = {
+    "full-stack-ai-engineering": re.compile(
+        r"\b60\+\s*hours\b", re.IGNORECASE
+    ),
+    "llm-primer": re.compile(
+        r"\b10\s*hours?\b|\bfive\s+(?:in-depth\s+)?2-hour\s+(?:video\s+)?sessions\b",
+        re.IGNORECASE,
+    ),
+    "ai-for-work": re.compile(r"\baround\s+20\s+hours\b", re.IGNORECASE),
+}
+
+MONTHLY_PLAN_PRICE_RE = re.compile(
+    r"\$\s*99(?:\.00)?\s*(?:/\s*month|monthly)\b",
+    re.IGNORECASE,
+)
+YEARLY_PLAN_PRICE_RE = re.compile(
+    r"\$\s*899(?:\.00)?.{0,20}(?:/\s*year|per year|once a year)\b",
+    re.IGNORECASE,
+)
+PERMANENT_ACCESS_RE = re.compile(
+    r"\b(?:lifetime|forever|keep|retain|retained)\b",
+    re.IGNORECASE,
+)
+
+
+def monthly_plan_intent(query: str) -> bool:
+    return bool(
+        re.search(
+            r"\bmonthly\b|\bmonth[- ](?:to|by)[- ]month\b|"
+            r"\b(?:per|each)\s+month\b|"
+            r"\bmonth\s+(?:price|cost|plan|rate|subscription|membership|mentorship)\b",
+            query,
+        )
+    )
+
+
+def yearly_plan_intent(query: str) -> bool:
+    return bool(
+        re.search(
+            r"\b(?:yearly|annual|annually)\b|\bper\s+year\b|"
+            r"\byear\s+(?:price|cost|plan|rate|subscription|membership|mentorship)\b",
+            query,
+        )
+    )
+
+
+def _supports_monthly_plan_price(text: str) -> bool:
+    for match in MONTHLY_PLAN_PRICE_RE.finditer(text):
+        prefix = text[max(0, match.start() - 16) : match.start()]
+        suffix = text[match.end() : match.end() + 32]
+        if re.search(r"\b(?:from|about)\s*$", prefix):
+            continue
+        if re.search(r"\bbilled\s+(?:yearly|annually)\b", suffix):
+            continue
+        return True
+    return False
+
+
+def _supports_yearly_plan_price(text: str) -> bool:
+    for match in YEARLY_PLAN_PRICE_RE.finditer(text):
+        prefix = text[max(0, match.start() - 16) : match.start()]
+        if re.search(r"\b(?:from|about)\s*$", prefix):
+            continue
+        if "a month" in match.group().casefold():
+            continue
+        return True
+    return False
+
+
+def requested_fact_fields(query: str) -> frozenset[str]:
+    """Classify high-risk facts that require typed, target-bound evidence."""
+
+    lowered = SPACE_RE.sub(" ", query.casefold().replace("–", "-")).strip()
+    fields: set[str] = set()
+    if re.search(r"\b(?:price|cost|how much)\b|[$€£¥]\s*\d", lowered):
+        fields.add("price")
+    if "lesson" in lowered and re.search(
+        r"\b(?:how many|number of|total|overall)\b|\b\d+\s+lessons?\b|\blessons?\s*[:=]?\s*\d+\b",
+        lowered,
+    ):
+        fields.add("lesson_count")
+    if "product" in lowered and re.search(
+        r"\b(?:how many|number of|total)\b", lowered
+    ):
+        fields.add("product_count")
+    if "page" in lowered and re.search(
+        r"\b(?:how many|number of|total|pages?)\b", lowered
+    ):
+        fields.add("page_count")
+    if re.search(
+        r"\bhow long\b|\bhow many hours?\b|\bduration\b|\btime to (?:finish|complete)\b|\b\d+\+?\s*hours?\b|\bhours?\s+(?:long|total)\b|\bhours?.{0,24}\b(?:take|finish|complete)\b",
+        lowered,
+    ):
+        fields.add("duration")
+    if re.search(
+        r"\bprerequisites?\b|\brequirements?\b|\bprior experience\b|\bneed to know\b|\bneed (?:python|coding|code)\b",
+        lowered,
+    ):
+        fields.add("prerequisite")
+    if re.search(r"\bcertificat(?:e|ion|ed)\b", lowered):
+        fields.add("certificate")
+    if re.search(r"\brefund\b|\bmoney[- ]back\b", lowered):
+        fields.add("refund")
+    if re.search(r"\bguarantee(?:d)?\b", lowered):
+        fields.add("guarantee")
+    if re.search(
+        r"\bdiscount\b|\bcoupon\b|\bpromo\b|\bsavings?\b|"
+        r"\b\d+(?:\.\d+)?%\s+(?:off|less)\b|"
+        r"\bsaves?\s+\d+(?:\.\d+)?%",
+        lowered,
+    ):
+        fields.add("discount")
+    if re.search(r"\baccess\b|\blifetime\b|\bkeep\b|\bforever\b|\bretain\b", lowered):
+        fields.add("access")
+    if (
+        "mentor" in lowered
+        and not re.search(r"\bcancel|\bcancell|\bafter\b|\blifetime\b|\bkeep\b", lowered)
+        and re.search(
+            r"\b(?:course|courses|llm fundamentals|full stack|agent engineering|master ai for work|choice|choose)\b",
+            lowered,
+        )
+        and re.search(r"\b(?:included|include|access|choice|choose)\b", lowered)
+    ):
+        fields.add("inclusion")
+    return frozenset(fields)
+
+
+def mixed_preview_fact_request(query: str) -> bool:
+    """Return true when one message mixes multiple preview/paid fact scopes.
+
+    A single offer ID cannot safely assign separate clauses to the free preview
+    and paid course. These compound questions therefore fail closed and ask the
+    visitor to use the contact form (or ask the facts separately).
+    """
+
+    lowered = SPACE_RE.sub(" ", query.casefold()).strip()
+    preview_intent = bool(re.search(r"\bpreview\b|\bfree\s+lessons?\b", lowered))
+    return preview_intent and len(requested_fact_fields(query)) > 1
+
+
+def _span_supports_fact(
+    span_text: str,
+    *,
+    field: str,
+    offer_id: str,
+    query: str,
+) -> bool:
+    text = SPACE_RE.sub(" ", span_text.casefold().replace("–", "-")).strip()
+    lowered_query = query.casefold().replace("–", "-")
+    is_preview = offer_id.endswith("-free-preview")
+
+    if field == "price":
+        if offer_id == "get-it-all":
+            asks_where_price_is_displayed = bool(
+                "checkout" in lowered_query
+                and re.search(
+                    r"\b(?:where|shown|displayed|find|see)\b", lowered_query
+                )
+            )
+            return (
+                asks_where_price_is_displayed
+                and "bundle price shown at checkout" in text
+            )
+        if offer_id in BUNDLE_OFFER_IDS:
+            return "bundle price" in text or (
+                "one-time" in text and bool(_CURRENCY_TOKEN_RE.search(text))
+            )
+        if offer_id == "mentorship":
+            if yearly_plan_intent(lowered_query):
+                return _supports_yearly_plan_price(text)
+            if monthly_plan_intent(lowered_query):
+                return _supports_monthly_plan_price(text)
+            return _supports_monthly_plan_price(
+                text
+            ) or _supports_yearly_plan_price(text)
+        if is_preview:
+            return "free" in text
+        return bool(_CURRENCY_TOKEN_RE.search(text)) and any(
+            term in text
+            for term in ("one-time", "/month", "in total", "lifetime access")
+        )
+
+    if field == "lesson_count":
+        if re.search(r"\bpreview\b|\bfree\s+lessons?\b", lowered_query):
+            preview_count_patterns = {
+                "full-stack-ai-engineering": re.compile(
+                    r"\b(?:first|try|explore)\s+6\s+lessons\b|\bfirst\s+six\s+lessons\b",
+                    re.IGNORECASE,
+                ),
+                "agent-engineering": re.compile(
+                    r"\b(?:first|try|explore)\s+7\s+lessons\b|\bfirst\s+seven\s+lessons\b",
+                    re.IGNORECASE,
+                ),
+            }
+            parent_pattern = preview_count_patterns.get(offer_id)
+            if parent_pattern is not None:
+                # The parent-page exception is count-only. Some CTA DOM blocks
+                # combine "Try 7 Lessons Free" with paid lifetime access and a
+                # guarantee; never admit that mixed block as preview evidence.
+                mixed_paid_entitlement = bool(
+                    re.search(
+                        r"\b(?:lifetime|guarantee|refund|certificat(?:e|ion)|"
+                        r"money[- ]back)\b|[$€£¥]\s*\d",
+                        text,
+                    )
+                )
+                return bool(parent_pattern.search(span_text)) and not (
+                    mixed_paid_entitlement
+                )
+        pattern = TOTAL_LESSON_PATTERNS.get(offer_id)
+        return bool(pattern and pattern.search(span_text))
+
+    if field == "product_count":
+        return bool(re.search(r"\b\d+\s+products\b", text))
+
+    if field == "page_count":
+        return bool(re.search(r"\b\d[\d,]*[- ]page\b", text))
+
+    if field == "duration":
+        pattern = DURATION_PATTERNS.get(offer_id)
+        return bool(pattern and pattern.search(span_text))
+
+    if field == "prerequisite":
+        return any(
+            term in text
+            for term in (
+                "prerequisite",
+                "prior experience",
+                "no prior",
+                "no code",
+                "no coding",
+                "basic python",
+                "intermediate python",
+                "complete beginner",
+                "zero prior",
+                "experience with",
+            )
+        )
+
+    if field == "certificate":
+        if not re.search(r"\bcertificat(?:e|ion|ed)\b", text):
+            return False
+        return not is_preview or any(term in text for term in ("free", "preview"))
+
+    if field == "refund":
+        if offer_id == "building-llms-for-production":
+            return False
+        if offer_id == "mentorship":
+            if monthly_plan_intent(lowered_query):
+                return (
+                    "monthly mentorship can be cancelled" in text
+                    or "yearly plan carries a 30-day money-back guarantee" in text
+                    or "money-back on yearly" in text
+                )
+            if yearly_plan_intent(lowered_query):
+                return "yearly" in text and "money-back" in text
+            return "yearly" in text and "money-back" in text
+        return "refund" in text
+
+    if field == "guarantee":
+        if re.search(r"\b(?:job|role|internship|placement|career)\b", lowered_query):
+            return bool(
+                re.search(r"\b(?:job|role|internship|placement|career|pathway)\b", text)
+                and re.search(r"\b(?:guarantee|promised|earned)\b", text)
+            )
+        return _span_supports_fact(
+            span_text, field="refund", offer_id=offer_id, query=query
+        )
+
+    if field == "discount":
+        if offer_id == "mentorship":
+            alpha_intent = bool(re.search(r"\b(?:new courses?|alpha)\b", lowered_query))
+            plan_intent = bool(
+                monthly_plan_intent(lowered_query)
+                or yearly_plan_intent(lowered_query)
+                or re.search(r"\b(?:billing|plan|save|savings?)\b|\b24%", lowered_query)
+            )
+            course_intent = bool(
+                re.search(
+                    r"\b(?:courses?|full stack|agent(?:ic)? engineering|"
+                    r"master ai for work|ai for work|existing)\b",
+                    lowered_query,
+                )
+            )
+            if sum((alpha_intent, plan_intent, course_intent)) > 1:
+                return False
+            if alpha_intent:
+                return "alpha access" in text and "% off" in text
+            if plan_intent:
+                if monthly_plan_intent(lowered_query) and not yearly_plan_intent(
+                    lowered_query
+                ):
+                    return False
+                return "save 24%" in text or (
+                    "24% less" in text and "month to month" in text
+                )
+            if course_intent:
+                return "25% off" in text
+            return False
+        if offer_id in BUNDLE_OFFER_IDS:
+            if re.search(r"\bstudent\b|\bprevious\b|\bbuyer\b", lowered_query):
+                return False
+            if re.search(r"\bgroup\b|\bteam\b|\btwo or more\b", lowered_query):
+                return "group" in text and "bundle pricing" in text
+            return "bundle price" in text and "was" in text
+        return "discount" in text or (
+            "students get 50% off" in text
+            and any(term in text for term in ("previous", "groups of two"))
+        )
+
+    if field == "access":
+        permanent_access_requested = bool(PERMANENT_ACCESS_RE.search(lowered_query))
+        if offer_id == "mentorship":
+            if re.search(r"\bcancel|\bcancell|\bafter\b", lowered_query):
+                return (
+                    "course access is active while" in text
+                    or "if you cancel" in text
+                )
+            if permanent_access_requested:
+                return bool(PERMANENT_ACCESS_RE.search(text))
+            return any(
+                term in text
+                for term in ("included from day one", "course access", "alpha access")
+            )
+        if is_preview:
+            relation = any(
+                term in text for term in ("access", "lifetime", "keep", "forever")
+            )
+            preview_qualified = any(
+                term in text for term in ("free", "preview", "lessons", "no card")
+            )
+            permanent_qualified = not permanent_access_requested or bool(
+                PERMANENT_ACCESS_RE.search(text)
+            )
+            return relation and preview_qualified and permanent_qualified
+        if permanent_access_requested:
+            return bool(PERMANENT_ACCESS_RE.search(text))
+        return any(term in text for term in ("access", "lifetime", "included"))
+
+    if field == "inclusion":
+        if offer_id == "mentorship":
+            return any(
+                term in text
+                for term in ("included from day one", "25% off", "alpha access")
+            )
+        return "included" in text or "comes with" in text
+
+    return False
+
+
+def evidence_span_supports_field(
+    span_text: str, *, field: str, offer_id: str, query: str
+) -> bool:
+    """Public validator counterpart to the typed retrieval evidence gate."""
+
+    return _span_supports_fact(
+        span_text,
+        field=field,
+        offer_id=offer_id,
+        query=query,
+    )
+
+
+_CURRENCY_TOKEN_RE = re.compile(r"[$€£¥]\s*\d")
+
+
+def _restrict_chunk_evidence(
+    chunk: dict[str, Any], query: str, fields: frozenset[str]
+) -> dict[str, Any] | None:
+    offer_id = str(chunk.get("offer_id", ""))
+    allowed_fields = {
+        field
+        for field in fields
+        if offer_id in evidence_offer_ids_for_field(query, field)
+    }
+    if not allowed_fields:
+        return None
+    spans = [
+        span
+        for span in chunk.get("evidence_spans", [])
+        if isinstance(span, dict)
+        and any(
+            _span_supports_fact(
+                str(span.get("text", "")),
+                field=field,
+                offer_id=offer_id,
+                query=query,
+            )
+            for field in allowed_fields
+        )
+    ]
+    if not spans:
+        return None
+    restricted = dict(chunk)
+    restricted["evidence_spans"] = spans
+    return restricted
 
 
 def normalized_path(url: str) -> tuple[str, str]:
@@ -447,9 +1088,12 @@ def chunks() -> tuple[dict[str, Any], ...]:
                     "path": str(page.get("path", "")),
                     "kind": str(page.get("kind", "page")),
                     "offer_id": str(page.get("offer_id", "")),
+                    "entity_id": str(page.get("entity_id", "")),
                     "heading": heading,
                     "headings": [heading] if heading else [],
                     "text": text,
+                    "chunk_index": raw_chunk.get("index"),
+                    "evidence_spans": list(raw_chunk.get("evidence_spans", [])),
                     "authority": page.get("authority", _authority(page)),
                     "fetched_at": page.get("fetched_at")
                     or page.get("catalog_generated_at", ""),
@@ -481,7 +1125,44 @@ def _routing_boost(query: str, chunk: dict[str, Any]) -> float:
     lowered = query.lower()
     url = str(chunk.get("url", "")).lower()
     chunk_path = normalized_path(url)[1]
+    chunk_index = chunk.get("chunk_index")
+    kind = str(chunk.get("kind", ""))
+    evidence_text = str(chunk.get("text", ""))
+    evidence_lower = evidence_text.lower()
     score = 0.0
+
+    course_starter = "help deciding which course to take" in lowered
+    canonical_learning_paths = {
+        "/academy/full-stack-ai-engineering",
+        "/academy/agent-engineering",
+        "/academy/llm-primer",
+        "/academy/python-for-ai-engineering",
+        "/academy/ai-for-work",
+        "/academy/building-llms-for-production",
+    }
+    if course_starter and chunk_path in canonical_learning_paths:
+        score += 36.0 if chunk_index == 0 else 6.0
+
+    free_starter = "free resources to learn before committing" in lowered
+    if free_starter:
+        if kind in {"free_resource", "digital_download"}:
+            score += 42.0 + (8.0 if chunk_index == 0 else 0.0)
+        elif chunk_path == "/academy/book":
+            score += 26.0
+
+    if "integrate ai into my company" in lowered:
+        if chunk_path == "/valuecreation":
+            score += 52.0 + (12.0 if chunk_index == 0 else 0.0)
+        elif chunk_path == "/enterpriseenablement":
+            score += 44.0 + (12.0 if chunk_index == 0 else 0.0)
+        elif chunk_path.startswith("/enterprise/"):
+            score += 28.0 + (8.0 if chunk_index == 0 else 0.0)
+
+    if "training inside my company" in lowered:
+        if chunk_path == "/enterpriseenablement":
+            score += 44.0
+        elif chunk_path.startswith("/enterprise/"):
+            score += 28.0
 
     if chunk_path == "/academy/bundles/get-it-all" and any(
         phrase in lowered for phrase in ("best value", "get it all", "every course")
@@ -510,13 +1191,10 @@ def _routing_boost(query: str, chunk: dict[str, Any]) -> float:
         chunk_path == "/academy/mentorship"
         and any(term in lowered for term in ("mentor", "mentorship"))
         and any(term in lowered for term in ("course", "included", "include", "access"))
+        and "llm fundamentals" in evidence_lower
+        and "included from day one" in evidence_lower
     ):
-        evidence_text = str(chunk.get("text", "")).lower()
-        if (
-            "llm fundamentals" in evidence_text
-            and "included from day one" in evidence_text
-        ):
-            score += 30.0
+        score += 30.0
 
     wants_free_preview = "free" in lowered and any(
         term in lowered for term in ("preview", "lesson")
@@ -571,10 +1249,29 @@ def _routing_boost(query: str, chunk: dict[str, Any]) -> float:
             score += 18.0
     if "webinar" in lowered and chunk_path == "/webinars/agentengineering":
         score += 40.0
-    if any(term in lowered for term in ("price", "cost", "how much")) and "$" in str(
-        chunk.get("text", "")
+    if (
+        any(term in lowered for term in ("price", "cost", "how much"))
+        and "$" in evidence_text
     ):
         score += 10.0
+    if (
+        "lesson" in lowered
+        and any(phrase in lowered for phrase in ("how many", "number of"))
+        and re.search(r"\b\d[\d,+]*\s+lessons\b", evidence_lower)
+    ):
+        score += 16.0
+    if (
+        "page" in lowered
+        and any(phrase in lowered for phrase in ("how many", "number of"))
+        and re.search(r"\b\d[\d,]*[- ]page\b", evidence_lower)
+    ):
+        score += 16.0
+    if (
+        "product" in lowered
+        and any(phrase in lowered for phrase in ("how many", "number of"))
+        and re.search(r"\b\d+\s+products\b", evidence_lower)
+    ):
+        score += 16.0
 
     rules = (
         (("mentor", "mentorship"), "/academy/mentorship/", 7.0),
@@ -623,6 +1320,71 @@ def retrieve(
     if not corpus:
         return []
 
+    normalized_query = SPACE_RE.sub(" ", query.strip().lower()).rstrip(".")
+    course_paths = {
+        "/academy/full-stack-ai-engineering",
+        "/academy/agent-engineering",
+        "/academy/llm-primer",
+        "/academy/python-for-ai-engineering",
+        "/academy/ai-for-work",
+        "/academy/building-llms-for-production",
+    }
+    if normalized_query == "i want help deciding which course to take":
+        corpus = [chunk for chunk in corpus if chunk.get("path") in course_paths]
+    elif normalized_query == "i want help to integrate ai into my company":
+        corpus = [
+            chunk
+            for chunk in corpus
+            if chunk.get("path") in {"/valuecreation", "/enterpriseenablement"}
+            or str(chunk.get("path", "")).startswith("/enterprise/")
+        ]
+    elif normalized_query == "i want a training inside my company":
+        corpus = [
+            chunk
+            for chunk in corpus
+            if chunk.get("path") == "/enterpriseenablement"
+            or str(chunk.get("path", "")).startswith("/enterprise/")
+        ]
+    elif normalized_query == (
+        "i'm looking for more free resources to learn before committing to buying "
+        "a course"
+    ):
+        corpus = [
+            chunk
+            for chunk in corpus
+            if chunk.get("kind") in {"free_resource", "digital_download"}
+            or chunk.get("path") == "/academy/book"
+        ]
+    elif normalized_query == "i want to find mentors":
+        corpus = [
+            chunk for chunk in corpus if chunk.get("path") == "/academy/mentorship"
+        ]
+
+    target_offer_ids = offer_ids_for_query(query)
+    evidence_offer_ids = evidence_offer_ids_for_query(query)
+    if evidence_offer_ids:
+        corpus = [
+            chunk
+            for chunk in corpus
+            if str(chunk.get("offer_id", "")) in evidence_offer_ids
+        ]
+    fact_fields = requested_fact_fields(query)
+    if fact_fields:
+        # High-risk facts without an explicit offer are ambiguous by definition.
+        # Ask the visitor to contact the team instead of mixing offer policies.
+        if not target_offer_ids:
+            return []
+        if mixed_preview_fact_request(query):
+            return []
+        restricted_corpus: list[dict[str, Any]] = []
+        for chunk in corpus:
+            restricted = _restrict_chunk_evidence(chunk, query, fact_fields)
+            if restricted is not None:
+                restricted_corpus.append(restricted)
+        corpus = restricted_corpus
+    if not corpus:
+        return []
+
     document_terms = [_token_list(str(chunk.get("text", ""))) for chunk in corpus]
     document_frequency: Counter[str] = Counter()
     for terms in document_terms:
@@ -651,9 +1413,14 @@ def retrieve(
         metadata_tokens = tokenize(searchable)
         metadata_matches = set(query_counts) & metadata_tokens
         all_matches = matched | metadata_matches
-        if not all_matches:
-            continue
         route_boost = _routing_boost(query, chunk)
+        if fact_fields and target_offer_ids:
+            # Typed evidence has already passed the strict offer/field/qualifier
+            # gate. It should not be discarded merely because the visitor used
+            # a synonym such as "cancelling" while the page says "cancel".
+            route_boost += 20.0
+        if not all_matches and route_boost < 10.0:
+            continue
         informative_matches = all_matches & informative_query_terms
         trusted_route = route_boost >= 10.0
         if informative_query_terms and not informative_matches and not trusted_route:
@@ -703,9 +1470,15 @@ def retrieve(
     scored.sort(key=lambda item: (-item[0], item[1]))
     result: list[dict[str, Any]] = []
     per_url: defaultdict[str, int] = defaultdict(int)
+    diversify = normalized_query in {
+        "i want help deciding which course to take",
+        "i want help to integrate ai into my company",
+        "i'm looking for more free resources to learn before committing to buying a course",
+    }
+    per_url_limit = 1 if diversify else 2
     for _score, _index, chunk in scored:
         url = str(chunk.get("url", ""))
-        if per_url[url] >= 2:
+        if per_url[url] >= per_url_limit:
             continue
         result.append(chunk)
         per_url[url] += 1
@@ -772,6 +1545,22 @@ def in_scope(text: str, history: list[str] | None = None) -> bool:
         "genai",
         "certificate",
         "certification",
+        "preview",
+        "lesson",
+        "lessons",
+        "free",
+        "full stack",
+        "ebook",
+        "e-book",
+        "lifetime",
+        "access",
+        "feature",
+        "features",
+        "duration",
+        "hour",
+        "hours",
+        "guarantee",
+        "support",
         "refund",
         "price",
         "pricing",

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 from typing import Any
 from urllib.parse import urlparse
 from uuid import uuid4
@@ -16,6 +17,7 @@ from .catalog import (
     allowed_paths_by_host,
     coupon_followup,
     coupon_intent,
+    evidence_offer_ids_for_query,
     forced_prompts,
     in_scope,
     page_is_allowed,
@@ -28,6 +30,8 @@ from .schemas import HelperChatRequest, HelperChatResponse, SourceOut
 from .settings import repo_root, settings
 
 logger = logging.getLogger(__name__)
+
+CONTACT_FORM_URL = "https://towardsai.com/academy/contact/#contact"
 
 app = FastAPI(title="Towards AI Helper API", version="0.1.0")
 app.add_middleware(
@@ -149,13 +153,44 @@ def _user_history_text(payload: HelperChatRequest) -> list[str]:
 
 
 def _retrieval_query(payload: HelperChatRequest) -> str:
-    """Build search context without treating prior assistant claims as evidence."""
-    parts = [
-        payload.selectedPrompt.strip(),
-        *_user_history_text(payload),
-        payload.query,
+    """Use current intent, adding only a real user referent when it is needed."""
+
+    query = payload.query.strip()
+    if not payload.history:
+        return query
+
+    words = set(re.findall(r"[a-z0-9'-]+", query.casefold()))
+    contextual_terms = {
+        "it",
+        "that",
+        "this",
+        "they",
+        "them",
+        "those",
+        "price",
+        "cost",
+        "discount",
+        "included",
+        "access",
+        "refund",
+        "duration",
+        "hours",
+        "lessons",
+        "prerequisites",
+    }
+    needs_context = len(words) <= 12 and bool(words & contextual_terms)
+    if not needs_context:
+        return query
+
+    starters = set(forced_prompts())
+    prior_user_turns = [
+        turn.strip()
+        for turn in _user_history_text(payload)
+        if turn.strip() and turn.strip() not in starters and turn.strip() != query
     ]
-    return "\n".join(dict.fromkeys(part for part in parts if part.strip()))
+    if not prior_user_turns:
+        return query
+    return f"{prior_user_turns[-1]}\n{query}"
 
 
 def _validate_payload(payload: HelperChatRequest) -> None:
@@ -181,12 +216,36 @@ def _fixed_coupon_answer(payload: HelperChatRequest) -> str:
     if coupon_followup(payload.query, history):
         return (
             "I can't provide a coupon code here. If you have specific context, "
-            "email louis@towardsai.net with what you need and we will do the best possible."
+            f"[contact the Towards AI team]({CONTACT_FORM_URL}) with what you need."
         )
     return (
         "I can't provide a coupon code here. For pricing help based on your "
-        "circumstances, email louis@towardsai.net with the relevant context."
+        f"circumstances, [contact the Towards AI team]({CONTACT_FORM_URL})."
     )
+
+
+def _contact_intent(text: str) -> bool:
+    lowered = text.casefold()
+    return any(
+        phrase in lowered
+        for phrase in (
+            "contact form",
+            "contact the team",
+            "contact a person",
+            "contact someone",
+            "customer support",
+            "talk to a person",
+            "talk to someone",
+            "speak to a person",
+            "speak to someone",
+            "reach the team",
+            "email the team",
+        )
+    )
+
+
+def _contact_answer() -> str:
+    return f"Please [contact the Towards AI team]({CONTACT_FORM_URL})."
 
 
 def _out_of_scope_answer() -> str:
@@ -200,8 +259,8 @@ def _out_of_scope_answer() -> str:
 def _insufficient_evidence_answer() -> str:
     return (
         "I couldn't verify that from the current Towards AI pages, so I don't want "
-        "to guess. Please check the relevant offer page or contact "
-        "louis@towardsai.net."
+        f"to guess. Please [contact the Towards AI team]({CONTACT_FORM_URL}) "
+        "for confirmation."
     )
 
 
@@ -273,7 +332,10 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
     response_status = "insufficient_evidence"
 
     try:
-        if coupon_intent(query):
+        if _contact_intent(query):
+            answer = _contact_answer()
+            response_status = "policy"
+        elif coupon_intent(query):
             answer = _fixed_coupon_answer(payload)
             response_status = "policy"
         elif not in_scope(query, _history_text(payload)):
@@ -297,9 +359,21 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
                     ],
                     selected_pages=selected_pages,
                 )
-                grounded = await asyncio.to_thread(
-                    llm.generate_grounded_answer, prompt, selected_pages
+                retrieval_query = _retrieval_query(payload)
+                target_offer_ids = evidence_offer_ids_for_query(retrieval_query)
+                grounded = llm.extract_mentorship_course_access(
+                    query,
+                    selected_pages,
+                    target_offer_ids=target_offer_ids,
                 )
+                if grounded is None:
+                    grounded = await asyncio.to_thread(
+                        llm.generate_grounded_answer,
+                        prompt,
+                        selected_pages,
+                        query=query,
+                        target_offer_ids=target_offer_ids,
+                    )
                 usage = grounded.usage
                 latency_ms = grounded.latency_ms
                 if grounded.is_answered:
@@ -327,6 +401,7 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
         logger.exception("helper generation failed")
         answer = _insufficient_evidence_answer()
         sources = []
+        response_status = "insufficient_evidence"
 
     monitor = HelperMonitor(
         query=query,

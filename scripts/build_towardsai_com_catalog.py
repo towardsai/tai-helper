@@ -29,6 +29,9 @@ ACADEMY_HOSTS = frozenset({"academy.towardsai.net"})
 MIN_CHUNK_CHARS = 1_200
 TARGET_CHUNK_CHARS = 1_550
 MAX_CHUNK_CHARS = 1_800
+MAX_EVIDENCE_SPAN_CHARS = 320
+SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+(?=[\"'(\[]*[A-Z0-9])")
+SPAN_TOKEN_RE = re.compile(r"[A-Za-z0-9]+")
 
 # Collection pages are still scanned and hashed, but are not factual evidence:
 # their compact cards have contradicted the corresponding canonical detail pages.
@@ -44,9 +47,7 @@ COM_EXCLUSIONS = {
 # collection, or legacy copies of authoritative product pages. They are fetched so
 # that a refresh records their existence and hash, then withheld from retrieval.
 ACADEMY_EXCLUSIONS = {
-    "/collections": (
-        "catalog summary can lag behind canonical offer detail pages"
-    ),
+    "/collections": ("catalog summary can lag behind canonical offer detail pages"),
     "/collections/products": (
         "catalog summary can lag behind canonical offer detail pages"
     ),
@@ -354,9 +355,31 @@ SUPPRESSED_CLASS_TOKENS = frozenset(
         "site-footer",
         "site-nav",
         "ta-announce",
+        # Testimonials, endorsements, simulated conversations, and competitor
+        # comparison tables are useful marketing context but are not first-party
+        # offer terms. Keeping them citable lets review copy or competitor facts
+        # conflict with the actual product specification.
+        "ta-ment-thread",
+        "ta-ment-vsnote",
+        "ta-ment-vswrap",
         "ta-mobile-menu",
+        "ta-quote",
+        "ta-review",
     }
 )
+
+PREVIEW_SUPPRESSED_SECTION_IDS: dict[str, frozenset[str]] = {
+    # These sections explicitly describe the paid course, not the free preview.
+    "/academy/agent-engineering-free-preview": frozenset({"fullcourse"}),
+    "/academy/full-stack-ai-engineering-free-preview": frozenset(
+        {"outcomes", "cta"}
+    ),
+}
+PAGE_SUPPRESSED_CLASS_TOKENS: dict[str, frozenset[str]] = {
+    # Keep the first-party feature list in the comparison section, but discard
+    # competitor scorecards and bought-separately summaries.
+    "/academy/mentorship": frozenset({"board", "sum"}),
+}
 
 
 def _clean(text: str) -> str:
@@ -398,12 +421,20 @@ def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def _evidence_hash(page: dict[str, Any]) -> str:
+    canonical = json.dumps(
+        {key: value for key, value in page.items() if key != "evidence_hash"},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return _sha256(canonical)
+
+
 def _is_suppressed_container(tag: str, attributes: dict[str, str | None]) -> bool:
     class_tokens = {
         token
-        for token in re.split(
-            r"[^a-z0-9_-]+", (attributes.get("class") or "").lower()
-        )
+        for token in re.split(r"[^a-z0-9_-]+", (attributes.get("class") or "").lower())
         if token
     }
     # Offer pages use a semantic <header class="ta-hero"> for product stats,
@@ -421,6 +452,26 @@ def _is_suppressed_container(tag: str, attributes: dict[str, str | None]) -> boo
         " ".join([attributes.get("id") or "", attributes.get("class") or ""]).lower(),
     )
     return any(token in SUPPRESSED_CLASS_TOKENS for token in tokens if token)
+
+
+def _is_page_specific_suppressed_container(
+    base_url: str, tag: str, attributes: dict[str, str | None]
+) -> bool:
+    page_path = _path(base_url)
+    if tag == "section":
+        suppressed_ids = PREVIEW_SUPPRESSED_SECTION_IDS.get(page_path, frozenset())
+        if (attributes.get("id") or "").casefold() in suppressed_ids:
+            return True
+    class_tokens = {
+        token
+        for token in re.split(
+            r"[^a-z0-9_-]+", (attributes.get("class") or "").casefold()
+        )
+        if token
+    }
+    return bool(
+        class_tokens & PAGE_SUPPRESSED_CLASS_TOKENS.get(page_path, frozenset())
+    )
 
 
 def _meta_refresh_target(content: str) -> str:
@@ -443,7 +494,7 @@ class PageParser(HTMLParser):
         self.text_parts: list[str] = []
         self.headings: list[str] = []
         self.links: list[dict[str, str]] = []
-        self.sections: list[dict[str, str]] = []
+        self.sections: list[dict[str, Any]] = []
         self.meta_description = ""
         self.canonical_url = ""
         self.meta_refresh_url = ""
@@ -451,7 +502,10 @@ class PageParser(HTMLParser):
         self._heading_parts: list[str] | None = None
         self._current_heading = ""
         self._section_parts: list[str] = []
+        self._section_spans: list[str] = []
         self._block_parts: list[str] = []
+        self._table_row_parts: list[str] | None = None
+        self._table_head_depth = 0
         self._link_href = ""
         self._link_parts: list[str] | None = None
 
@@ -463,7 +517,9 @@ class PageParser(HTMLParser):
             if tag not in VOID_TAGS:
                 self.suppressed_depth += 1
             return
-        if _is_suppressed_container(tag, values):
+        if _is_suppressed_container(tag, values) or _is_page_specific_suppressed_container(
+            self.base_url, tag, values
+        ):
             self._flush_block()
             self.suppressed_depth = 1
             return
@@ -487,7 +543,12 @@ class PageParser(HTMLParser):
 
         if self.head_depth:
             return
-        if tag in HEADING_TAGS:
+        if tag == "thead":
+            self._table_head_depth += 1
+        elif tag == "tr":
+            self._flush_block()
+            self._table_row_parts = []
+        elif tag in HEADING_TAGS:
             self._flush_block()
             self._flush_section()
             self._heading_parts = []
@@ -539,6 +600,14 @@ class PageParser(HTMLParser):
             self._link_parts = None
         if tag in BLOCK_TAGS:
             self._flush_block()
+        if tag == "tr" and self._table_row_parts is not None:
+            self._flush_block()
+            row = _clean(" ".join(self._table_row_parts))
+            if row and self._table_head_depth == 0:
+                self._section_spans.append(row)
+            self._table_row_parts = None
+        if tag == "thead":
+            self._table_head_depth = max(0, self._table_head_depth - 1)
 
     def handle_data(self, data: str) -> None:
         value = _clean(data)
@@ -554,6 +623,8 @@ class PageParser(HTMLParser):
             return
         self.text_parts.append(value)
         self._block_parts.append(value)
+        if self._table_row_parts is not None:
+            self._table_row_parts.append(value)
         if self._link_parts is not None:
             self._link_parts.append(value)
 
@@ -566,14 +637,23 @@ class PageParser(HTMLParser):
         block = _clean(" ".join(self._block_parts))
         if block:
             self._section_parts.append(block)
+            if self._table_row_parts is None:
+                self._section_spans.append(block)
         self._block_parts = []
 
     def _flush_section(self) -> None:
         self._flush_block()
         body = _clean(" ".join(self._section_parts))
         if body or self._current_heading:
-            self.sections.append({"heading": self._current_heading, "text": body})
+            self.sections.append(
+                {
+                    "heading": self._current_heading,
+                    "text": body,
+                    "spans": list(dict.fromkeys(self._section_spans)),
+                }
+            )
         self._section_parts = []
+        self._section_spans = []
 
 
 def _unique_links(links: Iterable[dict[str, str]]) -> list[dict[str, str]]:
@@ -615,8 +695,57 @@ def _split_to_limit(text: str, limit: int) -> list[str]:
     return pieces
 
 
+def _atomic_span_texts(raw_spans: Iterable[str]) -> list[str]:
+    """Return complete, bounded source spans; never emit arbitrary substrings."""
+
+    result: list[str] = []
+    seen: set[str] = set()
+    for raw_span in raw_spans:
+        block = _clean(str(raw_span))
+        if not block:
+            continue
+        # Accordion rows are flattened by the parser as ``Question? + Answer``.
+        # Only the complete answer is evidence: the question may contain a false
+        # premise, comparison price, or visitor-style wording that must never be
+        # treated as a first-party offer fact.
+        faq_parts = re.split(r"(?<=\?)\s*\+\s*", block, maxsplit=1)
+        if len(faq_parts) > 1:
+            candidates = faq_parts[1:]
+        else:
+            sentences = SENTENCE_SPLIT_RE.split(block)
+            candidates = sentences if len(sentences) > 1 else [block]
+        for candidate in candidates:
+            span = _clean(candidate)
+            key = span.casefold()
+            if (
+                len(SPAN_TOKEN_RE.findall(span)) < 2
+                or len(span) > MAX_EVIDENCE_SPAN_CHARS
+                or any(symbol in span for symbol in ("✓", "✗"))
+                or key in seen
+            ):
+                continue
+            seen.add(key)
+            result.append(span)
+    return result
+
+
+def _span_records(
+    canonical_url: str, chunk_id: str, raw_spans: Iterable[str]
+) -> list[dict[str, str]]:
+    records: list[dict[str, str]] = []
+    for text in _atomic_span_texts(raw_spans):
+        identity = f"{canonical_url}\n{chunk_id}\n{text}"
+        records.append(
+            {
+                "span_id": f"span-{_sha256(identity)[:24]}",
+                "text": text,
+            }
+        )
+    return records
+
+
 def build_chunks(
-    sections: Iterable[dict[str, str]],
+    sections: Iterable[dict[str, Any]],
     canonical_url: str,
     *,
     min_chars: int = MIN_CHUNK_CHARS,
@@ -632,6 +761,9 @@ def build_chunks(
     for section_index, section in enumerate(sections):
         heading = _clean(str(section.get("heading", "")))
         body = _clean(str(section.get("text", "")))
+        raw_section_spans = [str(item) for item in section.get("spans", [])]
+        section_spans = _atomic_span_texts(raw_section_spans)
+        heading_spans = _atomic_span_texts([heading]) if heading else []
         if not heading and not body:
             continue
         prefix = f"{heading}\n" if heading else ""
@@ -639,11 +771,21 @@ def build_chunks(
         body_pieces = _split_to_limit(body, body_limit) if body else [""]
         for part_index, body_piece in enumerate(body_pieces):
             text = f"{prefix}{body_piece}".strip()
+            normalized_piece = _clean(body_piece)
+            piece_spans = [span for span in section_spans if span in normalized_piece]
+            if part_index == 0:
+                piece_spans = [
+                    *[span for span in heading_spans if re.search(r"\d|[$€£¥%]", span)],
+                    *piece_spans,
+                ]
+            if not piece_spans:
+                piece_spans.extend(heading_spans)
             pieces.append(
                 {
                     "text": text,
                     "heading": heading or "Overview",
                     "key": f"section-{section_index}-part-{part_index}",
+                    "spans": piece_spans,
                 }
             )
 
@@ -682,12 +824,18 @@ def build_chunks(
         # of short sections. Every original heading remains embedded in the text.
         anchor = max(group, key=lambda item: len(item["text"]))
         identity = f"{canonical_url}\n{anchor['key']}"
+        chunk_id = f"tai-{_sha256(identity)[:24]}"
         result.append(
             {
-                "chunk_id": f"tai-{_sha256(identity)[:24]}",
+                "chunk_id": chunk_id,
                 "text": "\n\n".join(item["text"] for item in group),
                 "heading": anchor["heading"],
                 "index": index,
+                "evidence_spans": _span_records(
+                    canonical_url,
+                    chunk_id,
+                    (span for item in group for span in item.get("spans", [])),
+                ),
             }
         )
     return result
@@ -937,6 +1085,7 @@ def fetch_page(
     if not title:
         title = _clean(str(spec.get("review_title", ""))) or canonical_url
     offer_id = offer_id_for_url(canonical_url) or offer_id_for_url(discovered_url)
+    chunks = build_chunks(parser.sections, canonical_url)
     page = {
         "discovered_url": discovered_url,
         "url": canonical_url,
@@ -955,7 +1104,7 @@ def fetch_page(
         "headings": list(dict.fromkeys(parser.headings))[:100],
         "text": text,
         "links": _unique_links(parser.links)[:300],
-        "chunks": build_chunks(parser.sections, canonical_url),
+        "chunks": chunks,
         "fetched_at": fetched_at,
         "content_sha256": content_sha256,
         # content_hash is the generic name consumed by the retrieval layer.
@@ -970,6 +1119,7 @@ def fetch_page(
     }
     if excluded_reason:
         page["excluded_reason"] = excluded_reason
+    page["evidence_hash"] = _evidence_hash(page)
     return page
 
 
@@ -979,7 +1129,8 @@ def _failed_page(
     url = _normalise_url(str(spec["url"]))
     parsed = urlparse(url)
     content_sha256 = _sha256("")
-    return {
+    chunks: list[dict[str, Any]] = []
+    page = {
         "discovered_url": url,
         "url": url,
         "canonical_url": url,
@@ -995,7 +1146,7 @@ def _failed_page(
         "headings": [],
         "text": "",
         "links": [],
-        "chunks": [],
+        "chunks": chunks,
         "fetched_at": fetched_at,
         "content_sha256": content_sha256,
         "content_hash": content_sha256,
@@ -1008,6 +1159,8 @@ def _failed_page(
         "redirect_chain": [],
         "error": f"{type(error).__name__}: {error}",
     }
+    page["evidence_hash"] = _evidence_hash(page)
+    return page
 
 
 def _exclude_canonical_duplicates(pages: list[dict[str, Any]]) -> None:
@@ -1031,7 +1184,8 @@ def _manual_resource_page(spec: dict[str, Any], fetched_at: str) -> dict[str, An
     parsed = urlparse(url)
     text = _clean(str(spec["text"]))
     content_sha256 = _sha256(text)
-    return {
+    chunks: list[dict[str, Any]] = []
+    page = {
         "discovered_url": url,
         "url": url,
         "canonical_url": url,
@@ -1045,7 +1199,7 @@ def _manual_resource_page(spec: dict[str, Any], fetched_at: str) -> dict[str, An
         "headings": [str(spec["title"])],
         "text": text,
         "links": list(spec.get("links", [])),
-        "chunks": [],
+        "chunks": chunks,
         "fetched_at": fetched_at,
         "content_sha256": content_sha256,
         "content_hash": content_sha256,
@@ -1060,6 +1214,8 @@ def _manual_resource_page(spec: dict[str, Any], fetched_at: str) -> dict[str, An
         "sitemap_url": "manual_allowlist",
         "redirect_chain": [],
     }
+    page["evidence_hash"] = _evidence_hash(page)
+    return page
 
 
 def build_catalog(
@@ -1100,6 +1256,8 @@ def build_catalog(
         pages.extend(
             _manual_resource_page(spec, fetched_at) for spec in MANUAL_SAFE_RESOURCES
         )
+    for page in pages:
+        page["evidence_hash"] = _evidence_hash(page)
 
     statuses: dict[str, int] = {}
     for page in pages:

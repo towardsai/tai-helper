@@ -33,6 +33,16 @@ def _model_json(*, text: str, quote: str, chunk_id: str | None = None) -> str:
     )
 
 
+def _with_spans(page: dict, *spans: str) -> dict:
+    return {
+        **page,
+        "evidence_spans": [
+            {"span_id": f"{page['chunk_id']}:span-{index}", "text": span}
+            for index, span in enumerate(spans)
+        ],
+    }
+
+
 def test_prompt_uses_stable_chunk_ids_and_marks_notes_as_non_evidence() -> None:
     prompt = llm.build_prompt(
         query="Does mentorship include a course?",
@@ -75,6 +85,26 @@ def test_valid_mentorship_claim_returns_only_validated_text_and_cited_chunk() ->
     assert result.latency_ms == 42
 
 
+def test_valid_unpunctuated_atomic_span_gets_only_a_server_added_period() -> None:
+    quote = "10-Hour LLM Fundamentals course $199 Included from day one"
+    page = _with_spans(
+        {
+            **MENTORSHIP_PAGE,
+            "chunk_id": "mentorship-row",
+            "text": quote,
+        },
+        quote,
+    )
+    result = llm.validate_grounded_result(
+        _model_json(text=quote, quote=quote, chunk_id="mentorship-row"),
+        [page],
+    )
+
+    assert result.valid
+    assert result.answer == f"{quote}."
+    assert result.claims[0].quote == quote
+
+
 def test_mentorship_table_supports_two_separate_correcting_claims() -> None:
     table_text = (
         "What Full price As a member 10-Hour LLM Fundamentals video course "
@@ -82,14 +112,6 @@ def test_mentorship_table_supports_two_separate_correcting_claims() -> None:
         "Full Stack AI Engineering · Agent Engineering · Master AI for Work "
         "$349–499 each 25% off, always"
     )
-    table_page = {
-        "chunk_id": "mentorship-curriculum-table",
-        "title": "Towards AI Mentorship",
-        "kind": "mentorship",
-        "url": "https://towardsai.com/academy/mentorship/",
-        "headings": ["The curriculum comes with the team"],
-        "text": table_text,
-    }
     included_quote = (
         "10-Hour LLM Fundamentals video course Five in-depth 2-hour video "
         "sessions $199 Included from day one"
@@ -97,6 +119,18 @@ def test_mentorship_table_supports_two_separate_correcting_claims() -> None:
     discount_quote = (
         "Full Stack AI Engineering · Agent Engineering · Master AI for Work "
         "$349–499 each 25% off, always"
+    )
+    table_page = _with_spans(
+        {
+            "chunk_id": "mentorship-curriculum-table",
+            "title": "Towards AI Mentorship",
+            "kind": "mentorship",
+            "url": "https://towardsai.com/academy/mentorship/",
+            "headings": ["The curriculum comes with the team"],
+            "text": table_text,
+        },
+        included_quote,
+        discount_quote,
     )
     raw = json.dumps(
         {
@@ -127,22 +161,24 @@ def test_mentorship_table_supports_two_separate_correcting_claims() -> None:
     assert result.cited_chunk_ids == ("mentorship-curriculum-table",)
 
 
-def test_invalid_claim_text_is_replaced_by_its_exact_table_row_quotes() -> None:
-    included_quote = (
-        "10-Hour LLM Fundamentals video course $199 Included from day one"
-    )
+def test_invalid_claim_text_fails_closed_even_with_valid_table_row_quotes() -> None:
+    included_quote = "10-Hour LLM Fundamentals video course $199 Included from day one"
     discount_quote = (
         "Full Stack AI Engineering · Agent Engineering · Master AI for Work "
         "$349–499 each 25% off, always"
     )
-    table_page = {
-        "chunk_id": "mentorship-table",
-        "title": "Towards AI Mentorship",
-        "kind": "mentorship",
-        "url": "https://towardsai.com/academy/mentorship/",
-        "headings": ["The curriculum comes with the team"],
-        "text": f"{included_quote} {discount_quote}",
-    }
+    table_page = _with_spans(
+        {
+            "chunk_id": "mentorship-table",
+            "title": "Towards AI Mentorship",
+            "kind": "mentorship",
+            "url": "https://towardsai.com/academy/mentorship/",
+            "headings": ["The curriculum comes with the team"],
+            "text": f"{included_quote} {discount_quote}",
+        },
+        included_quote,
+        discount_quote,
+    )
     raw = json.dumps(
         {
             "status": "answered",
@@ -169,26 +205,25 @@ def test_invalid_claim_text_is_replaced_by_its_exact_table_row_quotes() -> None:
 
     result = llm.validate_grounded_result(raw, [table_page])
 
-    assert result.valid
-    assert result.is_answered
-    assert result.answer == f"{included_quote}. {discount_quote}."
-    assert "two courses" not in result.answer.lower()
-    assert "not included" not in result.answer.lower()
-    assert all(claim.text.removesuffix(".") == claim.quote for claim in result.claims)
+    assert not result.valid
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert "unsupported number words" in result.validation_error
 
 
-def test_claim_framing_is_discarded_in_favor_of_the_exact_quote() -> None:
-    quote = (
-        "10-Hour LLM Fundamentals video course $199 Included from day one"
+def test_claim_cannot_add_framing_to_an_exact_span() -> None:
+    quote = "10-Hour LLM Fundamentals video course $199 Included from day one"
+    table_page = _with_spans(
+        {
+            "chunk_id": "mentorship-table",
+            "title": "Towards AI Mentorship",
+            "kind": "mentorship",
+            "url": "https://towardsai.com/academy/mentorship/",
+            "headings": ["The curriculum comes with the team"],
+            "text": quote,
+        },
+        quote,
     )
-    table_page = {
-        "chunk_id": "mentorship-table",
-        "title": "Towards AI Mentorship",
-        "kind": "mentorship",
-        "url": "https://towardsai.com/academy/mentorship/",
-        "headings": ["The curriculum comes with the team"],
-        "text": quote,
-    }
     raw = _model_json(
         text=(
             "The mentorship includes the 10-Hour LLM Fundamentals video course "
@@ -200,24 +235,25 @@ def test_claim_framing_is_discarded_in_favor_of_the_exact_quote() -> None:
 
     result = llm.validate_grounded_result(raw, [table_page])
 
-    assert result.valid
-    assert result.status == "answered"
-    assert result.answer == f"{quote}."
-    assert "mentorship includes" not in result.answer.lower()
+    assert not result.valid
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert "verbatim" in result.validation_error
 
 
-def test_salvage_never_surfaces_framing_from_an_unrelated_chunk() -> None:
-    quote = (
-        "10-Hour LLM Fundamentals video course $199 Included from day one"
+def test_claim_cannot_borrow_framing_from_an_unrelated_chunk() -> None:
+    quote = "10-Hour LLM Fundamentals video course $199 Included from day one"
+    table_page = _with_spans(
+        {
+            "chunk_id": "mentorship-table",
+            "title": "Towards AI Mentorship",
+            "kind": "mentorship",
+            "url": "https://towardsai.com/academy/mentorship/",
+            "headings": ["The curriculum comes with the team"],
+            "text": quote,
+        },
+        quote,
     )
-    table_page = {
-        "chunk_id": "mentorship-table",
-        "title": "Towards AI Mentorship",
-        "kind": "mentorship",
-        "url": "https://towardsai.com/academy/mentorship/",
-        "headings": ["The curriculum comes with the team"],
-        "text": quote,
-    }
     unrelated_page = {
         "chunk_id": "unrelated-premium-page",
         "title": "Premium Executive Subscription",
@@ -237,10 +273,10 @@ def test_salvage_never_surfaces_framing_from_an_unrelated_chunk() -> None:
 
     result = llm.validate_grounded_result(raw, [table_page, unrelated_page])
 
-    assert result.valid
-    assert result.status == "answered"
-    assert result.answer == f"{quote}."
-    assert "premium executive subscription" not in result.answer.lower()
+    assert not result.valid
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert "verbatim" in result.validation_error
 
 
 def test_not_found_is_valid_but_has_no_user_answer_or_citations() -> None:
@@ -287,7 +323,7 @@ def test_invented_quote_fails_closed() -> None:
 
     assert result.status == "validation_failure"
     assert result.answer == ""
-    assert "quote" in result.validation_error
+    assert "evidence span" in result.validation_error
 
 
 def test_bad_chunk_id_fails_closed_even_when_quote_exists_elsewhere() -> None:
@@ -306,36 +342,42 @@ def test_bad_chunk_id_fails_closed_even_when_quote_exists_elsewhere() -> None:
 
 
 @pytest.mark.parametrize(
-    ("claim", "quote"),
+    ("claim", "quote", "error_fragment"),
     [
         (
             "The Mentorship program includes 2 courses.",
             "The Mentorship program includes 1 course",
+            "numbers",
         ),
         (
             "The Mentorship program includes two courses.",
             "The Mentorship program includes one course",
+            "number words",
         ),
         (
             "Members receive 3 live sessions every week.",
             "Members also receive two live sessions every week.",
+            "numbers",
         ),
         (
             "The yearly plan saves 25%.",
             "The yearly plan saves 24%",
+            "percentages",
         ),
         (
             "The plan costs $199.",
             "The plan costs $99",
+            "currency amounts",
         ),
         (
             "Details are at https://towardsai.com/invented.",
             "Details are at https://towardsai.com/academy/mentorship/",
+            "URLs",
         ),
     ],
 )
-def test_unsupported_critical_facts_are_discarded_for_the_exact_quote(
-    claim: str, quote: str
+def test_unsupported_critical_facts_fail_closed(
+    claim: str, quote: str, error_fragment: str
 ) -> None:
     page = {**MENTORSHIP_PAGE, "text": f"{MENTORSHIP_PAGE['text']} {quote}"}
     result = llm.validate_grounded_result(
@@ -347,27 +389,26 @@ def test_unsupported_critical_facts_are_discarded_for_the_exact_quote(
         [page],
     )
 
-    expected = quote if quote.endswith(".") else f"{quote}."
-    assert result.valid
-    assert result.status == "answered"
-    assert result.answer == expected
-    assert result.answer != claim
+    assert not result.valid
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert error_fragment in result.validation_error
 
 
-def test_loose_paraphrase_is_discarded_for_the_exact_quote() -> None:
+def test_loose_paraphrase_fails_closed() -> None:
     quote = "Members also receive two live sessions every week."
     claim = "Experts provide unlimited private coaching and personal hiring referrals."
     result = llm.validate_grounded_result(
         _model_json(text=claim, quote=quote), [MENTORSHIP_PAGE]
     )
 
-    assert result.valid
-    assert result.status == "answered"
-    assert result.answer == quote
-    assert "private coaching" not in result.answer
+    assert not result.valid
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert "verbatim" in result.validation_error
 
 
-def test_changed_negation_is_discarded_for_the_exact_quote() -> None:
+def test_changed_negation_fails_closed() -> None:
     quote = "The Mentorship program does not include two courses."
     claim = "The Mentorship program does include two courses."
     page = {**MENTORSHIP_PAGE, "text": quote}
@@ -380,14 +421,14 @@ def test_changed_negation_is_discarded_for_the_exact_quote() -> None:
         [page],
     )
 
-    assert result.valid
-    assert result.status == "answered"
-    assert result.answer == quote
-    assert "does not include" in result.answer
+    assert not result.valid
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert "negation" in result.validation_error
 
 
-def test_oversized_exact_quote_cannot_be_salvaged() -> None:
-    quote = "x" * (llm.MAX_SALVAGED_QUOTE_CHARS + 1)
+def test_oversized_exact_quote_fails_closed() -> None:
+    quote = "x" * (llm.MAX_EVIDENCE_QUOTE_CHARS + 1)
     page = {**MENTORSHIP_PAGE, "text": quote}
     result = llm.validate_grounded_result(
         _model_json(
@@ -401,7 +442,7 @@ def test_oversized_exact_quote_cannot_be_salvaged() -> None:
     assert not result.valid
     assert result.status == "validation_failure"
     assert result.answer == ""
-    assert "safely salvaged" in result.validation_error
+    assert "exceeds" in result.validation_error
 
 
 @pytest.mark.parametrize(
@@ -413,17 +454,23 @@ def test_oversized_exact_quote_cannot_be_salvaged() -> None:
     ],
 )
 def test_claim_cannot_recombine_words_from_a_table_chunk(claim: str) -> None:
-    quote = (
+    full_table = (
         "Two live Q&A calls every week Course Full price As a member "
         "10-Hour LLM Fundamentals video course $199 Included from day one "
         "Full Stack AI Engineering · Agent Engineering · Master AI for Work "
         "$349–499 each 25% off, always"
     )
-    page = {
-        **MENTORSHIP_PAGE,
-        "chunk_id": "mentorship-table",
-        "text": quote,
-    }
+    included_row = "10-Hour LLM Fundamentals video course $199 Included from day one"
+    discount_row = (
+        "Full Stack AI Engineering · Agent Engineering · Master AI for Work "
+        "$349–499 each 25% off, always"
+    )
+    page = _with_spans(
+        {**MENTORSHIP_PAGE, "chunk_id": "mentorship-table", "text": full_table},
+        included_row,
+        discount_row,
+    )
+    quote = claim.removesuffix(".")
     result = llm.validate_grounded_result(
         _model_json(text=claim, quote=quote, chunk_id="mentorship-table"),
         [page],
@@ -431,7 +478,7 @@ def test_claim_cannot_recombine_words_from_a_table_chunk(claim: str) -> None:
 
     assert result.status == "validation_failure"
     assert result.answer == ""
-    assert "verbatim" in result.validation_error
+    assert "evidence span" in result.validation_error
 
 
 def test_evidence_quote_length_is_bounded() -> None:
@@ -457,7 +504,45 @@ def test_claim_must_be_a_single_complete_sentence() -> None:
     )
 
     assert result.status == "validation_failure"
-    assert "one complete sentence" in result.validation_error
+    assert "complete server-defined evidence span" in result.validation_error
+
+
+@pytest.mark.parametrize(
+    ("source_span", "unsafe_substring"),
+    [
+        ("No code required: learn by doing, not watching.", "code required"),
+        ("Never guaranteed, always earned.", "guaranteed"),
+        ("Earned, never promised.", "promised"),
+        (
+            "If you cancel the monthly plan, you can upgrade before renewal.",
+            "you can upgrade before renewal",
+        ),
+        ("Pay once $399 $349 one-time Save 12%", "$399"),
+    ],
+)
+def test_arbitrary_substrings_cannot_omit_negation_or_conditions(
+    source_span: str, unsafe_substring: str
+) -> None:
+    page = _with_spans(
+        {
+            **MENTORSHIP_PAGE,
+            "chunk_id": "atomic-source",
+            "text": source_span,
+        },
+        source_span,
+    )
+    result = llm.validate_grounded_result(
+        _model_json(
+            text=f"{unsafe_substring}.",
+            quote=unsafe_substring,
+            chunk_id="atomic-source",
+        ),
+        [page],
+    )
+
+    assert result.status == "validation_failure"
+    assert result.answer == ""
+    assert "complete server-defined evidence span" in result.validation_error
 
 
 def test_generate_grounded_answer_never_returns_raw_unvalidated_text(
@@ -473,3 +558,309 @@ def test_generate_grounded_answer_never_returns_raw_unvalidated_text(
 
     assert result.status == "validation_failure"
     assert result.answer == ""
+
+
+def _query_bound_result(page: dict, query: str, target_offer_id: str):
+    span = page["evidence_spans"][0]["text"]
+    raw = _model_json(
+        text=span if span.endswith((".", "!", "?")) else f"{span}.",
+        quote=span,
+        chunk_id=page["chunk_id"],
+    )
+    return llm.validate_grounded_result(
+        raw,
+        [page],
+        query=query,
+        target_offer_ids=frozenset({target_offer_id}),
+    )
+
+
+def test_query_binding_rejects_an_exact_span_from_the_wrong_offer() -> None:
+    page = _with_spans(
+        {
+            "chunk_id": "book-community",
+            "title": "Building LLMs for Production",
+            "kind": "book",
+            "offer_id": "building-llms-for-production",
+            "entity_id": "offer:building-llms-for-production",
+            "url": "https://towardsai.com/academy/building-llms-for-production/",
+            "headings": ["Community"],
+            "text": "Community access and our own AI Tutor",
+        },
+        "Community access and our own AI Tutor",
+    )
+
+    result = _query_bound_result(
+        page,
+        "Does LLM Fundamentals include community support and an AI tutor?",
+        "llm-primer",
+    )
+
+    assert result.status == "validation_failure"
+    assert "outside the requested offer boundary" in result.validation_error
+
+
+@pytest.mark.parametrize(
+    ("offer_id", "query", "span"),
+    [
+        (
+            "full-stack-ai-engineering-free-preview",
+            "Does the Full Stack free preview give me a certificate?",
+            "03 A certification that unlocks six-figure roles",
+        ),
+        (
+            "mentorship",
+            "Does the monthly mentorship plan have a 30-day money-back guarantee?",
+            "Join the Mentorship 30-day money-back guarantee",
+        ),
+        (
+            "get-it-all",
+            "What is the Get It All bundle price?",
+            "$1,625 combined price bought separately",
+        ),
+        (
+            "agent-engineering",
+            "Does Agent Engineering include lifetime access?",
+            "Get instant access today",
+        ),
+        (
+            "mentorship",
+            "What is the monthly mentorship price?",
+            "From $75/month",
+        ),
+        (
+            "mentorship",
+            "What is the month-to-month mentorship price?",
+            "From $75/month",
+        ),
+        (
+            "mentorship",
+            "What does mentorship cost each month?",
+            "How is this different from a $150/month mentor?",
+        ),
+        (
+            "mentorship",
+            "What is the monthly mentorship price?",
+            "1× Guest workshop monthly, recorded",
+        ),
+        (
+            "mentorship",
+            "What is the yearly mentorship price?",
+            "Yearly Save 24% · $289 off",
+        ),
+        (
+            "mentorship",
+            "Is the yearly mentorship plan 24% off?",
+            (
+                "Full Stack AI Engineering · Agent Engineering · Master AI for "
+                "Work $349–499 each 25% off, always"
+            ),
+        ),
+        (
+            "mentorship",
+            "Does monthly mentorship have a discount?",
+            (
+                "Full Stack AI Engineering · Agent Engineering · Master AI for "
+                "Work $349–499 each 25% off, always"
+            ),
+        ),
+    ],
+)
+def test_query_binding_rejects_wrong_qualifier_within_the_right_offer(
+    offer_id: str, query: str, span: str
+) -> None:
+    page = _with_spans(
+        {
+            "chunk_id": f"{offer_id}-unsafe-field",
+            "title": offer_id,
+            "kind": "course",
+            "offer_id": offer_id,
+            "entity_id": f"offer:{offer_id}",
+            "url": f"https://towardsai.com/academy/{offer_id}/",
+            "headings": ["Offer"],
+            "text": span,
+        },
+        span,
+    )
+
+    result = _query_bound_result(page, query, offer_id)
+
+    assert result.status == "validation_failure"
+    assert "target-qualified" in result.validation_error
+
+
+@pytest.mark.parametrize(
+    ("offer_id", "query", "span", "targets"),
+    [
+        (
+            "full-stack-ai-engineering",
+            "How many Full Stack AI Engineering lessons can I preview for free?",
+            "Explore the first 6 lessons free.",
+            frozenset(
+                {
+                    "full-stack-ai-engineering",
+                    "full-stack-ai-engineering-free-preview",
+                }
+            ),
+        ),
+        (
+            "llm-primer",
+            "Is LLM Fundamentals 10 or 12 hours long?",
+            (
+                "It is self-paced; the average completion time is 10 hours "
+                "across five 2-hour sessions."
+            ),
+            frozenset({"llm-primer"}),
+        ),
+        (
+            "mentorship",
+            "What is the month-to-month mentorship price?",
+            "$99 /month",
+            frozenset({"mentorship"}),
+        ),
+    ],
+)
+def test_query_binding_accepts_exact_target_qualified_facts(
+    offer_id: str,
+    query: str,
+    span: str,
+    targets: frozenset[str],
+) -> None:
+    page = _with_spans(
+        {
+            "chunk_id": f"{offer_id}-valid-field",
+            "title": offer_id,
+            "kind": "course",
+            "offer_id": offer_id,
+            "entity_id": f"offer:{offer_id}",
+            "url": f"https://towardsai.com/academy/{offer_id}/",
+            "headings": ["Offer"],
+            "text": span,
+        },
+        span,
+    )
+    raw = _model_json(
+        text=span,
+        quote=span,
+        chunk_id=page["chunk_id"],
+    )
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query=query,
+        target_offer_ids=targets,
+    )
+
+    assert result.is_answered
+    assert result.answer == (
+        span if span.endswith((".", "!", "?")) else f"{span}."
+    )
+
+
+def test_preview_count_exception_rejects_paid_course_access_claim() -> None:
+    preview_count = "Free preview · 7 full lessons"
+    paid_access = "Unlock Lifetime Access"
+    preview_page = _with_spans(
+        {
+            "chunk_id": "agent-preview-count",
+            "title": "Agent Engineering free preview",
+            "kind": "course_preview",
+            "offer_id": "agent-engineering-free-preview",
+            "entity_id": "offer:agent-engineering-free-preview",
+            "url": (
+                "https://towardsai.com/academy/"
+                "agent-engineering-free-preview/"
+            ),
+            "headings": ["Free preview"],
+            "text": preview_count,
+        },
+        preview_count,
+    )
+    paid_page = _with_spans(
+        {
+            "chunk_id": "agent-paid-access",
+            "title": "Agent Engineering",
+            "kind": "course",
+            "offer_id": "agent-engineering",
+            "entity_id": "offer:agent-engineering",
+            "url": "https://towardsai.com/academy/agent-engineering/",
+            "headings": ["Purchase"],
+            "text": paid_access,
+        },
+        paid_access,
+    )
+    raw = json.dumps(
+        {
+            "status": "answered",
+            "claims": [
+                {
+                    "text": preview_count,
+                    "chunk_id": preview_page["chunk_id"],
+                    "quote": preview_count,
+                },
+                {
+                    "text": paid_access,
+                    "chunk_id": paid_page["chunk_id"],
+                    "quote": paid_access,
+                },
+            ],
+        }
+    )
+    query = (
+        "Do the 7 lessons in the Agent Engineering preview include lifetime access?"
+    )
+
+    result = llm.validate_grounded_result(
+        raw,
+        [preview_page, paid_page],
+        query=query,
+        target_offer_ids=frozenset(
+            {"agent-engineering-free-preview", "agent-engineering"}
+        ),
+    )
+
+    assert result.status == "validation_failure"
+    assert "target-qualified" in result.validation_error
+
+
+@pytest.mark.parametrize(
+    ("query", "span"),
+    [
+        (
+            "Does mentorship include lifetime course access?",
+            (
+                "A senior AI consultant runs $200–500 an hour, with retainers "
+                "from $3,000 a month."
+            ),
+        ),
+        (
+            "Does mentorship include resume and project reviews?",
+            (
+                "A single mentor runs $120–450 a month, with resume reviews "
+                "billed $150–300 each."
+            ),
+        ),
+    ],
+)
+def test_competitor_comparison_spans_are_never_offer_evidence(
+    query: str, span: str
+) -> None:
+    page = _with_spans(
+        {
+            "chunk_id": "mentorship-comparison",
+            "title": "Towards AI Mentorship",
+            "kind": "mentorship",
+            "offer_id": "mentorship",
+            "entity_id": "offer:mentorship",
+            "url": "https://towardsai.com/academy/mentorship/",
+            "headings": ["Comparison"],
+            "text": span,
+        },
+        span,
+    )
+
+    result = _query_bound_result(page, query, "mentorship")
+
+    assert result.status == "validation_failure"
+    assert "competitor comparison" in result.validation_error

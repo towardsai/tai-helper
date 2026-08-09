@@ -12,6 +12,16 @@ from tai_helper import api, catalog, llm
 from tai_helper.schemas import HelperChatRequest
 
 
+def _evidence_hash(page: dict[str, Any]) -> str:
+    payload = json.dumps(
+        {key: value for key, value in page.items() if key != "evidence_hash"},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
 def _page(
     *,
     slug: str = "agent-engineering",
@@ -27,6 +37,8 @@ def _page(
         "path": f"/academy/{slug}",
         "title": slug.replace("-", " ").title(),
         "kind": "course",
+        "offer_id": slug,
+        "entity_id": f"offer:{slug}",
         "status": "included",
         "retrieval_eligible": True,
         "authority": "canonical_offer",
@@ -39,9 +51,13 @@ def _page(
                 "chunk_id": f"{slug}:overview",
                 "heading": "Overview",
                 "text": text,
+                "evidence_spans": [
+                    {"span_id": f"{slug}:overview:span-0", "text": text}
+                ],
             }
         ],
     }
+    page["evidence_hash"] = _evidence_hash(page)
     page.update(overrides)
     return page
 
@@ -102,6 +118,93 @@ def test_retrieval_eligibility_must_be_explicitly_true(
 
     assert catalog.pages() == []
     assert catalog.retrieve("orbital pottery course") == []
+
+
+def test_content_hash_is_recomputed_before_page_can_supply_evidence(
+    install_catalog,
+) -> None:
+    page = _page(text="Original verified course content.")
+    page["text"] = "Tampered course content."
+    install_catalog(page)
+
+    assert catalog.pages() == []
+    assert catalog.retrieve("tampered course content") == []
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("authority", "primary"),
+        ("offer_id", ""),
+        ("kind", "bundle"),
+        ("title", "Altered trusted title"),
+    ],
+)
+def test_evidence_hash_binds_retrieval_provenance_and_metadata(
+    install_catalog, field: str, value: str
+) -> None:
+    page = _page(text="Hash-bound canonical course evidence.")
+    page[field] = value
+    install_catalog(page)
+
+    assert catalog.pages() == []
+    assert catalog.retrieve("canonical course evidence") == []
+
+
+def test_chunk_text_must_belong_to_the_hashed_page_text(install_catalog) -> None:
+    page = _page(text="The verified page includes one fundamentals course.")
+    forged = "The mentorship includes two courses of your choice."
+    page["chunks"][0]["text"] = forged
+    page["chunks"][0]["evidence_spans"] = [{"span_id": "forged:span-0", "text": forged}]
+    install_catalog(page)
+
+    assert catalog.pages() == []
+    assert catalog.retrieve("two courses of your choice") == []
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("url", "https://evil.example/phish"),
+        ("host", "evil.example"),
+        ("path", "/academy/different-course"),
+    ],
+)
+def test_citation_url_and_metadata_must_match_the_canonical_page(
+    install_catalog, field: str, value: str
+) -> None:
+    page = _page(text="Verified canonical course evidence.")
+    page[field] = value
+    install_catalog(page)
+
+    assert catalog.pages() == []
+    assert catalog.retrieve("canonical course evidence") == []
+
+
+def test_duplicate_chunk_ids_across_pages_fail_closed(install_catalog) -> None:
+    first = _page(slug="first", text="First unique course evidence.")
+    second = _page(slug="second", text="Second unique course evidence.")
+    second["chunks"][0]["chunk_id"] = first["chunks"][0]["chunk_id"]
+    second["evidence_hash"] = _evidence_hash(second)
+    install_catalog(first, second)
+
+    assert catalog.pages() == []
+    assert catalog.retrieve("unique course evidence") == []
+
+
+@pytest.mark.parametrize("mutation", ["missing", "not_in_chunk"])
+def test_atomic_evidence_spans_are_required_and_verified(
+    install_catalog, mutation: str
+) -> None:
+    page = _page(text="No code required for this course.")
+    if mutation == "missing":
+        page["chunks"][0].pop("evidence_spans")
+    else:
+        page["chunks"][0]["evidence_spans"][0]["text"] = "Invented span."
+    install_catalog(page)
+
+    assert catalog.pages() == []
+    assert catalog.retrieve("code required") == []
 
 
 @pytest.mark.parametrize(
@@ -281,7 +384,7 @@ def test_api_exposes_only_sources_for_chunks_cited_by_validated_answer(
     monkeypatch.setattr(
         api.llm,
         "generate_grounded_answer",
-        lambda _prompt, _selected: grounded,
+        lambda _prompt, _selected, **_kwargs: grounded,
     )
 
     response = TestClient(api.app).post(

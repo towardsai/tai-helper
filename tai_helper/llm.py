@@ -12,7 +12,15 @@ from typing import Any, Literal
 import requests
 from google import genai
 
-from .catalog import assistant_notes
+from .catalog import (
+    evidence_offer_ids_for_field,
+    evidence_span_supports_field,
+    mixed_preview_fact_request,
+    monthly_plan_intent,
+    offer_alias_tokens,
+    offer_ids_for_query,
+    requested_fact_fields,
+)
 from .settings import settings
 
 DEEPSEEK_PROVIDER = "deepseek"
@@ -21,7 +29,6 @@ DEFAULT_TEMPERATURE = 0.0
 MAX_CONTEXT_CHARS = 18000
 MAX_CHUNK_TEXT_CHARS = 4500
 MAX_EVIDENCE_QUOTE_CHARS = 320
-MAX_SALVAGED_QUOTE_CHARS = 200
 logger = logging.getLogger(__name__)
 
 
@@ -84,9 +91,9 @@ Grounding rules (higher priority than helpfulness):
   period only when the source quote has no final period. Do not paraphrase,
   reorder, omit, or add words. Split separate source sentences or table rows
   into separate claims.
-- Each claim must cite one valid chunk_id and copy one exact, contiguous quote
-  of at most 320 characters from that same chunk. Never invent, edit, combine,
-  or use ellipses in a quote.
+- Each claim must cite one valid chunk_id and copy exactly one complete
+  ALLOWED_EVIDENCE_SPAN shown for that chunk. Never quote an arbitrary substring,
+  omit a qualifier or negation, edit, combine, or use ellipses in a quote.
 
 Output rules:
 - Return exactly one JSON object and nothing else (no Markdown fences).
@@ -115,6 +122,12 @@ class LLMResult:
 
 
 @dataclass(frozen=True)
+class EvidenceSpan:
+    span_id: str
+    text: str
+
+
+@dataclass(frozen=True)
 class EvidenceChunk:
     chunk_id: str
     title: str
@@ -122,16 +135,26 @@ class EvidenceChunk:
     kind: str
     headings: tuple[str, ...]
     text: str
+    offer_id: str = ""
+    entity_id: str = ""
+    evidence_spans: tuple[EvidenceSpan, ...] = ()
 
     @property
     def evidence_text(self) -> str:
+        spans = "\n".join(
+            f'<SPAN span_id="{span.span_id}">{span.text}</SPAN>'
+            for span in self.evidence_spans
+        )
         return "\n".join(
             [
                 f"Title: {self.title}",
                 f"Kind: {self.kind}",
+                f"Offer ID: {self.offer_id or '(none)'}",
+                f"Entity ID: {self.entity_id or '(none)'}",
                 f"URL: {self.url}",
                 f"Headings: {', '.join(self.headings)}",
-                f"Text: {self.text}",
+                "Allowed evidence spans (quote exactly one complete span):",
+                spans or "(none)",
             ]
         )
 
@@ -172,6 +195,7 @@ _SAFE_CHUNK_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
 _WHITESPACE_RE = re.compile(r"\s+")
 _TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'][a-z0-9]+)*", re.IGNORECASE)
 _SENTENCE_BOUNDARY_RE = re.compile(r"[.!?][\"')\]]*\s+(?=[A-Z0-9])")
+_ATOMIC_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+(?=[\"'(\[]*[A-Z0-9])")
 _URL_RE = re.compile(r"https?://[^\s<>\"']+", re.IGNORECASE)
 _PERCENT_RE = re.compile(r"(?<![\w.])\d+(?:[.,]\d+)*\s*%")
 _CURRENCY_RE = re.compile(
@@ -183,6 +207,11 @@ _NUMBER_RE = re.compile(r"(?<![\w.])\d+(?:[.,]\d+)*(?![\w.])")
 _POLARITY_RE = re.compile(
     r"\b(?:no|not|never|none|without|cannot|can't|couldn't|doesn't|don't|"
     r"isn't|aren't|won't)\b",
+    re.IGNORECASE,
+)
+_UNSAFE_COMPARISON_EVIDENCE_RE = re.compile(
+    r"\b(?:a single mentor|senior ai consultant|chatgpt\s*&\s*claude|"
+    r"discord\s*&\s*reddit)\b",
     re.IGNORECASE,
 )
 _NUMBER_WORDS = frozenset(
@@ -221,6 +250,124 @@ _NUMBER_WORDS = frozenset(
         "billion",
     ]
 )
+
+_QUERY_RELEVANCE_STOP = frozenset(
+    {
+        "a",
+        "about",
+        "all",
+        "am",
+        "an",
+        "and",
+        "any",
+        "are",
+        "as",
+        "at",
+        "be",
+        "can",
+        "come",
+        "comes",
+        "course",
+        "courses",
+        "do",
+        "does",
+        "every",
+        "each",
+        "feature",
+        "features",
+        "for",
+        "from",
+        "get",
+        "give",
+        "has",
+        "have",
+        "having",
+        "how",
+        "i",
+        "if",
+        "in",
+        "include",
+        "included",
+        "includes",
+        "is",
+        "it",
+        "me",
+        "many",
+        "my",
+        "of",
+        "on",
+        "or",
+        "our",
+        "part",
+        "per",
+        "plan",
+        "please",
+        "program",
+        "provide",
+        "really",
+        "that",
+        "the",
+        "their",
+        "there",
+        "this",
+        "to",
+        "towards",
+        "true",
+        "us",
+        "we",
+        "what",
+        "which",
+        "with",
+        "long",
+        "you",
+        "your",
+    }
+)
+
+_FACT_QUERY_TERMS = frozenset(
+    {
+        "access",
+        "annual",
+        "annually",
+        "cancel",
+        "cancelled",
+        "cancelling",
+        "certificate",
+        "certification",
+        "cost",
+        "coupon",
+        "discount",
+        "duration",
+        "forever",
+        "guarantee",
+        "guaranteed",
+        "hour",
+        "hours",
+        "keep",
+        "lesson",
+        "lessons",
+        "lifetime",
+        "money-back",
+        "month",
+        "month-by-month",
+        "month-to-month",
+        "monthly",
+        "page",
+        "pages",
+        "price",
+        "product",
+        "products",
+        "promo",
+        "prerequisite",
+        "prerequisites",
+        "refund",
+        "retain",
+        "year",
+        "yearly",
+    }
+)
+
+
 def _normalize_text(value: str) -> str:
     normalized = unicodedata.normalize("NFKC", value).replace("’", "'")
     return _WHITESPACE_RE.sub(" ", normalized).strip()
@@ -249,14 +396,72 @@ def chunk_id_for_page(page: dict[str, Any]) -> str:
     return f"chunk_{digest}"
 
 
+def _fallback_span_texts(text: str) -> list[str]:
+    """Derive conservative atomic spans for tests and legacy in-memory inputs."""
+
+    normalized = _normalize_text(text)
+    if not normalized:
+        return []
+    candidates = _ATOMIC_SENTENCE_SPLIT_RE.split(normalized)
+    result: list[str] = []
+    for candidate in candidates:
+        span = _normalize_text(candidate)
+        if 2 <= len(_TOKEN_RE.findall(span)) and len(span) <= MAX_EVIDENCE_QUOTE_CHARS:
+            result.append(span)
+    return list(dict.fromkeys(result))
+
+
+def _evidence_spans_from_page(
+    page: dict[str, Any], chunk_id: str, text: str
+) -> tuple[EvidenceSpan, ...]:
+    normalized_text = _normalize_text(text)
+    raw_spans = page.get("evidence_spans")
+    candidates: list[tuple[str, str]] = []
+    if isinstance(raw_spans, list):
+        for index, raw_span in enumerate(raw_spans):
+            if not isinstance(raw_span, dict):
+                continue
+            span_text = _normalize_text(str(raw_span.get("text", "")))
+            span_id = str(raw_span.get("span_id", "")).strip()
+            if not span_id:
+                span_id = f"{chunk_id}:span-{index}"
+            candidates.append((span_id, span_text))
+    else:
+        candidates = [
+            (f"{chunk_id}:span-{index}", span_text)
+            for index, span_text in enumerate(_fallback_span_texts(text))
+        ]
+
+    result: list[EvidenceSpan] = []
+    seen: set[tuple[str, str]] = set()
+    for span_id, span_text in candidates:
+        key = (span_id, span_text)
+        if (
+            key in seen
+            or not _SAFE_CHUNK_ID_RE.fullmatch(span_id)
+            or not span_text
+            or len(span_text) > MAX_EVIDENCE_QUOTE_CHARS
+            or span_text not in normalized_text
+        ):
+            continue
+        seen.add(key)
+        result.append(EvidenceSpan(span_id=span_id, text=span_text))
+    return tuple(result)
+
+
 def _chunk_from_page(page: dict[str, Any]) -> EvidenceChunk:
+    chunk_id = chunk_id_for_page(page)
+    text = str(page.get("text", ""))[:MAX_CHUNK_TEXT_CHARS]
     return EvidenceChunk(
-        chunk_id=chunk_id_for_page(page),
+        chunk_id=chunk_id,
         title=str(page.get("title", "")),
         url=str(page.get("url", "")),
         kind=str(page.get("kind", "")),
         headings=tuple(str(item) for item in page.get("headings", [])[:12]),
-        text=str(page.get("text", ""))[:MAX_CHUNK_TEXT_CHARS],
+        text=text,
+        offer_id=str(page.get("offer_id", "")),
+        entity_id=str(page.get("entity_id", "")),
+        evidence_spans=_evidence_spans_from_page(page, chunk_id, text),
     )
 
 
@@ -271,12 +476,10 @@ def _render_chunk(chunk: EvidenceChunk) -> str:
 
 
 def _routing_notes_section() -> str:
-    notes = json.dumps(assistant_notes(), ensure_ascii=False, sort_keys=True)
     return (
         "<NON_EVIDENCE_ROUTING_NOTES>\n"
-        "These notes may guide routing/style but are NOT factual evidence,\n"
-        "must not be cited, and cannot support any answer claim.\n"
-        f"{notes}\n"
+        "Routing was completed deterministically before generation. This section\n"
+        "contains no factual evidence, must not support a claim, and must not be cited.\n"
         "</NON_EVIDENCE_ROUTING_NOTES>"
     )
 
@@ -353,11 +556,11 @@ Visitor message (a question, NOT evidence):
 {_context_block(selected_pages)}
 
 Use only EVIDENCE_CHUNKS for factual claims. Return the required JSON object now.
-Every factual claim must be directly supported by an exact evidence quote.
+Every factual claim must be directly supported by one complete ALLOWED_EVIDENCE_SPAN.
 The text of each claim must copy its quote verbatim; the only permitted change is
-adding one final period when the quote has none. Keep each quote to one local
-source sentence or table row and at most 320 characters. Never paraphrase or
-combine words from different parts of a chunk.
+adding one final period when the span has none. Copy the entire span exactly into
+quote; arbitrary substrings are forbidden. Never omit qualifiers or negations,
+paraphrase, or combine words from different parts of a chunk.
 Correction rule: the visitor's premise and proposed alternatives are not evidence.
 If the chunks contain directly relevant facts that correct or resolve the question,
 return answered with those facts as separate extractive claims. For example, when
@@ -366,9 +569,9 @@ discounted, make one claim for the included row and another claim for the discou
 row. Do not infer a total or say "only" unless an evidence quote explicitly does.
 Do not repeat or deny the visitor's unsupported premise. Never write "not included"
 unless those literal words occur in that claim's exact quote.
-If the evidence contains no directly relevant facts, return not_found; you cannot
-confirm it. Do not use not_found when the evidence contains supported correcting
-facts.
+If the evidence contains no directly relevant facts, return not_found.
+You cannot confirm it. Do not use not_found when the evidence contains supported
+correcting facts.
 """
 
 
@@ -570,7 +773,7 @@ def _critical_facts(value: str) -> dict[str, set[str]]:
 
 
 def _claim_is_one_sentence(text: str) -> bool:
-    if not text or re.search(r"\.[\"')\]]*$", text) is None:
+    if not text or re.search(r"[.!?][\"')\]]*$", text) is None:
         return False
     return _SENTENCE_BOUNDARY_RE.search(text) is None
 
@@ -587,16 +790,18 @@ def _validate_claim_reference(
         return "evidence quote must not be empty"
     if len(normalized_quote) > MAX_EVIDENCE_QUOTE_CHARS:
         return f"evidence quote exceeds {MAX_EVIDENCE_QUOTE_CHARS} characters"
-    normalized_chunk = _normalize_text(chunk.evidence_text)
+    normalized_chunk = _normalize_text(chunk.text)
     if normalized_quote not in normalized_chunk:
-        return "evidence quote is not an exact normalized substring of its chunk"
+        return "evidence span is not present in its chunk text"
+    allowed_spans = {
+        _normalize_text(span.text) for span in chunk.evidence_spans if span.text
+    }
+    if normalized_quote not in allowed_spans:
+        return "evidence quote must equal one complete server-defined evidence span"
     return ""
 
 
 def _validate_claim_text(claim: GroundedClaim) -> str:
-    if not _claim_is_one_sentence(claim.text):
-        return "each claim must contain exactly one complete sentence"
-
     normalized_claim = _normalize_text(claim.text)
     normalized_quote = _normalize_text(claim.quote)
     claim_facts = _critical_facts(claim.text)
@@ -616,36 +821,143 @@ def _validate_claim_text(claim: GroundedClaim) -> str:
     if claim_polarity != quote_polarity:
         return "claim changes or omits evidence negation"
 
-    if normalized_claim.removesuffix(".") != normalized_quote.removesuffix("."):
+    allowed_claim_texts = {normalized_quote}
+    if not re.search(r"[.!?][\"')\]]*$", normalized_quote):
+        allowed_claim_texts.add(f"{normalized_quote}.")
+    if normalized_claim not in allowed_claim_texts:
         return "claim must copy its evidence quote verbatim"
+
+    canonical_text = normalized_quote
+    if not re.search(r"[.!?][\"')\]]*$", canonical_text):
+        canonical_text = f"{canonical_text}."
+    if not _claim_is_one_sentence(canonical_text):
+        return "each claim must contain exactly one complete sentence"
 
     return ""
 
 
-def _safe_quote_sentence(quote: str) -> str:
-    """Return one short normalized source-only sentence, or an empty string."""
+def _specific_query_terms(
+    query: str, target_offer_ids: frozenset[str]
+) -> frozenset[str]:
+    alias_terms = offer_alias_tokens(target_offer_ids)
+    result: set[str] = set()
+    for token in (item.casefold() for item in _TOKEN_RE.findall(query)):
+        if (
+            token in _QUERY_RELEVANCE_STOP
+            or token in _FACT_QUERY_TERMS
+            or token in _NUMBER_WORDS
+            or token in alias_terms
+            or any(character.isdigit() for character in token)
+        ):
+            continue
+        result.add(token)
+    return frozenset(result)
 
-    normalized = _normalize_text(quote)
-    if not normalized or len(normalized) > MAX_SALVAGED_QUOTE_CHARS:
+
+def _term_is_present(term: str, evidence_terms: set[str]) -> bool:
+    if term in evidence_terms:
+        return True
+    if term.endswith("s") and term[:-1] in evidence_terms:
+        return True
+    return f"{term}s" in evidence_terms
+
+
+def _validate_query_grounding(
+    query: str,
+    claims: list[GroundedClaim],
+    chunk_by_id: dict[str, EvidenceChunk],
+    target_offer_ids: frozenset[str],
+) -> str:
+    if not query:
         return ""
-    if _SENTENCE_BOUNDARY_RE.search(normalized):
-        return ""
-    if re.search(r"[.!?][\"')\]]*$", normalized):
-        return normalized
-    return f"{normalized}."
+
+    resolved_targets = target_offer_ids or offer_ids_for_query(query)
+    if resolved_targets:
+        for claim in claims:
+            chunk = chunk_by_id[claim.chunk_id]
+            if chunk.offer_id not in resolved_targets:
+                return (
+                    "claim cites offer "
+                    f"{chunk.offer_id or '(none)'} outside the requested offer boundary"
+                )
+            if _UNSAFE_COMPARISON_EVIDENCE_RE.search(claim.quote):
+                return "claim cites competitor comparison rather than offer evidence"
+
+    fields = requested_fact_fields(query)
+    if mixed_preview_fact_request(query):
+        return (
+            "mixed preview and paid-course facts lack separate target-qualified "
+            "evidence scopes"
+        )
+    for claim in claims:
+        chunk = chunk_by_id[claim.chunk_id]
+        if fields and not any(
+            chunk.offer_id in evidence_offer_ids_for_field(query, fact_field)
+            and evidence_span_supports_field(
+                claim.quote,
+                field=fact_field,
+                offer_id=chunk.offer_id,
+                query=query,
+            )
+            for fact_field in fields
+        ):
+            return "claim lacks target-qualified evidence for the requested facts"
+    for fact_field in fields:
+        if not any(
+            chunk_by_id[claim.chunk_id].offer_id
+            in evidence_offer_ids_for_field(query, fact_field)
+            and evidence_span_supports_field(
+                claim.quote,
+                field=fact_field,
+                offer_id=chunk_by_id[claim.chunk_id].offer_id,
+                query=query,
+            )
+            for claim in claims
+        ):
+            return f"answer lacks target-qualified {fact_field} evidence"
+
+    normalized_query = _normalize_text(query).casefold()
+    combined_quotes = " ".join(_normalize_text(claim.quote) for claim in claims)
+    normalized_quotes = combined_quotes.casefold()
+    if (
+        monthly_plan_intent(normalized_query)
+        and fields & {"refund", "guarantee"}
+        and not (
+            "monthly" in normalized_quotes
+            and "yearly" in normalized_quotes
+            and "money-back" in normalized_quotes
+        )
+    ):
+        return "monthly guarantee answer must include the qualified yearly policy"
+
+    specific_terms = _specific_query_terms(query, resolved_targets)
+    if specific_terms:
+        evidence_terms = {
+            item.casefold() for item in _TOKEN_RE.findall(combined_quotes)
+        }
+        matched = sum(
+            _term_is_present(term, evidence_terms) for term in specific_terms
+        )
+        # Require at least two thirds of the visitor's non-generic qualifiers.
+        # Corrections involving a false number remain possible because proposed
+        # numbers and number words are deliberately excluded above.
+        if matched * 3 < len(specific_terms) * 2:
+            return "answer does not address enough of the requested qualifiers"
+    return ""
 
 
 def validate_grounded_result(
     raw_result: LLMResult | str,
     selected_pages: list[dict[str, Any]],
+    *,
+    query: str = "",
+    target_offer_ids: frozenset[str] | None = None,
 ) -> GroundingResult:
     """Strictly validate provider JSON and return only evidence-backed text.
 
-    A malformed schema, bad citation, invented quote, or unsafe quote produces
-    ``validation_failure`` with an empty answer. When only the provider's claim
-    wording is invalid, that wording is discarded and one short, normalized
-    sentence is built solely from its already-validated exact quote. Invalid raw
-    claim text is never copied into the safe result.
+    Any malformed schema, bad citation, unsafe evidence span, or non-verbatim
+    claim produces ``validation_failure`` with an empty ``answer``. Raw model
+    text is never copied into the safe result.
     """
 
     raw = raw_result if isinstance(raw_result, LLMResult) else LLMResult(raw_result)
@@ -699,20 +1011,24 @@ def validate_grounded_result(
         )
         reference_error = _validate_claim_reference(claim, chunk_by_id)
         if reference_error:
-            return _validation_failure(
-                raw, f"claim {index + 1}: {reference_error}"
-            )
+            return _validation_failure(raw, f"claim {index + 1}: {reference_error}")
         text_error = _validate_claim_text(claim)
         if text_error:
-            safe_text = _safe_quote_sentence(claim.quote)
-            if not safe_text:
-                return _validation_failure(
-                    raw,
-                    f"claim {index + 1}: {text_error}; exact quote cannot be "
-                    "safely salvaged",
-                )
-            claim = replace(claim, text=safe_text)
+            return _validation_failure(raw, f"claim {index + 1}: {text_error}")
+        safe_text = _normalize_text(claim.quote)
+        if not re.search(r"[.!?][\"')\]]*$", safe_text):
+            safe_text = f"{safe_text}."
+        claim = replace(claim, text=safe_text)
         claims.append(claim)
+
+    query_error = _validate_query_grounding(
+        query,
+        claims,
+        chunk_by_id,
+        target_offer_ids or frozenset(),
+    )
+    if query_error:
+        return _validation_failure(raw, query_error)
 
     cited_chunks: list[EvidenceChunk] = []
     cited_ids: set[str] = set()
@@ -732,9 +1048,198 @@ def validate_grounded_result(
     )
 
 
+def extract_mentorship_course_access(
+    query: str,
+    selected_pages: list[dict[str, Any]],
+    *,
+    target_offer_ids: frozenset[str] | None = None,
+) -> GroundingResult | None:
+    """Extract high-risk mentorship entitlements and policies without generation."""
+
+    lowered = query.casefold()
+    if "mentor" not in lowered:
+        return None
+
+    chunks = evidence_chunks(selected_pages)
+
+    def find_span(*phrases: str) -> tuple[EvidenceChunk, EvidenceSpan] | None:
+        for chunk in chunks:
+            if chunk.offer_id != "mentorship":
+                continue
+            for span in chunk.evidence_spans:
+                span_lower = span.text.casefold()
+                if all(phrase in span_lower for phrase in phrases):
+                    return chunk, span
+        return None
+
+    def validated_extraction(
+        evidence: list[tuple[EvidenceChunk, EvidenceSpan]],
+    ) -> GroundingResult:
+        if not evidence:
+            return GroundingResult(valid=True, status="not_found")
+        raw = json.dumps(
+            {
+                "status": "answered",
+                "claims": [
+                    {
+                        "text": span.text,
+                        "chunk_id": chunk.chunk_id,
+                        "quote": span.text,
+                    }
+                    for chunk, span in evidence
+                ],
+            },
+            ensure_ascii=False,
+        )
+        result = validate_grounded_result(
+            LLMResult(raw, usage={"provider": "deterministic_extraction"}),
+            selected_pages,
+            target_offer_ids=target_offer_ids,
+        )
+        return (
+            result
+            if result.valid
+            else GroundingResult(valid=True, status="not_found")
+        )
+
+    course_access_intent = any(
+        term in lowered
+        for term in (
+            "course",
+            "courses",
+            "llm fundamentals",
+            "full stack",
+            "agent engineering",
+            "master ai for work",
+        )
+    ) and any(
+        term in lowered
+        for term in (
+            "include",
+            "included",
+            "access",
+            "choice",
+            "choose",
+            "discount",
+            "% off",
+            "free",
+            "2",
+            "two",
+        )
+    )
+    cancellation_intent = bool(
+        re.search(r"\bcancel|\bcancell|\bafter\b", lowered)
+        and any(term in lowered for term in ("course", "access", "lifetime", "keep"))
+    )
+    if cancellation_intent:
+        active = find_span("course access is active while")
+        upgrade = find_span("if you cancel", "lifetime access")
+        if active is None or upgrade is None:
+            return GroundingResult(valid=True, status="not_found")
+        return validated_extraction([active, upgrade])
+
+    guarantee_intent = any(
+        term in lowered for term in ("refund", "money-back", "money back", "guarantee")
+    )
+    if guarantee_intent:
+        yearly = find_span("yearly plan", "money-back guarantee")
+        if yearly is None:
+            yearly = find_span("money-back on yearly")
+        if monthly_plan_intent(lowered):
+            monthly = find_span("monthly mentorship", "cancelled")
+            if monthly is None or yearly is None:
+                return GroundingResult(valid=True, status="not_found")
+            return validated_extraction([monthly, yearly])
+        if yearly is None:
+            return GroundingResult(valid=True, status="not_found")
+        return validated_extraction([yearly])
+
+    if not course_access_intent:
+        return None
+
+    included: tuple[EvidenceChunk, EvidenceSpan] | None = None
+    discounted: tuple[EvidenceChunk, EvidenceSpan] | None = None
+    alpha: tuple[EvidenceChunk, EvidenceSpan] | None = None
+    for chunk in chunks:
+        if "/academy/mentorship" not in chunk.url:
+            continue
+        for span in chunk.evidence_spans:
+            span_lower = span.text.casefold()
+            if (
+                included is None
+                and "llm fundamentals" in span_lower
+                and re.search(r"\bincluded\b", span_lower)
+            ):
+                included = (chunk, span)
+            if (
+                discounted is None
+                and any(
+                    name in span_lower
+                    for name in (
+                        "full stack ai engineering",
+                        "agent engineering",
+                        "master ai for work",
+                    )
+                )
+                and re.search(r"\b\d+(?:[–-]\d+)?%\s+off\b", span_lower)
+            ):
+                discounted = (chunk, span)
+            if (
+                alpha is None
+                and "new courses" in span_lower
+                and "alpha access" in span_lower
+                and "% off" in span_lower
+            ):
+                alpha = (chunk, span)
+
+    if any(term in lowered for term in ("new course", "new courses", "alpha")):
+        return (
+            validated_extraction([alpha])
+            if alpha is not None
+            else GroundingResult(valid=True, status="not_found")
+        )
+
+    wants_discount = any(
+        term in lowered for term in ("discount", "% off", "off full", "off agent")
+    ) or bool(re.search(r"\b\d+(?:[.-]\d+)?%", lowered))
+    wants_comparison = any(
+        term in lowered
+        for term in (
+            "courses",
+            "choice",
+            "choose",
+            "2",
+            "two",
+            "full stack",
+            "agent engineering",
+            "master ai for work",
+        )
+    )
+    if wants_discount and discounted is None:
+        return GroundingResult(valid=True, status="not_found")
+    if not wants_discount and included is None:
+        return GroundingResult(valid=True, status="not_found")
+
+    evidence: list[tuple[EvidenceChunk, EvidenceSpan]] = []
+    if included is not None and (not wants_discount or wants_comparison):
+        evidence.append(included)
+    if discounted is not None and (wants_discount or wants_comparison):
+        evidence.append(discounted)
+    return validated_extraction(evidence)
+
+
 def generate_grounded_answer(
-    prompt: str, selected_pages: list[dict[str, Any]]
+    prompt: str,
+    selected_pages: list[dict[str, Any]],
+    *,
+    query: str = "",
+    target_offer_ids: frozenset[str] | None = None,
 ) -> GroundingResult:
     """Generate and cross the fail-closed grounding boundary in one call."""
 
-    return validate_grounded_result(generate_answer(prompt), selected_pages)
+    return validate_grounded_result(
+        generate_answer(prompt),
+        selected_pages,
+        query=query,
+        target_offer_ids=target_offer_ids,
+    )

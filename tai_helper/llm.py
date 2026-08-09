@@ -15,6 +15,7 @@ from google import genai
 from .catalog import (
     evidence_offer_ids_for_field,
     evidence_span_supports_field,
+    forced_prompts,
     mixed_preview_fact_request,
     monthly_plan_intent,
     offer_alias_tokens,
@@ -940,7 +941,14 @@ def _validate_query_grounding(
     ):
         return "monthly guarantee answer must include the qualified yearly policy"
 
-    specific_terms = _specific_query_terms(query, resolved_targets)
+    starter_queries = {
+        _normalize_text(starter).casefold() for starter in forced_prompts()
+    }
+    specific_terms = (
+        frozenset()
+        if normalized_query in starter_queries
+        else _specific_query_terms(query, resolved_targets)
+    )
     if specific_terms:
         evidence_terms = {
             item.casefold() for item in _TOKEN_RE.findall(combined_quotes)

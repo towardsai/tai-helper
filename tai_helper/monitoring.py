@@ -135,6 +135,7 @@ class HelperMonitor:
                 }
             if self.error_message:
                 span.error_info = {
-                    "type": "RuntimeError",
+                    "exception_type": "RuntimeError",
                     "message": _truncate(self.error_message, 1000),
+                    "traceback": "",
                 }

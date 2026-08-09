@@ -705,7 +705,10 @@ def requested_fact_fields(query: str) -> frozenset[str]:
     ):
         fields.add("duration")
     if re.search(
-        r"\bprerequisites?\b|\brequirements?\b|\bprior experience\b|\bneed to know\b|\bneed (?:python|coding|code)\b",
+        r"\bprerequisites?\b|\brequirements?\b|\bprior experience\b|"
+        r"\bneed to know\b|\bneed (?:python|coding|code)\b|"
+        r"\b(?:no|zero)\s+(?:prior\s+)?(?:coding|software|programming)\s+"
+        r"(?:experience|background)\b|\bcomplete beginners?\b|\bfrom scratch\b",
         lowered,
     ):
         fields.add("prerequisite")
@@ -841,6 +844,8 @@ def _span_supports_fact(
                 "no prior",
                 "no code",
                 "no coding",
+                "no software background",
+                "from scratch",
                 "basic python",
                 "intermediate python",
                 "complete beginner",

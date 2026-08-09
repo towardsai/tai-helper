@@ -747,6 +747,33 @@ def test_zero_coding_experience_is_a_typed_prerequisite_question() -> None:
     assert result.is_answered
 
 
+def test_requires_coding_is_a_typed_prerequisite_question() -> None:
+    span = "No code required: learn by doing, not watching."
+    page = _with_spans(
+        {
+            "chunk_id": "ai-for-work-prerequisite",
+            "title": "Master AI for Work",
+            "kind": "course",
+            "offer_id": "ai-for-work",
+            "entity_id": "offer:ai-for-work",
+            "url": "https://towardsai.com/academy/ai-for-work/",
+            "headings": ["No code required"],
+            "text": span,
+        },
+        span,
+    )
+    raw = _model_json(text=span, quote=span, chunk_id=page["chunk_id"])
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query="Does Master AI for Work require coding?",
+        target_offer_ids=frozenset({"ai-for-work"}),
+    )
+
+    assert result.is_answered
+
+
 def test_query_binding_rejects_an_exact_span_from_the_wrong_offer() -> None:
     page = _with_spans(
         {

@@ -707,6 +707,7 @@ def requested_fact_fields(query: str) -> frozenset[str]:
     if re.search(
         r"\bprerequisites?\b|\brequirements?\b|\bprior experience\b|"
         r"\bneed to know\b|\bneed (?:python|coding|code)\b|"
+        r"\brequire(?:s|d)? (?:python|coding|code)\b|"
         r"\b(?:no|zero)\s+(?:prior\s+)?(?:coding|software|programming)\s+"
         r"(?:experience|background)\b|\bcomplete beginners?\b|\bfrom scratch\b",
         lowered,

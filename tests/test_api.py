@@ -389,6 +389,46 @@ def test_mentorship_course_access_incident_uses_exact_retrieved_rows(
     assert body["sources"][0]["kind"] == "mentorship"
 
 
+def test_enterprise_developer_conversion_uses_exact_public_capability(
+    monkeypatch,
+) -> None:
+    reset_limiters()
+
+    def unexpected_model(*_args, **_kwargs):
+        raise AssertionError("explicit enterprise capability must be extractive")
+
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected_model)
+    request_payload = payload(
+        query=(
+            "Can Towards AI train our software developers to become AI "
+            "engineers?"
+        ),
+        url=(
+            "https://towardsai.com/enterprise/"
+            "software-developer-to-ai-engineer/"
+        ),
+    )
+    request_payload["history"] = [
+        {"role": "user", "content": "I want a training inside my company"}
+    ]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "answered"
+    assert "Every software developer, no AI background needed" in body["answer"]
+    assert "design, evaluate, ship, and maintain production LLM systems" in body[
+        "answer"
+    ]
+    assert {source["url"] for source in body["sources"]} == {
+        (
+            "https://towardsai.com/enterprise/"
+            "software-developer-to-ai-engineer/"
+        )
+    }
+
+
 def test_mentorship_cancellation_uses_exact_current_access_policy(
     monkeypatch,
 ) -> None:

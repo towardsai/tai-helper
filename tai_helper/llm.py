@@ -1077,6 +1077,67 @@ def validate_grounded_result(
     )
 
 
+def extract_enterprise_software_to_ai_engineer(
+    query: str,
+    selected_pages: list[dict[str, Any]],
+) -> GroundingResult | None:
+    """Extract the explicit enterprise developer-conversion capability.
+
+    This narrow organizational route avoids relying on provider wording for a
+    yes/no capability that the public enterprise page states directly. Missing
+    or changed source spans still fail closed.
+    """
+
+    lowered = _normalize_text(query).casefold()
+    if not (
+        "software developers" in lowered
+        and "ai engineer" in lowered
+        and re.search(r"\b(?:train|convert|turn|upskill)\w*\b|\bbecome\b", lowered)
+    ):
+        return None
+
+    chunks = [
+        chunk
+        for chunk in evidence_chunks(selected_pages)
+        if "/enterprise/software-developer-to-ai-engineer" in chunk.url
+    ]
+
+    def find_span(*phrases: str) -> tuple[EvidenceChunk, EvidenceSpan] | None:
+        for chunk in chunks:
+            for span in chunk.evidence_spans:
+                span_lower = span.text.casefold()
+                if all(phrase in span_lower for phrase in phrases):
+                    return chunk, span
+        return None
+
+    audience = find_span("every software developer", "no ai background needed")
+    outcome = find_span("to design", "production llm systems")
+    if audience is None or outcome is None:
+        return GroundingResult(valid=True, status="not_found")
+
+    raw = json.dumps(
+        {
+            "status": "answered",
+            "claims": [
+                {
+                    "text": span.text,
+                    "chunk_id": chunk.chunk_id,
+                    "quote": span.text,
+                }
+                for chunk, span in (audience, outcome)
+            ],
+        },
+        ensure_ascii=False,
+    )
+    result = validate_grounded_result(
+        LLMResult(raw, usage={"provider": "deterministic_extraction"}),
+        selected_pages,
+    )
+    return (
+        result if result.valid else GroundingResult(valid=True, status="not_found")
+    )
+
+
 def extract_mentorship_course_access(
     query: str,
     selected_pages: list[dict[str, Any]],

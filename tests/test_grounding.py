@@ -5,6 +5,7 @@ import json
 import pytest
 
 from tai_helper import llm
+from tai_helper.catalog import forced_prompts
 
 MENTORSHIP_PAGE = {
     "title": "Towards AI Mentorship",
@@ -600,6 +601,41 @@ def test_broad_course_decision_starter_accepts_retrieved_offer_evidence() -> Non
         raw,
         [page],
         query="I want help deciding which course to take.",
+        target_offer_ids=frozenset(),
+    )
+
+    assert result.is_answered
+    assert result.answer == span
+
+
+@pytest.mark.parametrize("starter", forced_prompts())
+def test_exact_starter_prompts_are_routing_intent_not_factual_qualifiers(
+    starter: str,
+) -> None:
+    span = "Two live Q&A calls with senior engineers."
+    page = _with_spans(
+        {
+            "chunk_id": "starter-route-evidence",
+            "title": "Towards AI Offer",
+            "kind": "course",
+            "offer_id": "",
+            "entity_id": "",
+            "url": "https://towardsai.com/academy/",
+            "headings": ["Offer"],
+            "text": span,
+        },
+        span,
+    )
+    raw = _model_json(
+        text=span,
+        quote=span,
+        chunk_id=page["chunk_id"],
+    )
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query=starter,
         target_offer_ids=frozenset(),
     )
 

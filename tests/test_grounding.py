@@ -774,6 +774,54 @@ def test_requires_coding_is_a_typed_prerequisite_question() -> None:
     assert result.is_answered
 
 
+def test_current_price_word_does_not_mask_typed_price_and_lesson_evidence() -> None:
+    lesson_span = "92 lessons across the full AI stack"
+    price_span = "$399 $349 one-time Save 12%"
+    page = _with_spans(
+        {
+            "chunk_id": "full-stack-current-offer",
+            "title": "Full Stack AI Engineering",
+            "kind": "course",
+            "offer_id": "full-stack-ai-engineering",
+            "entity_id": "offer:full-stack-ai-engineering",
+            "url": "https://towardsai.com/academy/full-stack-ai-engineering/",
+            "headings": ["Course offer"],
+            "text": f"{lesson_span}. {price_span}.",
+        },
+        lesson_span,
+        price_span,
+    )
+    raw = json.dumps(
+        {
+            "status": "answered",
+            "claims": [
+                {
+                    "text": f"{lesson_span}.",
+                    "chunk_id": page["chunk_id"],
+                    "quote": lesson_span,
+                },
+                {
+                    "text": f"{price_span}.",
+                    "chunk_id": page["chunk_id"],
+                    "quote": price_span,
+                },
+            ],
+        }
+    )
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query=(
+            "How many lessons are in Full Stack AI Engineering, and what is "
+            "its current price?"
+        ),
+        target_offer_ids=frozenset({"full-stack-ai-engineering"}),
+    )
+
+    assert result.is_answered
+
+
 def test_query_binding_rejects_an_exact_span_from_the_wrong_offer() -> None:
     page = _with_spans(
         {

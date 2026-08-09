@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+
+import pytest
 from fastapi.testclient import TestClient
 
 from tai_helper import api
@@ -45,6 +48,13 @@ def payload(
             "signedIn": signed_in,
         },
     }
+
+
+def assert_contact_handoff(body: dict, *, status: str = "insufficient_evidence") -> None:
+    assert body["status"] == status
+    assert body["sources"] == []
+    assert body["answer"].count(api.CONTACT_FORM_URL) == 1
+    assert "louis@towardsai.net" not in body["answer"]
 
 
 def test_config_exposes_public_widget_contract() -> None:
@@ -118,7 +128,7 @@ def test_chat_returns_only_grounded_answer_and_cited_sources(monkeypatch) -> Non
     prompts = []
 
     def fake_generate_grounded_answer(
-        prompt: str, selected_pages: list[dict]
+        prompt: str, selected_pages: list[dict], **_kwargs
     ) -> GroundingResult:
         prompts.append(prompt)
         assert selected_pages
@@ -160,7 +170,7 @@ def test_chat_still_accepts_legacy_net_origin(monkeypatch) -> None:
     monkeypatch.setattr(
         api.llm,
         "generate_grounded_answer",
-        lambda _prompt, selected: GroundingResult(
+        lambda _prompt, selected, **_kwargs: GroundingResult(
             valid=True,
             status="answered",
             answer="Supported answer.",
@@ -198,9 +208,8 @@ def test_chat_abstains_without_retrieved_evidence(monkeypatch) -> None:
     response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
 
     assert response.status_code == 200
-    assert response.json()["status"] == "insufficient_evidence"
+    assert_contact_handoff(response.json())
     assert "don't want to guess" in response.json()["answer"]
-    assert response.json()["sources"] == []
 
 
 def test_chat_abstains_on_model_not_found_or_validation_failure(monkeypatch) -> None:
@@ -231,9 +240,253 @@ def test_chat_abstains_on_model_not_found_or_validation_failure(monkeypatch) -> 
         response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
 
         assert response.status_code == 200
-        assert response.json()["status"] == "insufficient_evidence"
+        assert_contact_handoff(response.json())
         assert "don't want to guess" in response.json()["answer"]
-        assert response.json()["sources"] == []
+
+
+def test_chat_abstains_when_model_omits_negation_from_an_evidence_span(
+    monkeypatch,
+) -> None:
+    reset_limiters()
+    selected = api.retrieve(FIRST_PROMPT)
+    ai_work = next(page for page in selected if "No code required" in page["text"])
+    raw = json.dumps(
+        {
+            "status": "answered",
+            "claims": [
+                {
+                    "text": "code required.",
+                    "chunk_id": ai_work["chunk_id"],
+                    "quote": "code required",
+                }
+            ],
+        }
+    )
+    monkeypatch.setattr(
+        api.llm,
+        "generate_answer",
+        lambda _prompt: api.llm.LLMResult(answer=raw),
+    )
+
+    response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
+
+    assert response.status_code == 200
+    assert_contact_handoff(response.json())
+    assert "don't want to guess" in response.json()["answer"]
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        (
+            "Do the 7 lessons in the Agent Engineering preview include "
+            "lifetime access?"
+        ),
+        (
+            "Do the 7 lessons in the Agent Engineering preview have a "
+            "30-day refund guarantee?"
+        ),
+        "Do the 7 lessons in the Agent Engineering preview give a certificate?",
+        "Do the 7 lessons in the Agent Engineering preview cost $499?",
+        "Do the 7 lessons in the Agent Engineering preview get a 50% discount?",
+    ],
+)
+def test_preview_count_cannot_borrow_other_paid_course_facts(
+    monkeypatch, query: str
+) -> None:
+    reset_limiters()
+    assert api.retrieve(query) == []
+
+    def unexpected(*_args, **_kwargs):
+        raise AssertionError("mixed preview facts must not invoke the model")
+
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected)
+    request_payload = payload(query=query)
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post(
+        "/api/helper/chat", json=request_payload, headers=HEADERS
+    )
+
+    assert response.status_code == 200
+    assert_contact_handoff(response.json())
+
+
+def test_preview_count_cannot_mask_an_unsupported_feature(monkeypatch) -> None:
+    reset_limiters()
+    query = (
+        "Do the 7 lessons in the Agent Engineering preview include weekly "
+        "code reviews?"
+    )
+    selected = api.retrieve(query)
+    count_chunk = next(
+        chunk
+        for chunk in selected
+        if any("7" in span["text"] for span in chunk["evidence_spans"])
+    )
+    count_span = next(
+        span["text"]
+        for span in count_chunk["evidence_spans"]
+        if "7" in span["text"]
+    )
+    raw = json.dumps(
+        {
+            "status": "answered",
+            "claims": [
+                {
+                    "text": count_span,
+                    "chunk_id": count_chunk["chunk_id"],
+                    "quote": count_span,
+                }
+            ],
+        }
+    )
+    monkeypatch.setattr(
+        api.llm,
+        "generate_answer",
+        lambda _prompt: api.llm.LLMResult(answer=raw),
+    )
+    request_payload = payload(query=query)
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post(
+        "/api/helper/chat", json=request_payload, headers=HEADERS
+    )
+
+    assert response.status_code == 200
+    assert_contact_handoff(response.json())
+
+
+def test_mentorship_course_access_incident_uses_exact_retrieved_rows(
+    monkeypatch,
+) -> None:
+    reset_limiters()
+
+    def unexpected_model(*_args, **_kwargs):
+        raise AssertionError("high-risk mentorship access answer must be extractive")
+
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected_model)
+    request_payload = payload(
+        query=(
+            "The chatbot mentioned access to 2 courses of our choice as part of "
+            "mentorship. Is that true?"
+        ),
+        url="https://towardsai.com/academy/mentorship/",
+    )
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "answered"
+    assert "10-Hour LLM Fundamentals" in body["answer"]
+    assert "Included from day one" in body["answer"]
+    assert "25% off, always" in body["answer"]
+    assert "two courses" not in body["answer"].lower()
+    assert len(body["sources"]) == 1
+    assert body["sources"][0]["url"] == ("https://towardsai.com/academy/mentorship/")
+    assert body["sources"][0]["kind"] == "mentorship"
+
+
+def test_mentorship_cancellation_uses_exact_current_access_policy(
+    monkeypatch,
+) -> None:
+    reset_limiters()
+
+    def unexpected_model(*_args, **_kwargs):
+        raise AssertionError("mentorship cancellation answer must be extractive")
+
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected_model)
+    request_payload = payload(
+        query=(
+            "Do I keep LLM Fundamentals lifetime access after cancelling mentorship?"
+        ),
+        url="https://towardsai.com/academy/mentorship/",
+    )
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "answered"
+    assert "Course access is active while your mentorship is active" in body["answer"]
+    assert "If you cancel" in body["answer"]
+    assert "lifetime access at a reduced price" in body["answer"]
+    assert "Included from day one" not in body["answer"]
+    assert {source["url"] for source in body["sources"]} == {
+        "https://towardsai.com/academy/mentorship/"
+    }
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        "Does the monthly mentorship have a 30-day money-back guarantee?",
+        "Does the month-to-month mentorship have a 30-day money-back guarantee?",
+    ],
+)
+def test_monthly_mentorship_guarantee_names_the_yearly_qualification(
+    monkeypatch, query: str
+) -> None:
+    reset_limiters()
+
+    def unexpected_model(*_args, **_kwargs):
+        raise AssertionError("mentorship guarantee answer must be extractive")
+
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected_model)
+    request_payload = payload(
+        query=query,
+        url="https://towardsai.com/academy/mentorship/",
+    )
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "answered"
+    assert "monthly mentorship can be cancelled at any time" in body["answer"]
+    assert "yearly plan carries a 30-day money-back guarantee" in body["answer"]
+    assert "Join the Mentorship 30-day" not in body["answer"]
+    assert len(body["sources"]) == 1
+
+
+def test_late_source_error_resets_answered_status_to_insufficient_evidence(
+    monkeypatch,
+) -> None:
+    reset_limiters()
+    selected = api.retrieve(FIRST_PROMPT)
+    cited = EvidenceChunk(
+        chunk_id=str(selected[0]["chunk_id"]),
+        title=str(selected[0]["title"]),
+        url=str(selected[0]["url"]),
+        kind=str(selected[0]["kind"]),
+        headings=tuple(selected[0].get("headings", [])),
+        text=str(selected[0]["text"]),
+    )
+    monkeypatch.setattr(
+        api.llm,
+        "generate_grounded_answer",
+        lambda *_args: GroundingResult(
+            valid=True,
+            status="answered",
+            answer="Verified source span.",
+            cited_chunks=(cited,),
+        ),
+    )
+    monkeypatch.setattr(
+        api,
+        "sources_from_pages",
+        lambda _pages: (_ for _ in ()).throw(RuntimeError("late source failure")),
+    )
+
+    response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
+
+    assert response.status_code == 200
+    assert_contact_handoff(response.json())
+    assert "don't want to guess" in response.json()["answer"]
 
 
 def test_prior_assistant_claim_is_not_added_to_retrieval_query(monkeypatch) -> None:
@@ -262,11 +515,110 @@ def test_prior_assistant_claim_is_not_added_to_retrieval_query(monkeypatch) -> N
     assert response.json()["status"] == "insufficient_evidence"
 
 
+def test_substantive_followup_drops_starter_prompt_from_retrieval(monkeypatch) -> None:
+    reset_limiters()
+    captured: list[str] = []
+    query = "Does LLM Fundamentals include community support and an AI tutor?"
+
+    def fake_retrieve(retrieval_query: str, **_kwargs):
+        captured.append(retrieval_query)
+        return []
+
+    monkeypatch.setattr(api, "retrieve", fake_retrieve)
+    request_payload = payload(query=query)
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    assert captured == [query]
+    assert_contact_handoff(response.json())
+
+
+def test_short_referential_followup_uses_only_last_substantive_user_turn(
+    monkeypatch,
+) -> None:
+    reset_limiters()
+    captured: list[str] = []
+
+    def fake_retrieve(retrieval_query: str, **_kwargs):
+        captured.append(retrieval_query)
+        return []
+
+    monkeypatch.setattr(api, "retrieve", fake_retrieve)
+    request_payload = payload(query="What is its price?")
+    request_payload["history"] = [
+        {"role": "user", "content": FIRST_PROMPT},
+        {"role": "user", "content": "Tell me about Agent Engineering."},
+        {
+            "role": "assistant",
+            "content": "Unverified claim: it costs $1 and guarantees a job.",
+        },
+    ]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    assert captured == ["Tell me about Agent Engineering.\nWhat is its price?"]
+    assert "$1" not in captured[0]
+    assert_contact_handoff(response.json())
+
+
+def test_direct_contact_requests_bypass_retrieval_and_model(monkeypatch) -> None:
+    reset_limiters()
+
+    def unexpected(*_args, **_kwargs):
+        raise AssertionError("direct contact intent must not use retrieval or a model")
+
+    monkeypatch.setattr(api, "retrieve", unexpected)
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected)
+    request_payload = payload(query="Where is your contact form?")
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    assert_contact_handoff(response.json(), status="policy")
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        "Does Agent Engineering free preview include lifetime access and require no card?",
+        "Does the Full Stack free preview give me a certificate?",
+        "Does Building LLMs for Production have a refund guarantee?",
+        "How long is Agent Engineering?",
+        "How many hours does Python for AI Engineering take?",
+        "How many lessons are in LLM Fundamentals?",
+        "Does mentorship include a certificate?",
+        "Does the Get It All bundle get 50% off?",
+        "What is the Get It All bundle price?",
+        "Does monthly mentorship have a discount?",
+    ],
+)
+def test_absent_offer_facts_go_directly_to_contact_form(
+    monkeypatch, query: str
+) -> None:
+    reset_limiters()
+
+    def unexpected(*_args, **_kwargs):
+        raise AssertionError("model must not run without target-qualified evidence")
+
+    monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected)
+    request_payload = payload(query=query)
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
+
+    assert response.status_code == 200
+    assert_contact_handoff(response.json())
+
+
 def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> None:
     reset_limiters()
 
     def unexpected_generate_answer(
-        _prompt: str, _selected: list[dict]
+        _prompt: str, _selected: list[dict], **_kwargs
     ) -> GroundingResult:
         raise AssertionError("model should not be called for coupon intent")
 
@@ -285,10 +637,10 @@ def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> 
     second_response = client.post("/api/helper/chat", json=second, headers=HEADERS)
 
     assert first_response.status_code == 200
-    assert "louis@towardsai.net" in first_response.json()["answer"]
+    assert api.CONTACT_FORM_URL in first_response.json()["answer"]
     assert first_response.json()["status"] == "policy"
     assert second_response.status_code == 200
-    assert "louis@towardsai.net" in second_response.json()["answer"]
+    assert api.CONTACT_FORM_URL in second_response.json()["answer"]
 
 
 def test_rate_limit_is_hard(monkeypatch) -> None:
@@ -301,7 +653,7 @@ def test_rate_limit_is_hard(monkeypatch) -> None:
     monkeypatch.setattr(
         api.llm,
         "generate_grounded_answer",
-        lambda _prompt, selected: GroundingResult(
+        lambda _prompt, selected, **_kwargs: GroundingResult(
             valid=True,
             status="answered",
             answer="Supported answer.",

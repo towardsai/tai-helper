@@ -16,6 +16,9 @@
   }
   if (!apiBase) return;
 
+  var contactFormUrl = "https://towardsai.com/academy/contact/#contact";
+  var contactLinkMarkdown = "[contact the Towards AI team](" + contactFormUrl + ")";
+
   var state = {
     config: null,
     visible: false,
@@ -383,9 +386,17 @@
       .then(function (response) {
         if (!response.ok) {
           if (response.status === 429) {
-            throw new Error("The helper is rate limited right now. Please try again later.");
+            throw new Error(
+              "The helper is rate limited right now. Please try again later or " +
+                contactLinkMarkdown +
+                "."
+            );
           }
-          throw new Error("The helper is unavailable on this page.");
+          throw new Error(
+            "The helper is unavailable on this page. Please " +
+              contactLinkMarkdown +
+              "."
+          );
         }
         return response.json();
       })
@@ -414,7 +425,10 @@
       })
       .catch(function (error) {
         loading.classList.remove("empty");
-        loading.innerHTML = renderMarkdown(error.message || "Something went wrong.");
+        loading.innerHTML = renderMarkdown(
+          error.message ||
+            "Something went wrong. Please " + contactLinkMarkdown + "."
+        );
       })
       .finally(function () {
         setBusy(false);

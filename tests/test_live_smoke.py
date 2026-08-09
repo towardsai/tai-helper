@@ -104,3 +104,53 @@ def test_live_chat_returns_concise_answer() -> None:
     assert len(payload["answer"]) < 1400
     assert payload["sources"]
     assert elapsed <= max_seconds("LIVE_SMOKE_MAX_CHAT_SECONDS", 90)
+
+
+@pytest.mark.live
+@pytest.mark.skipif(
+    not RUN_LIVE_CHAT,
+    reason="RUN_LIVE_CHAT_SMOKE is not enabled",
+)
+def test_live_chat_fails_closed_for_offer_access_and_guarantees() -> None:
+    base_url = require_live_base_url()
+
+    def ask(query: str, visitor_id: str) -> dict:
+        response = requests.post(
+            f"{base_url}/api/helper/chat",
+            json={
+                "query": query,
+                "selectedPrompt": FIRST_PROMPT,
+                "visitorId": visitor_id,
+                "threadId": "",
+                "history": [{"role": "user", "content": FIRST_PROMPT}],
+                "context": {
+                    "url": "https://towardsai.com/academy/mentorship/",
+                    "pageTitle": "Mentorship",
+                    "signedIn": False,
+                },
+            },
+            headers=HEADERS,
+            timeout=120,
+        )
+        assert response.status_code == 200
+        return response.json()
+
+    incident = ask(
+        "Does mentorship include access to 2 courses of my choice?",
+        "github-action-mentorship-grounding",
+    )
+    assert incident["status"] == "answered"
+    assert "Included from day one" in incident["answer"]
+    assert "25% off, always" in incident["answer"]
+    assert "two courses" not in incident["answer"].casefold()
+    assert {source["url"] for source in incident["sources"]} == {
+        "https://towardsai.com/academy/mentorship/"
+    }
+
+    unsupported = ask(
+        "Does Agent Engineering guarantee me a job and include a $500 discount?",
+        "github-action-unsupported-offer-fact",
+    )
+    assert unsupported["status"] == "insufficient_evidence"
+    assert unsupported["sources"] == []
+    assert "https://towardsai.com/academy/contact/#contact" in unsupported["answer"]

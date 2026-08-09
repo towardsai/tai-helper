@@ -82,9 +82,12 @@ API paths, and previews remain blocked.
 `data/towardsai_com_pages.json` is generated from every URL in the current
 `towardsai.com` page sitemap. `data/pages.json` is generated from every public
 Academy sitemap URL. Each eligible page records its canonical URL, successful
-fetch time, content hash, source authority, and heading-aware chunks. Known
-staging pages, legacy duplicates, failed fetches, and manually described links
-remain in the inventory but are explicitly ineligible as evidence.
+fetch time, content hash, source authority, heading-aware chunks, and atomic
+evidence spans (complete source sentences, DOM blocks, or table rows). A second
+hash binds the canonical URL, page text, chunks, and span definitions together.
+Known staging pages, legacy duplicates, conflicting catalog summaries, failed
+fetches, and manually described links remain in the inventory but are explicitly
+ineligible as evidence.
 
 Refresh both catalogs after public pages change:
 
@@ -98,10 +101,16 @@ supersede lower-authority Academy mirrors for the same offer. Routing notes are
 never treated as factual evidence.
 
 For factual answers, the model must return structured sentence-level claims.
-Every claim needs a valid retrieved chunk ID and an exact contiguous quote from
-that chunk. The server independently rejects altered numbers, number words,
-prices, percentages, URLs, negation, invented quotes, malformed output, and
-uncited text before anything is shown to a visitor.
+Every claim needs a valid retrieved chunk ID and must copy one complete
+server-defined evidence span. Arbitrary substrings are forbidden, so a model
+cannot turn “No code required” into “code required” or cross table-row
+boundaries. The server independently verifies catalog freshness, both hashes,
+canonical URLs, chunk/span identity, numbers, prices, percentages, URLs,
+negation, the named offer, the requested fact type, and output schema before
+anything is shown to a visitor. If exact target-qualified evidence is missing or
+generation fails validation, the API returns no sources and directs the visitor
+to the canonical [Towards AI contact form](https://towardsai.com/academy/contact/#contact)
+instead of guessing.
 
 ## Monitoring
 

@@ -113,7 +113,9 @@ def test_prompt_corrects_unsupported_alternatives_with_supported_table_facts() -
     assert 'do not infer a total or say "only"' in prompt_lower
     assert "do not repeat or deny the visitor's unsupported premise" in prompt_lower
     assert 'never write "not included"' in prompt_lower
-    assert 'unless those literal words occur in that claim\'s exact quote' in prompt_lower
+    assert (
+        "unless those literal words occur in that claim's exact quote" in prompt_lower
+    )
 
 
 def test_generate_answer_uses_deepseek_primary(monkeypatch) -> None:

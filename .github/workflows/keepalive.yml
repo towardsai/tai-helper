@@ -6,7 +6,7 @@ on:
     - cron: "29 */12 * * *"
 
 env:
-  SPACE_BASE_URL: https://towardsai-tutors-thinkific-tutor-api.hf.space
+  SPACE_BASE_URL: https://towardsai-tutors-tai-helper.hf.space
 
 jobs:
   ping:

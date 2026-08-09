@@ -561,6 +561,53 @@ def test_generate_grounded_answer_never_returns_raw_unvalidated_text(
     assert result.answer == ""
 
 
+def test_generate_grounded_answer_retries_one_validation_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sentence = (
+        "The Mentorship program includes one course: the 10-Hour LLM "
+        "Fundamentals course."
+    )
+    responses = iter(
+        [
+            llm.LLMResult("An unsupported provider sentence."),
+            llm.LLMResult(_model_json(text=sentence, quote=sentence)),
+        ]
+    )
+    prompts: list[str] = []
+
+    def fake_generate(prompt: str) -> llm.LLMResult:
+        prompts.append(prompt)
+        return next(responses)
+
+    monkeypatch.setattr(llm, "generate_answer", fake_generate)
+
+    result = llm.generate_grounded_answer("prompt", [MENTORSHIP_PAGE])
+
+    assert result.is_answered
+    assert result.answer == sentence
+    assert len(prompts) == 2
+    assert "single valid claim is better" in prompts[1]
+
+
+def test_generate_grounded_answer_does_not_retry_valid_not_found(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = 0
+
+    def fake_generate(_prompt: str) -> llm.LLMResult:
+        nonlocal calls
+        calls += 1
+        return llm.LLMResult('{"status":"not_found","claims":[]}')
+
+    monkeypatch.setattr(llm, "generate_answer", fake_generate)
+
+    result = llm.generate_grounded_answer("prompt", [MENTORSHIP_PAGE])
+
+    assert result.status == "not_found"
+    assert calls == 1
+
+
 def _query_bound_result(page: dict, query: str, target_offer_id: str):
     span = page["evidence_spans"][0]["text"]
     raw = _model_json(
@@ -641,6 +688,63 @@ def test_exact_starter_prompts_are_routing_intent_not_factual_qualifiers(
 
     assert result.is_answered
     assert result.answer == span
+
+
+def test_typed_duration_uses_field_validation_not_literal_structure_word() -> None:
+    span = "It is self-paced; the average completion time is 10 hours across five 2-hour sessions."
+    page = _with_spans(
+        {
+            "chunk_id": "llm-primer-duration",
+            "title": "10-Hour LLM Fundamentals",
+            "kind": "course",
+            "offer_id": "llm-primer",
+            "entity_id": "offer:llm-primer",
+            "url": "https://towardsai.com/academy/llm-primer/",
+            "headings": ["Course duration"],
+            "text": span,
+        },
+        span,
+    )
+    raw = _model_json(text=span, quote=span, chunk_id=page["chunk_id"])
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query="How long is LLM Fundamentals, and how is it structured?",
+        target_offer_ids=frozenset({"llm-primer"}),
+    )
+
+    assert result.is_answered
+
+
+def test_zero_coding_experience_is_a_typed_prerequisite_question() -> None:
+    span = "The course teaches Python from scratch and assumes no software background."
+    page = _with_spans(
+        {
+            "chunk_id": "python-prerequisite",
+            "title": "Beginner Python for AI Engineering",
+            "kind": "course",
+            "offer_id": "python-for-ai-engineering",
+            "entity_id": "offer:python-for-ai-engineering",
+            "url": "https://towardsai.com/academy/python-for-ai-engineering/",
+            "headings": ["Prerequisites"],
+            "text": span,
+        },
+        span,
+    )
+    raw = _model_json(text=span, quote=span, chunk_id=page["chunk_id"])
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query=(
+            "Is Beginner Python for AI Engineering suitable for someone with "
+            "zero coding experience?"
+        ),
+        target_offer_ids=frozenset({"python-for-ai-engineering"}),
+    )
+
+    assert result.is_answered
 
 
 def test_query_binding_rejects_an_exact_span_from_the_wrong_offer() -> None:

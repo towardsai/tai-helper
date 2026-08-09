@@ -314,6 +314,8 @@ _QUERY_RELEVANCE_STOP = frozenset(
         "recommendations",
         "recommended",
         "really",
+        "someone",
+        "suitable",
         "that",
         "the",
         "their",
@@ -345,10 +347,12 @@ _FACT_QUERY_TERMS = frozenset(
         "cancelling",
         "certificate",
         "certification",
+        "coding",
         "cost",
         "coupon",
         "discount",
         "duration",
+        "experience",
         "forever",
         "guarantee",
         "guaranteed",
@@ -373,6 +377,8 @@ _FACT_QUERY_TERMS = frozenset(
         "prerequisites",
         "refund",
         "retain",
+        "structure",
+        "structured",
         "year",
         "yearly",
     }
@@ -1253,10 +1259,33 @@ def generate_grounded_answer(
     query: str = "",
     target_offer_ids: frozenset[str] | None = None,
 ) -> GroundingResult:
-    """Generate and cross the fail-closed grounding boundary in one call."""
+    """Generate and cross the fail-closed grounding boundary.
 
-    return validate_grounded_result(
+    A provider response that fails deterministic validation gets one bounded
+    retry asking for fewer, exact extractive claims. Both attempts cross the
+    same validator; raw provider text is never returned.
+    """
+
+    first = validate_grounded_result(
         generate_answer(prompt),
+        selected_pages,
+        query=query,
+        target_offer_ids=target_offer_ids,
+    )
+    if first.status != "validation_failure" or not selected_pages:
+        return first
+
+    retry_prompt = (
+        f"{prompt}\n\n"
+        "<NON_EVIDENCE_RETRY_INSTRUCTION>\n"
+        "Your previous response could not pass the deterministic grounding "
+        "validator. Return not_found, or select fewer claims that each copy "
+        "one complete directly relevant ALLOWED_EVIDENCE_SPAN exactly. A "
+        "single valid claim is better than adding an uncertain claim.\n"
+        "</NON_EVIDENCE_RETRY_INSTRUCTION>"
+    )
+    return validate_grounded_result(
+        generate_answer(retry_prompt),
         selected_pages,
         query=query,
         target_offer_ids=target_offer_ids,

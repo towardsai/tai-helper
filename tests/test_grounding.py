@@ -575,6 +575,38 @@ def _query_bound_result(page: dict, query: str, target_offer_id: str):
     )
 
 
+def test_broad_course_decision_starter_accepts_retrieved_offer_evidence() -> None:
+    span = "Build and evaluate production-ready agentic AI systems."
+    page = _with_spans(
+        {
+            "chunk_id": "agent-engineering-overview",
+            "title": "Agent Engineering",
+            "kind": "course",
+            "offer_id": "agent-engineering",
+            "entity_id": "offer:agent-engineering",
+            "url": "https://towardsai.com/academy/agent-engineering/",
+            "headings": ["Agent Engineering"],
+            "text": span,
+        },
+        span,
+    )
+    raw = _model_json(
+        text=span,
+        quote=span,
+        chunk_id=page["chunk_id"],
+    )
+
+    result = llm.validate_grounded_result(
+        raw,
+        [page],
+        query="I want help deciding which course to take.",
+        target_offer_ids=frozenset(),
+    )
+
+    assert result.is_answered
+    assert result.answer == span
+
+
 def test_query_binding_rejects_an_exact_span_from_the_wrong_offer() -> None:
     page = _with_spans(
         {

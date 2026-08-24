@@ -18,7 +18,7 @@ It is deliberately separate from the Thinkific lesson tutor:
   Academy/legacy `.net` pages.
 - It hides when a visitor appears signed in.
 - The first message must be one of the fixed prompt buttons.
-- It uses DeepSeek V4 Flash through the DeepSeek API first, then falls back to
+- It uses DeepSeek V4 Flash through OpenRouter first, then falls back to
   Gemini 2.5 Flash if the primary provider fails.
 - It does not answer general AI questions or give away course lesson content.
 - It returns offer facts only after every sentence has passed exact-quote and
@@ -37,20 +37,38 @@ uv run uvicorn tai_helper.api:app --host 0.0.0.0 --port 8001
 Required model secrets:
 
 ```bash
-DEEPSEEK_API_KEY=...
+HELPER_PRIMARY_API_KEY=...   # OpenRouter key
 GEMINI_API_KEY=...
 ```
 
-Both providers matter. DeepSeek is primary; Gemini only takes over when DeepSeek
-fails, and it passes deterministic grounding validation less often, so a
-depleted DeepSeek balance shows up as visitors being told "I couldn't verify
-that" on questions the helper used to answer. `usage.fallback_from` in the chat
-response says when a reply came from the backup.
+## Model Providers
 
-Keep `HELPER_GEMINI_THINKING_BUDGET=0` unless you also raise
-`HELPER_MAX_OUTPUT_TOKENS`: Gemini 2.5 counts thinking tokens against the output
-budget, and an 8k-token grounding prompt will otherwise spend nearly all of it
-reasoning and emit a fragment that cannot pass validation.
+The primary model is DeepSeek V4 Flash reached **through OpenRouter**, so the
+helper draws on the shared OpenRouter balance instead of a standalone DeepSeek
+account that can silently run dry. Any OpenAI-compatible chat-completions
+endpoint works, so `HELPER_PRIMARY_MODEL` can point at other OpenRouter models
+without code changes. `HELPER_PRIMARY_*` supersede the older `DEEPSEEK_*` names.
+
+Gemini 2.5 Flash is the fallback. It only runs when the primary fails and it
+passes deterministic grounding validation less often, so a broken primary shows
+up as visitors being told "I couldn't verify that" on questions the helper used
+to answer. `usage.provider` and `usage.fallback_from` in the chat response say
+which model actually replied.
+
+**Reasoning must stay off on both.** Reasoning tokens are billed against the
+output budget, so with it on the model spends `HELPER_MAX_OUTPUT_TOKENS`
+reasoning and returns a truncated fragment that cannot pass validation. Each
+provider has its own switch and **accepts the other's with HTTP 200 while
+ignoring it**, so a wrong switch fails silently:
+
+| Gateway | Switch | Set by |
+| --- | --- | --- |
+| OpenRouter | `reasoning: {enabled: false}` | `HELPER_PRIMARY_API_STYLE=openrouter` |
+| DeepSeek direct | `thinking: {type: disabled}` | `HELPER_PRIMARY_API_STYLE=deepseek` |
+| Gemini | `thinking_config.thinking_budget` | `HELPER_GEMINI_THINKING_BUDGET=0` |
+
+`HELPER_PRIMARY_API_STYLE` is inferred from the base URL when unset. Only raise
+`HELPER_GEMINI_THINKING_BUDGET` if you also raise `HELPER_MAX_OUTPUT_TOKENS`.
 
 ## Public Widget Snippet
 

@@ -45,6 +45,11 @@ def _bool_env(name: str, default: bool = False) -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+DEFAULT_PRIMARY_MODEL = "deepseek/deepseek-v4-flash"
+DEFAULT_FALLBACK_MODEL = "gemini-3.7-flash"
+
+
 @dataclass(frozen=True)
 class Settings:
     allowed_origins: tuple[str, ...] = field(
@@ -72,60 +77,30 @@ class Settings:
             "towardsai.com,www.towardsai.com",
         )
     )
-    # The primary provider speaks the OpenAI chat-completions shape, so it can
-    # be DeepSeek direct or an OpenRouter gateway to DeepSeek and other models.
-    # HELPER_PRIMARY_* are the current names; the DEEPSEEK_* ones still work.
-    deepseek_api_key: str = field(
-        default_factory=lambda: (
-            os.getenv("HELPER_PRIMARY_API_KEY", "").strip()
-            or os.getenv("DEEPSEEK_API_KEY", "").strip()
-        )
+    # The primary model is reached through OpenRouter, which keeps a topped-up
+    # shared balance. A standalone DeepSeek account previously ran dry and took
+    # the helper down, so the direct-to-DeepSeek path was removed on purpose.
+    primary_api_key: str = field(
+        default_factory=lambda: os.getenv("HELPER_PRIMARY_API_KEY", "").strip()
     )
-    deepseek_base_url: str = field(
+    primary_base_url: str = field(
         default_factory=lambda: (
-            os.getenv(
-                "HELPER_PRIMARY_BASE_URL",
-                os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
-            )
+            os.getenv("HELPER_PRIMARY_BASE_URL", OPENROUTER_BASE_URL)
             .strip()
             .rstrip("/")
-            or "https://api.deepseek.com"
+            or OPENROUTER_BASE_URL
         )
     )
-    deepseek_thinking_type: str = field(
-        default_factory=lambda: (
-            os.getenv(
-                "HELPER_DEEPSEEK_THINKING",
-                "disabled",
-            ).strip()
-            or "disabled"
-        )
-    )
-    # Each gateway disables reasoning with its own parameter and silently
-    # ignores the other one's. Sending the wrong one leaves reasoning on, and
-    # reasoning tokens are billed against max_tokens, so the JSON answer comes
-    # back truncated and fails grounding validation.
-    primary_api_style: str = field(
-        default_factory=lambda: (
-            os.getenv("HELPER_PRIMARY_API_STYLE", "").strip().lower()
-            or (
-                "openrouter"
-                if "openrouter."
-                in os.getenv(
-                    "HELPER_PRIMARY_BASE_URL",
-                    os.getenv("DEEPSEEK_BASE_URL", ""),
-                ).lower()
-                else "deepseek"
-            )
-        )
+    # Reasoning tokens are billed against max_output_tokens, so leaving this on
+    # spends the budget reasoning and returns a truncated answer that cannot
+    # pass grounding validation.
+    primary_reasoning_enabled: bool = field(
+        default_factory=lambda: _bool_env("HELPER_PRIMARY_REASONING", False)
     )
     primary_model_name: str = field(
         default_factory=lambda: (
-            os.getenv(
-                "HELPER_PRIMARY_MODEL",
-                os.getenv("HELPER_MODEL", "deepseek-v4-flash"),
-            ).strip()
-            or "deepseek-v4-flash"
+            os.getenv("HELPER_PRIMARY_MODEL", DEFAULT_PRIMARY_MODEL).strip()
+            or DEFAULT_PRIMARY_MODEL
         )
     )
     gemini_api_key: str = field(
@@ -133,16 +108,13 @@ class Settings:
     )
     fallback_model_name: str = field(
         default_factory=lambda: (
-            os.getenv(
-                "HELPER_FALLBACK_MODEL",
-                "gemini-2.5-flash",
-            ).strip()
-            or "gemini-2.5-flash"
+            os.getenv("HELPER_FALLBACK_MODEL", DEFAULT_FALLBACK_MODEL).strip()
+            or DEFAULT_FALLBACK_MODEL
         )
     )
-    # Gemini 2.5 counts thinking tokens against max_output_tokens, so leaving
-    # thinking on spends the whole budget before any JSON is emitted. Mirrors
-    # HELPER_DEEPSEEK_THINKING, which already disables it on the primary.
+    # Gemini counts thinking tokens against max_output_tokens, the same trap as
+    # primary_reasoning_enabled above. Only raise this alongside
+    # HELPER_MAX_OUTPUT_TOKENS.
     gemini_thinking_budget: int = field(
         default_factory=lambda: _int_env("HELPER_GEMINI_THINKING_BUDGET", 0)
     )

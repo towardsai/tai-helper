@@ -53,7 +53,13 @@ def test_live_health_widget_and_config() -> None:
     )
 
     assert health.status_code == 200
-    assert health.json() == {"status": "ok"}
+    health_payload = health.json()
+    assert health_payload["status"] == "ok"
+    # An expired catalog leaves the Space up but unable to answer anything, so
+    # the smoke test checks the evidence countdown, not just liveness.
+    assert health_payload["catalog"]["fresh"] is True
+    assert health_payload["catalog"]["evidencePages"] > 0
+    assert health_payload["catalog"]["expiresInDays"] > 0
     assert health_seconds <= max_seconds("LIVE_SMOKE_MAX_HEALTH_SECONDS", 120)
     assert widget.status_code == 200
     assert "Towards AI Helper" in widget.text

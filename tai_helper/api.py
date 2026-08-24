@@ -19,6 +19,7 @@ from .catalog import (
     coupon_intent,
     evidence_offer_ids_for_query,
     forced_prompts,
+    freshness,
     in_scope,
     page_is_allowed,
     retrieve,
@@ -283,8 +284,15 @@ def _schedule_monitor(monitor: HelperMonitor) -> None:
 
 
 @app.get("/healthz")
-def healthcheck() -> dict[str, str]:
-    return {"status": "ok"}
+def healthcheck() -> dict[str, Any]:
+    # Stays 200 even when degraded: this is the Space liveness probe, and
+    # failing it would restart a container that is running perfectly well.
+    # The catalog block is what the scheduled keepalive check inspects.
+    catalog_state = freshness()
+    return {
+        "status": "ok" if catalog_state["fresh"] else "degraded",
+        "catalog": catalog_state,
+    }
 
 
 @app.get("/helper-widget.js")

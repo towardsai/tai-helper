@@ -1,0 +1,74 @@
+name: Refresh Catalog
+
+# The helper fails closed on evidence older than HELPER_CATALOG_MAX_AGE_DAYS
+# (14 by default). Without a scheduled rebuild the catalog quietly expires and
+# every answer becomes "I couldn't verify that" while /healthz still looks fine.
+# Weekly gives two refreshes of headroom before that boundary.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-catalog
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Rebuild page catalogs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Rebuild catalogs from the live sitemaps
+        run: uv run python scripts/build_towardsai_com_catalog.py
+
+      - name: Validate the rebuilt catalogs
+        # A partial or misparsed scrape must never be committed: these tests
+        # assert page counts, hashes, spans, and the known-unsafe exclusions.
+        run: uv run pytest -m "not live" -p no:cacheprovider tests
+
+      - name: Commit refreshed catalogs
+        id: commit
+        run: |
+          if git diff --quiet -- data/; then
+            echo "No catalog changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "Refresh page catalogs $(date -u +%Y-%m-%d)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+
+  deploy:
+    # Refreshing main is not enough on its own: the Space is a separate
+    # repository, and visitors keep seeing the old evidence until it is pushed.
+    name: Deploy refreshed catalogs
+    needs: refresh
+    if: needs.refresh.outputs.changed == 'true'
+    uses: ./.github/workflows/deploy-space.yml
+    secrets: inherit

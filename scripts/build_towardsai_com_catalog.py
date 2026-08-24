@@ -108,7 +108,11 @@ OFFER_PATHS = {
         "10-hour-crash-course-into-llm-developer-expert"
     ),
     "/academy/agent-engineering-free-preview": ("agent-engineering-free-preview"),
+    "/pages/agent-engineering-free-preview": ("agent-engineering-free-preview"),
     "/academy/full-stack-ai-engineering-free-preview": (
+        "full-stack-ai-engineering-free-preview"
+    ),
+    "/pages/full-stack-ai-engineering-free-preview": (
         "full-stack-ai-engineering-free-preview"
     ),
     "/products/digital_downloads/agents-cheatsheet": "agents-cheatsheet",

@@ -616,15 +616,38 @@ def _text_from_chat_content(content: Any) -> str:
 
 
 def _deepseek_headers() -> dict[str, str]:
-    return {
+    headers = {
         "Authorization": f"Bearer {settings.deepseek_api_key}",
         "Content-Type": "application/json",
     }
+    if settings.primary_api_style == "openrouter":
+        # Attribution headers OpenRouter uses to label traffic in the dashboard.
+        headers["HTTP-Referer"] = "https://towardsai.com"
+        headers["X-Title"] = "Towards AI Helper"
+    return headers
+
+
+def _reasoning_control() -> dict[str, Any]:
+    """Return the parameter that turns reasoning off on the configured gateway.
+
+    OpenRouter ignores DeepSeek's ``thinking`` field and DeepSeek ignores
+    OpenRouter's ``reasoning`` field, in both cases without an error. Sending
+    the wrong one leaves reasoning enabled, and its tokens count against
+    ``max_tokens``, so the model spends the budget reasoning and returns a
+    truncated fragment that cannot pass grounding validation.
+    """
+
+    if settings.primary_api_style == "openrouter":
+        return {"reasoning": {"enabled": settings.deepseek_thinking_type != "disabled"}}
+    return {"thinking": {"type": settings.deepseek_thinking_type}}
 
 
 def _generate_deepseek_answer(prompt: str) -> LLMResult:
     if not settings.deepseek_api_key:
-        raise RuntimeError("DEEPSEEK_API_KEY is not configured")
+        raise RuntimeError(
+            "No primary model API key configured "
+            "(HELPER_PRIMARY_API_KEY or DEEPSEEK_API_KEY)"
+        )
 
     response = requests.post(
         f"{settings.deepseek_base_url}/chat/completions",
@@ -635,7 +658,7 @@ def _generate_deepseek_answer(prompt: str) -> LLMResult:
                 {"role": "system", "content": SYSTEM_INSTRUCTION},
                 {"role": "user", "content": prompt},
             ],
-            "thinking": {"type": settings.deepseek_thinking_type},
+            **_reasoning_control(),
             "response_format": {"type": "json_object"},
             "temperature": DEFAULT_TEMPERATURE,
             "max_tokens": settings.max_output_tokens,
@@ -646,7 +669,9 @@ def _generate_deepseek_answer(prompt: str) -> LLMResult:
     if response.status_code >= 400:
         details = response.text.strip()[:500]
         raise RuntimeError(
-            f"DeepSeek request failed with HTTP {response.status_code}: {details}"
+            f"Primary model request to {settings.deepseek_base_url} "
+            f"({settings.primary_model_name}) failed with HTTP "
+            f"{response.status_code}: {details}"
         )
 
     payload = response.json()
@@ -685,6 +710,9 @@ def _generate_gemini_answer(prompt: str, *, fallback_from: str = "") -> LLMResul
             "max_output_tokens": settings.max_output_tokens,
             "response_mime_type": "application/json",
             "response_json_schema": GROUNDING_RESPONSE_SCHEMA,
+            "thinking_config": {
+                "thinking_budget": settings.gemini_thinking_budget
+            },
         },
     )
     usage_metadata = getattr(response, "usage_metadata", None)

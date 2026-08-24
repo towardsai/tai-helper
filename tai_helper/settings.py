@@ -72,14 +72,20 @@ class Settings:
             "towardsai.com,www.towardsai.com",
         )
     )
+    # The primary provider speaks the OpenAI chat-completions shape, so it can
+    # be DeepSeek direct or an OpenRouter gateway to DeepSeek and other models.
+    # HELPER_PRIMARY_* are the current names; the DEEPSEEK_* ones still work.
     deepseek_api_key: str = field(
-        default_factory=lambda: os.getenv("DEEPSEEK_API_KEY", "").strip()
+        default_factory=lambda: (
+            os.getenv("HELPER_PRIMARY_API_KEY", "").strip()
+            or os.getenv("DEEPSEEK_API_KEY", "").strip()
+        )
     )
     deepseek_base_url: str = field(
         default_factory=lambda: (
             os.getenv(
-                "DEEPSEEK_BASE_URL",
-                "https://api.deepseek.com",
+                "HELPER_PRIMARY_BASE_URL",
+                os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
             )
             .strip()
             .rstrip("/")
@@ -93,6 +99,24 @@ class Settings:
                 "disabled",
             ).strip()
             or "disabled"
+        )
+    )
+    # Each gateway disables reasoning with its own parameter and silently
+    # ignores the other one's. Sending the wrong one leaves reasoning on, and
+    # reasoning tokens are billed against max_tokens, so the JSON answer comes
+    # back truncated and fails grounding validation.
+    primary_api_style: str = field(
+        default_factory=lambda: (
+            os.getenv("HELPER_PRIMARY_API_STYLE", "").strip().lower()
+            or (
+                "openrouter"
+                if "openrouter."
+                in os.getenv(
+                    "HELPER_PRIMARY_BASE_URL",
+                    os.getenv("DEEPSEEK_BASE_URL", ""),
+                ).lower()
+                else "deepseek"
+            )
         )
     )
     primary_model_name: str = field(
@@ -115,6 +139,12 @@ class Settings:
             ).strip()
             or "gemini-2.5-flash"
         )
+    )
+    # Gemini 2.5 counts thinking tokens against max_output_tokens, so leaving
+    # thinking on spends the whole budget before any JSON is emitted. Mirrors
+    # HELPER_DEEPSEEK_THINKING, which already disables it on the primary.
+    gemini_thinking_budget: int = field(
+        default_factory=lambda: _int_env("HELPER_GEMINI_THINKING_BUDGET", 0)
     )
     max_output_tokens: int = field(
         default_factory=lambda: _int_env("HELPER_MAX_OUTPUT_TOKENS", 420)

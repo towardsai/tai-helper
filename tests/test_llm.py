@@ -187,3 +187,95 @@ def test_generate_answer_falls_back_to_gemini_when_deepseek_fails(
     assert result.usage["model"] == "gemini-2.5-flash"
     assert result.usage["fallback_from"] == "deepseek"
     assert FakeGeminiClient.models.calls[0]["model"] == "gemini-2.5-flash"
+
+
+def test_gemini_fallback_disables_thinking_so_it_can_actually_answer(
+    monkeypatch,
+) -> None:
+    """Gemini 2.5 counts thinking tokens against max_output_tokens.
+
+    With thinking left on, an 8k-token grounding prompt spent almost the whole
+    420-token budget reasoning and emitted a truncated fragment, so every
+    fallback answer failed validation. The fallback looked healthy while
+    answering nothing, and only surfaced once the primary ran out of credit.
+    """
+
+    FakeGeminiClient.models = FakeGeminiModels()
+    monkeypatch.setattr(
+        llm,
+        "settings",
+        Settings(deepseek_api_key="deepseek-key", gemini_api_key="gemini-key"),
+    )
+    monkeypatch.setattr(
+        llm.requests,
+        "post",
+        lambda *_args, **_kwargs: FakeDeepSeekResponse(402, {}, "Insufficient Balance"),
+    )
+    monkeypatch.setattr(llm.genai, "Client", FakeGeminiClient)
+
+    llm.generate_answer("Visitor prompt")
+
+    config = FakeGeminiClient.models.calls[0]["config"]
+    assert config["thinking_config"] == {"thinking_budget": 0}
+    assert config["max_output_tokens"] == 420
+
+
+def test_openrouter_style_disables_reasoning_with_openrouter_parameter(
+    monkeypatch,
+) -> None:
+    """Each gateway ignores the other's reasoning switch without erroring.
+
+    OpenRouter accepts DeepSeek's ``thinking`` field with HTTP 200 and simply
+    does not apply it, so reasoning stays on and its tokens are billed against
+    max_tokens. The JSON answer then comes back truncated and fails grounding
+    validation, exactly as it did on the Gemini fallback.
+    """
+
+    captured: dict[str, object] = {}
+
+    def fake_post(_url, **kwargs):
+        captured.update(kwargs["json"])
+        captured["headers"] = kwargs["headers"]
+        return FakeDeepSeekResponse(
+            200, {"choices": [{"message": {"content": "{}"}}]}, ""
+        )
+
+    monkeypatch.setattr(
+        llm,
+        "settings",
+        Settings(
+            deepseek_api_key="openrouter-key",
+            deepseek_base_url="https://openrouter.ai/api/v1",
+            primary_api_style="openrouter",
+            primary_model_name="deepseek/deepseek-v4-flash",
+        ),
+    )
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    llm.generate_answer("Visitor prompt")
+
+    assert captured["reasoning"] == {"enabled": False}
+    assert "thinking" not in captured
+    assert captured["model"] == "deepseek/deepseek-v4-flash"
+
+
+def test_deepseek_style_keeps_the_native_thinking_parameter(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_post(_url, **kwargs):
+        captured.update(kwargs["json"])
+        return FakeDeepSeekResponse(
+            200, {"choices": [{"message": {"content": "{}"}}]}, ""
+        )
+
+    monkeypatch.setattr(
+        llm,
+        "settings",
+        Settings(deepseek_api_key="deepseek-key", primary_api_style="deepseek"),
+    )
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    llm.generate_answer("Visitor prompt")
+
+    assert captured["thinking"] == {"type": "disabled"}
+    assert "reasoning" not in captured

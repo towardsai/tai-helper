@@ -7,6 +7,9 @@ on:
 
 env:
   SPACE_BASE_URL: https://towardsai-tutors-tai-helper.hf.space
+  # Fail while there is still time to act. The catalog is refreshed weekly, so
+  # fewer than this many days left means at least one refresh has been missed.
+  CATALOG_WARN_DAYS: "5"
 
 jobs:
   ping:
@@ -17,8 +20,52 @@ jobs:
     steps:
       - name: Health check
         run: |
-          curl --fail --show-error --silent --max-time 180 "$SPACE_BASE_URL/healthz"
+          curl --fail --show-error --silent --max-time 180 \
+            "$SPACE_BASE_URL/healthz" -o health.json
+          cat health.json
+
+      - name: Evidence catalog freshness
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          with open("health.json", encoding="utf-8") as handle:
+              payload = json.load(handle)
+
+          catalog = payload.get("catalog")
+          if not catalog:
+              sys.exit(
+                  "/healthz reported no catalog block. The deployed Space predates "
+                  "catalog freshness reporting, so an expiry would pass unnoticed. "
+                  "Deploy the current main to the Space."
+              )
+
+          expires_in = catalog.get("expiresInDays")
+          summary = json.dumps(catalog, sort_keys=True)
+
+          if not catalog.get("fresh"):
+              sys.exit(
+                  "Evidence catalog has EXPIRED. The helper is up but cannot answer "
+                  "anything: every reply falls back to 'I couldn't verify that'. "
+                  f"Run the Refresh Catalog workflow. {summary}"
+              )
+
+          warn_days = float(os.environ["CATALOG_WARN_DAYS"])
+          if expires_in is not None and expires_in < warn_days:
+              sys.exit(
+                  f"Evidence catalog expires in {expires_in} days, under the "
+                  f"{warn_days}-day floor. Run the Refresh Catalog workflow. {summary}"
+              )
+
+          print(
+              f"Catalog OK: {catalog['evidencePages']} evidence pages, "
+              f"expires in {expires_in} days."
+          )
+          PY
 
       - name: Widget check
         run: |
-          curl --fail --show-error --silent --max-time 60 "$SPACE_BASE_URL/helper-widget.js" | grep -q "Towards AI Helper"
+          curl --fail --show-error --silent --max-time 60 \
+            "$SPACE_BASE_URL/helper-widget.js" | grep -q "Towards AI Helper"

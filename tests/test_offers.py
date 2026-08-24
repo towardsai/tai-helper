@@ -88,7 +88,11 @@ def test_academy_refresh_scans_sitemap_and_excludes_unsafe_pages() -> None:
         if not page["retrieval_eligible"]
     }
 
-    assert len(academy_pages) == 28
+    # Lower bound, not an exact count: the Academy publishes new pages between
+    # refreshes, and an exact total turns every legitimate addition into a red
+    # build. The guard that matters is that a truncated or failed scan cannot
+    # pass, and that the known-unsafe paths below stay excluded.
+    assert len(academy_pages) >= 28
     assert {
         "/",
         "/pages/agent-course-landing-page",

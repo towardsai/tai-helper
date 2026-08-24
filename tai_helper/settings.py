@@ -103,6 +103,16 @@ class Settings:
             or DEFAULT_PRIMARY_MODEL
         )
     )
+    # OpenRouter serves one model id from many independent hosts at different
+    # quantisations, and they are not interchangeable for extractive grounding:
+    # measured on the same prompts, one host answered 3/3 while another
+    # answered 0/3 and a third returned not_found every time. Left unpinned,
+    # routing silently picks one and answer quality swings with it.
+    openrouter_provider_order: tuple[str, ...] = field(
+        default_factory=lambda: _csv_env(
+            "HELPER_OPENROUTER_PROVIDER_ORDER", "novita"
+        )
+    )
     gemini_api_key: str = field(
         default_factory=lambda: os.getenv("GEMINI_API_KEY", "").strip()
     )

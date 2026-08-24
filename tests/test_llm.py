@@ -260,3 +260,66 @@ def test_openrouter_style_disables_reasoning_with_openrouter_parameter(
     assert captured["reasoning"] == {"enabled": False}
     assert "thinking" not in captured
     assert captured["model"] == "deepseek/deepseek-v4-flash"
+
+
+def test_openrouter_request_pins_provider_routing(monkeypatch) -> None:
+    """One OpenRouter model id is served by many independent hosts.
+
+    They are not interchangeable for extractive grounding: on identical prompts
+    one host answered 3/3 while another answered 0/3, and the host the default
+    routing kept selecting returned not_found every time. require_parameters
+    also drops hosts that would ignore response_format and reply with prose.
+    """
+
+    captured: dict[str, object] = {}
+
+    def fake_post(_url, **kwargs):
+        captured.update(kwargs["json"])
+        return FakeOpenRouterResponse(
+            200, {"choices": [{"message": {"content": "{}"}}]}, ""
+        )
+
+    monkeypatch.setattr(
+        llm,
+        "settings",
+        Settings(
+            primary_api_key="openrouter-key",
+            openrouter_provider_order=("novita", "alibaba"),
+        ),
+    )
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    llm.generate_answer("Visitor prompt")
+
+    assert captured["provider"] == {
+        "require_parameters": True,
+        "allow_fallbacks": True,
+        "order": ["novita", "alibaba"],
+    }
+
+
+def test_openrouter_routing_omits_order_when_unset(monkeypatch) -> None:
+    """An empty order must not pin routing to nothing and 404 the request."""
+
+    captured: dict[str, object] = {}
+
+    def fake_post(_url, **kwargs):
+        captured.update(kwargs["json"])
+        return FakeOpenRouterResponse(
+            200, {"choices": [{"message": {"content": "{}"}}]}, ""
+        )
+
+    monkeypatch.setattr(
+        llm,
+        "settings",
+        Settings(primary_api_key="openrouter-key", openrouter_provider_order=()),
+    )
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    llm.generate_answer("Visitor prompt")
+
+    assert captured["provider"] == {
+        "require_parameters": True,
+        "allow_fallbacks": True,
+    }
+    assert "order" not in captured["provider"]

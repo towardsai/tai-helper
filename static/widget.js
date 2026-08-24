@@ -28,6 +28,9 @@
     messages: [],
     firstMessageSent: false,
     visitorId: visitorId(),
+    // Bumped on every reset so a reply from the previous conversation cannot
+    // land in the new one if the visitor resets while a request is in flight.
+    generation: 0,
   };
 
   var root = document.createElement("div");
@@ -48,8 +51,10 @@
     ".brand-mark{width:32px;height:32px;border-radius:8px;background:#182235;color:#fff;display:flex;align-items:center;justify-content:center;font:800 12px/1 system-ui}",
     ".title{font:750 15px/1.2 system-ui;color:#182235;letter-spacing:0}",
     ".subtitle{font:600 12px/1.25 system-ui;color:#64748b;max-width:285px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}",
-    ".iconbtn{width:34px;height:34px;flex:0 0 auto;border:0;border-radius:9px;background:#eef3f8;color:#475569;cursor:pointer;font:800 20px/1 system-ui}",
+    ".actions{display:flex;align-items:center;gap:6px}",
+    ".iconbtn{width:34px;height:34px;flex:0 0 auto;border:0;border-radius:9px;background:#eef3f8;color:#475569;cursor:pointer;font:800 20px/1 system-ui;display:flex;align-items:center;justify-content:center;padding:0}",
     ".iconbtn:hover{background:#e2eaf3;color:#182235}",
+    ".iconbtn svg{width:17px;height:17px;display:block}",
     ".msgs{flex:1;overflow:auto;padding:16px;background:#fff;display:flex;flex-direction:column;gap:12px}",
     ".msg{max-width:88%;padding:11px 13px;border-radius:11px;font:400 14px/1.48 system-ui;overflow-wrap:anywhere}",
     ".user{align-self:flex-end;background:#182235;color:#fff;border-bottom-right-radius:4px}",
@@ -85,7 +90,10 @@
     "  <section class='panel hidden' data-panel aria-label='Towards AI helper chat'>",
     "    <header class='head'>",
     "      <div class='brand'><div class='brand-mark'>TA</div><div><div class='title'>Towards AI Helper</div><div class='subtitle' data-subtitle></div></div></div>",
-    "      <button class='iconbtn' data-close aria-label='Minimize helper' title='Minimize'>&minus;</button>",
+    "      <div class='actions'>",
+    "        <button class='iconbtn' data-reset type='button' aria-label='Reset conversation' title='Reset conversation'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 12a8.5 8.5 0 1 1-2.49-6.01' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round'/><path d='M20.5 3.5V9H15' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg></button>",
+    "        <button class='iconbtn' data-close aria-label='Minimize helper' title='Minimize'>&minus;</button>",
+    "      </div>",
     "    </header>",
     "    <div class='msgs' data-msgs><div class='meta'>Choose a starter prompt.</div><div class='prompts' data-prompts></div></div>",
     "    <form class='form hidden' data-form>",
@@ -100,6 +108,7 @@
   var bubble = shadow.querySelector("[data-bubble]");
   var panel = shadow.querySelector("[data-panel]");
   var closeBtn = shadow.querySelector("[data-close]");
+  var resetBtn = shadow.querySelector("[data-reset]");
   var form = shadow.querySelector("[data-form]");
   var input = shadow.querySelector("[data-input]");
   var sendBtn = shadow.querySelector("[data-send]");
@@ -370,6 +379,7 @@
     setBusy(true);
     var loading = appendMessage("assistant", "Thinking...");
     loading.classList.add("empty");
+    var generation = state.generation;
 
     fetch(apiBase + "/api/helper/chat", {
       method: "POST",
@@ -401,6 +411,7 @@
         return response.json();
       })
       .then(function (payload) {
+        if (generation !== state.generation) return;
         state.threadId = payload.threadId || state.threadId;
         loading.classList.remove("empty");
         loading.innerHTML = renderMarkdown(payload.answer || "I could not answer that.");
@@ -424,6 +435,7 @@
         showInput();
       })
       .catch(function (error) {
+        if (generation !== state.generation) return;
         loading.classList.remove("empty");
         loading.innerHTML = renderMarkdown(
           error.message ||
@@ -431,6 +443,7 @@
         );
       })
       .finally(function () {
+        if (generation !== state.generation) return;
         setBusy(false);
         input.value = "";
         input.style.height = "auto";
@@ -452,12 +465,32 @@
     });
   }
 
+  function resetConversation() {
+    if (!state.config) return;
+    // Any reply still in flight belongs to the previous conversation.
+    state.generation += 1;
+    state.threadId = "";
+    state.messages = [];
+    state.firstMessageSent = false;
+    Array.prototype.forEach.call(msgs.querySelectorAll(".msg"), function (node) {
+      node.parentNode.removeChild(node);
+    });
+    prompts.classList.remove("hidden");
+    renderPrompts();
+    setBusy(false);
+    input.value = "";
+    input.style.height = "auto";
+    showInput();
+    msgs.scrollTop = 0;
+  }
+
   bubble.addEventListener("click", function () {
     setOpen(true);
   });
   closeBtn.addEventListener("click", function () {
     setOpen(false);
   });
+  resetBtn.addEventListener("click", resetConversation);
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     send(input.value, "");

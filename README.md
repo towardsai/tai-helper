@@ -41,6 +41,17 @@ DEEPSEEK_API_KEY=...
 GEMINI_API_KEY=...
 ```
 
+Both providers matter. DeepSeek is primary; Gemini only takes over when DeepSeek
+fails, and it passes deterministic grounding validation less often, so a
+depleted DeepSeek balance shows up as visitors being told "I couldn't verify
+that" on questions the helper used to answer. `usage.fallback_from` in the chat
+response says when a reply came from the backup.
+
+Keep `HELPER_GEMINI_THINKING_BUDGET=0` unless you also raise
+`HELPER_MAX_OUTPUT_TOKENS`: Gemini 2.5 counts thinking tokens against the output
+budget, and an 8k-token grounding prompt will otherwise spend nearly all of it
+reasoning and emit a fragment that cannot pass validation.
+
 ## Public Widget Snippet
 
 Add this to the global footer code on `towardsai.com`. Add it separately to

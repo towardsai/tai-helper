@@ -116,6 +116,12 @@ class Settings:
             or "gemini-2.5-flash"
         )
     )
+    # Gemini 2.5 counts thinking tokens against max_output_tokens, so leaving
+    # thinking on spends the whole budget before any JSON is emitted. Mirrors
+    # HELPER_DEEPSEEK_THINKING, which already disables it on the primary.
+    gemini_thinking_budget: int = field(
+        default_factory=lambda: _int_env("HELPER_GEMINI_THINKING_BUDGET", 0)
+    )
     max_output_tokens: int = field(
         default_factory=lambda: _int_env("HELPER_MAX_OUTPUT_TOKENS", 420)
     )

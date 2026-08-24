@@ -685,6 +685,9 @@ def _generate_gemini_answer(prompt: str, *, fallback_from: str = "") -> LLMResul
             "max_output_tokens": settings.max_output_tokens,
             "response_mime_type": "application/json",
             "response_json_schema": GROUNDING_RESPONSE_SCHEMA,
+            "thinking_config": {
+                "thinking_budget": settings.gemini_thinking_budget
+            },
         },
     )
     usage_metadata = getattr(response, "usage_metadata", None)

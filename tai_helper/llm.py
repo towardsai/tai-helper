@@ -24,7 +24,7 @@ from .catalog import (
 )
 from .settings import settings
 
-DEEPSEEK_PROVIDER = "deepseek"
+OPENROUTER_PROVIDER = "openrouter"
 GEMINI_PROVIDER = "google_genai"
 DEFAULT_TEMPERATURE = 0.0
 MAX_CONTEXT_CHARS = 18000
@@ -615,43 +615,36 @@ def _text_from_chat_content(content: Any) -> str:
     return str(content or "")
 
 
-def _deepseek_headers() -> dict[str, str]:
-    headers = {
-        "Authorization": f"Bearer {settings.deepseek_api_key}",
+def _openrouter_headers() -> dict[str, str]:
+    return {
+        "Authorization": f"Bearer {settings.primary_api_key}",
         "Content-Type": "application/json",
-    }
-    if settings.primary_api_style == "openrouter":
         # Attribution headers OpenRouter uses to label traffic in the dashboard.
-        headers["HTTP-Referer"] = "https://towardsai.com"
-        headers["X-Title"] = "Towards AI Helper"
-    return headers
+        "HTTP-Referer": "https://towardsai.com",
+        "X-Title": "Towards AI Helper",
+    }
 
 
 def _reasoning_control() -> dict[str, Any]:
-    """Return the parameter that turns reasoning off on the configured gateway.
+    """Return OpenRouter's reasoning switch.
 
-    OpenRouter ignores DeepSeek's ``thinking`` field and DeepSeek ignores
-    OpenRouter's ``reasoning`` field, in both cases without an error. Sending
-    the wrong one leaves reasoning enabled, and its tokens count against
-    ``max_tokens``, so the model spends the budget reasoning and returns a
-    truncated fragment that cannot pass grounding validation.
+    Reasoning tokens are billed against ``max_tokens``, so with reasoning on the
+    model spends the budget reasoning and returns a truncated fragment that
+    cannot pass grounding validation. OpenRouter accepts DeepSeek's native
+    ``thinking`` field with HTTP 200 and silently ignores it, so the switch has
+    to be OpenRouter's own.
     """
 
-    if settings.primary_api_style == "openrouter":
-        return {"reasoning": {"enabled": settings.deepseek_thinking_type != "disabled"}}
-    return {"thinking": {"type": settings.deepseek_thinking_type}}
+    return {"reasoning": {"enabled": settings.primary_reasoning_enabled}}
 
 
-def _generate_deepseek_answer(prompt: str) -> LLMResult:
-    if not settings.deepseek_api_key:
-        raise RuntimeError(
-            "No primary model API key configured "
-            "(HELPER_PRIMARY_API_KEY or DEEPSEEK_API_KEY)"
-        )
+def _generate_primary_answer(prompt: str) -> LLMResult:
+    if not settings.primary_api_key:
+        raise RuntimeError("HELPER_PRIMARY_API_KEY is not configured")
 
     response = requests.post(
-        f"{settings.deepseek_base_url}/chat/completions",
-        headers=_deepseek_headers(),
+        f"{settings.primary_base_url}/chat/completions",
+        headers=_openrouter_headers(),
         json={
             "model": settings.primary_model_name,
             "messages": [
@@ -669,7 +662,7 @@ def _generate_deepseek_answer(prompt: str) -> LLMResult:
     if response.status_code >= 400:
         details = response.text.strip()[:500]
         raise RuntimeError(
-            f"Primary model request to {settings.deepseek_base_url} "
+            f"Primary model request to {settings.primary_base_url} "
             f"({settings.primary_model_name}) failed with HTTP "
             f"{response.status_code}: {details}"
         )
@@ -677,7 +670,7 @@ def _generate_deepseek_answer(prompt: str) -> LLMResult:
     payload = response.json()
     choices = payload.get("choices") or []
     if not choices:
-        raise RuntimeError("DeepSeek response did not include any choices")
+        raise RuntimeError("Primary model response did not include any choices")
 
     message = choices[0].get("message") or {}
     answer = _text_from_chat_content(message.get("content")).strip()
@@ -689,7 +682,7 @@ def _generate_deepseek_answer(prompt: str) -> LLMResult:
             "output_tokens": raw_usage.get("completion_tokens")
             or raw_usage.get("output_tokens"),
             "total_tokens": raw_usage.get("total_tokens"),
-            "provider": DEEPSEEK_PROVIDER,
+            "provider": OPENROUTER_PROVIDER,
             "model": settings.primary_model_name,
         }
     )
@@ -747,27 +740,27 @@ def generate_answer(prompt: str) -> LLMResult:
     started = time.monotonic()
     primary_error: Exception | None = None
 
-    if settings.deepseek_api_key:
+    if settings.primary_api_key:
         try:
-            result = _generate_deepseek_answer(prompt)
+            result = _generate_primary_answer(prompt)
             return _with_latency(result, started)
         except Exception as exc:
             primary_error = exc
             logger.warning(
-                "DeepSeek generation failed; falling back to Gemini.",
+                "Primary model generation failed; falling back to Gemini.",
                 exc_info=True,
             )
 
     try:
         result = _generate_gemini_answer(
             prompt,
-            fallback_from=DEEPSEEK_PROVIDER if primary_error else "",
+            fallback_from=OPENROUTER_PROVIDER if primary_error else "",
         )
         return _with_latency(result, started)
     except Exception as fallback_error:
         if primary_error is not None:
             raise RuntimeError(
-                "DeepSeek primary and Gemini fallback generation both failed"
+                "OpenRouter primary and Gemini fallback generation both failed"
             ) from fallback_error
         raise
 

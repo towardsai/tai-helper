@@ -6,7 +6,7 @@ from tai_helper import llm
 from tai_helper.settings import Settings
 
 
-class FakeDeepSeekResponse:
+class FakeOpenRouterResponse:
     def __init__(self, status_code: int, payload: dict[str, Any], text: str = ""):
         self.status_code = status_code
         self._payload = payload
@@ -118,20 +118,20 @@ def test_prompt_corrects_unsupported_alternatives_with_supported_table_facts() -
     )
 
 
-def test_generate_answer_uses_deepseek_primary(monkeypatch) -> None:
+def test_generate_answer_uses_openrouter_primary(monkeypatch) -> None:
     request_calls = []
     monkeypatch.setattr(
         llm,
         "settings",
-        Settings(deepseek_api_key="deepseek-key", gemini_api_key="gemini-key"),
+        Settings(primary_api_key="openrouter-key", gemini_api_key="gemini-key"),
     )
 
     def fake_post(*args, **kwargs):
         request_calls.append({"args": args, **kwargs})
-        return FakeDeepSeekResponse(
+        return FakeOpenRouterResponse(
             200,
             {
-                "choices": [{"message": {"content": "DeepSeek answer"}}],
+                "choices": [{"message": {"content": "Primary answer"}}],
                 "usage": {
                     "prompt_tokens": 10,
                     "completion_tokens": 8,
@@ -144,17 +144,22 @@ def test_generate_answer_uses_deepseek_primary(monkeypatch) -> None:
 
     result = llm.generate_answer("Visitor prompt")
 
-    assert result.answer == "DeepSeek answer"
-    assert result.usage["provider"] == "deepseek"
-    assert result.usage["model"] == "deepseek-v4-flash"
+    assert result.answer == "Primary answer"
+    assert result.usage["provider"] == "openrouter"
+    assert result.usage["model"] == "deepseek/deepseek-v4-flash"
     assert result.usage["total_tokens"] == 18
-    assert request_calls[0]["args"] == ("https://api.deepseek.com/chat/completions",)
+    assert request_calls[0]["args"] == (
+        "https://openrouter.ai/api/v1/chat/completions",
+    )
     assert request_calls[0]["headers"] == {
-        "Authorization": "Bearer deepseek-key",
+        "Authorization": "Bearer openrouter-key",
         "Content-Type": "application/json",
+        "HTTP-Referer": "https://towardsai.com",
+        "X-Title": "Towards AI Helper",
     }
-    assert request_calls[0]["json"]["model"] == "deepseek-v4-flash"
-    assert request_calls[0]["json"]["thinking"] == {"type": "disabled"}
+    assert request_calls[0]["json"]["model"] == "deepseek/deepseek-v4-flash"
+    assert request_calls[0]["json"]["reasoning"] == {"enabled": False}
+    assert "thinking" not in request_calls[0]["json"]
     assert request_calls[0]["json"]["messages"][0]["role"] == "system"
     assert request_calls[0]["json"]["messages"][1] == {
         "role": "user",
@@ -162,19 +167,19 @@ def test_generate_answer_uses_deepseek_primary(monkeypatch) -> None:
     }
 
 
-def test_generate_answer_falls_back_to_gemini_when_deepseek_fails(
+def test_generate_answer_falls_back_to_gemini_when_primary_fails(
     monkeypatch,
 ) -> None:
     FakeGeminiClient.models = FakeGeminiModels()
     monkeypatch.setattr(
         llm,
         "settings",
-        Settings(deepseek_api_key="deepseek-key", gemini_api_key="gemini-key"),
+        Settings(primary_api_key="openrouter-key", gemini_api_key="gemini-key"),
     )
     monkeypatch.setattr(
         llm.requests,
         "post",
-        lambda *_args, **_kwargs: FakeDeepSeekResponse(
+        lambda *_args, **_kwargs: FakeOpenRouterResponse(
             503, {}, "temporarily unavailable"
         ),
     )
@@ -184,9 +189,9 @@ def test_generate_answer_falls_back_to_gemini_when_deepseek_fails(
 
     assert result.answer == "Gemini fallback answer"
     assert result.usage["provider"] == "google_genai"
-    assert result.usage["model"] == "gemini-2.5-flash"
-    assert result.usage["fallback_from"] == "deepseek"
-    assert FakeGeminiClient.models.calls[0]["model"] == "gemini-2.5-flash"
+    assert result.usage["model"] == "gemini-3.7-flash"
+    assert result.usage["fallback_from"] == "openrouter"
+    assert FakeGeminiClient.models.calls[0]["model"] == "gemini-3.7-flash"
 
 
 def test_gemini_fallback_disables_thinking_so_it_can_actually_answer(
@@ -204,12 +209,12 @@ def test_gemini_fallback_disables_thinking_so_it_can_actually_answer(
     monkeypatch.setattr(
         llm,
         "settings",
-        Settings(deepseek_api_key="deepseek-key", gemini_api_key="gemini-key"),
+        Settings(primary_api_key="openrouter-key", gemini_api_key="gemini-key"),
     )
     monkeypatch.setattr(
         llm.requests,
         "post",
-        lambda *_args, **_kwargs: FakeDeepSeekResponse(402, {}, "Insufficient Balance"),
+        lambda *_args, **_kwargs: FakeOpenRouterResponse(402, {}, "Insufficient Balance"),
     )
     monkeypatch.setattr(llm.genai, "Client", FakeGeminiClient)
 
@@ -236,7 +241,7 @@ def test_openrouter_style_disables_reasoning_with_openrouter_parameter(
     def fake_post(_url, **kwargs):
         captured.update(kwargs["json"])
         captured["headers"] = kwargs["headers"]
-        return FakeDeepSeekResponse(
+        return FakeOpenRouterResponse(
             200, {"choices": [{"message": {"content": "{}"}}]}, ""
         )
 
@@ -244,9 +249,7 @@ def test_openrouter_style_disables_reasoning_with_openrouter_parameter(
         llm,
         "settings",
         Settings(
-            deepseek_api_key="openrouter-key",
-            deepseek_base_url="https://openrouter.ai/api/v1",
-            primary_api_style="openrouter",
+            primary_api_key="openrouter-key",
             primary_model_name="deepseek/deepseek-v4-flash",
         ),
     )
@@ -257,25 +260,3 @@ def test_openrouter_style_disables_reasoning_with_openrouter_parameter(
     assert captured["reasoning"] == {"enabled": False}
     assert "thinking" not in captured
     assert captured["model"] == "deepseek/deepseek-v4-flash"
-
-
-def test_deepseek_style_keeps_the_native_thinking_parameter(monkeypatch) -> None:
-    captured: dict[str, object] = {}
-
-    def fake_post(_url, **kwargs):
-        captured.update(kwargs["json"])
-        return FakeDeepSeekResponse(
-            200, {"choices": [{"message": {"content": "{}"}}]}, ""
-        )
-
-    monkeypatch.setattr(
-        llm,
-        "settings",
-        Settings(deepseek_api_key="deepseek-key", primary_api_style="deepseek"),
-    )
-    monkeypatch.setattr(llm.requests, "post", fake_post)
-
-    llm.generate_answer("Visitor prompt")
-
-    assert captured["thinking"] == {"type": "disabled"}
-    assert "reasoning" not in captured

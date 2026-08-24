@@ -638,6 +638,22 @@ def _reasoning_control() -> dict[str, Any]:
     return {"reasoning": {"enabled": settings.primary_reasoning_enabled}}
 
 
+def _provider_routing() -> dict[str, Any]:
+    """Constrain which OpenRouter host serves the request.
+
+    ``require_parameters`` drops hosts that do not honour what is sent, so a
+    host that ignores ``response_format`` cannot answer with prose that then
+    fails to parse. The preference order puts a host measured as reliable for
+    extractive grounding first, with fallbacks left on so a single host being
+    down degrades quality instead of taking the helper offline.
+    """
+
+    routing: dict[str, Any] = {"require_parameters": True, "allow_fallbacks": True}
+    if settings.openrouter_provider_order:
+        routing["order"] = list(settings.openrouter_provider_order)
+    return {"provider": routing}
+
+
 def _generate_primary_answer(prompt: str) -> LLMResult:
     if not settings.primary_api_key:
         raise RuntimeError("HELPER_PRIMARY_API_KEY is not configured")
@@ -652,6 +668,7 @@ def _generate_primary_answer(prompt: str) -> LLMResult:
                 {"role": "user", "content": prompt},
             ],
             **_reasoning_control(),
+            **_provider_routing(),
             "response_format": {"type": "json_object"},
             "temperature": DEFAULT_TEMPERATURE,
             "max_tokens": settings.max_output_tokens,

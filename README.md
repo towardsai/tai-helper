@@ -49,6 +49,16 @@ out of balance and took the helper down, while OpenRouter draws on a shared
 balance that is kept topped up. `HELPER_PRIMARY_MODEL` can name any OpenRouter
 model without code changes.
 
+**Pin the OpenRouter host.** OpenRouter serves one model id from many
+independent providers at different quantisations, and they are not
+interchangeable for this workload. Measured on identical grounding prompts, one
+host answered 3/3 while another answered 0/3, and the host the default routing
+kept choosing returned `not_found` on the main starter prompt every single time
+— 0/6 in production, 6/6 once pinned. `HELPER_OPENROUTER_PROVIDER_ORDER` sets
+the preference order; `require_parameters` additionally drops hosts that would
+ignore `response_format` and answer with prose. Fallbacks stay enabled, so one
+host going down degrades quality rather than taking the helper offline.
+
 Gemini 3.7 Flash is the fallback, deliberately kept on Google's own API rather
 than routed through OpenRouter, so the backup does not share a gateway with the
 primary. It only runs when the primary fails and it passes the grounding

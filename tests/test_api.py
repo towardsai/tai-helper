@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import dataclasses
 import json
 
 import pytest
 from fastapi.testclient import TestClient
 
 from tai_helper import api
+from tai_helper import catalog as catalog_module
 from tai_helper.llm import EvidenceChunk, GroundingResult
 from tai_helper.rate_limiter import FixedWindowRateLimiter, RateLimit
 
@@ -716,3 +718,37 @@ def test_rate_limit_is_hard(monkeypatch) -> None:
     assert first.status_code == 200
     assert second.status_code == 429
     assert int(second.headers["retry-after"]) > 0
+
+
+def test_healthz_reports_catalog_freshness_countdown() -> None:
+    payload = client.get("/healthz").json()
+
+    assert payload["status"] == "ok"
+    catalog = payload["catalog"]
+    assert catalog["fresh"] is True
+    assert catalog["evidencePages"] > 0
+    assert catalog["maxAgeDays"] > 0
+    assert catalog["oldestFetchAgeDays"] is not None
+    assert catalog["expiresInDays"] > 0
+
+
+def test_healthz_reports_degraded_when_the_catalog_has_expired(monkeypatch) -> None:
+    """An expired catalog leaves the API up but unable to answer anything.
+
+    /healthz must stay 200 so the Space is not restarted for a container that
+    is fine, while still saying plainly that there is no evidence left.
+    """
+
+    expired = dataclasses.replace(
+        catalog_module.settings, catalog_max_age_days=0
+    )
+    monkeypatch.setattr(catalog_module, "settings", expired)
+
+    response = client.get("/healthz")
+    payload = response.json()
+
+    assert response.status_code == 200
+    assert payload["status"] == "degraded"
+    assert payload["catalog"]["fresh"] is False
+    assert payload["catalog"]["evidencePages"] == 0
+    assert payload["catalog"]["expiresInDays"] <= 0

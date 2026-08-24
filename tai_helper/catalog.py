@@ -468,6 +468,42 @@ def pages() -> list[dict[str, Any]]:
     return list(_fresh_pages())
 
 
+def freshness() -> dict[str, Any]:
+    """Report how close the evidence catalog is to expiring.
+
+    When every page ages past ``HELPER_CATALOG_MAX_AGE_DAYS`` the helper keeps
+    answering requests but has no evidence left, so every reply becomes
+    "I couldn't verify that". That failure is invisible to a liveness probe,
+    which is how it once ran for a day unnoticed. Surfacing the countdown lets
+    the scheduled keepalive fail before visitors see it.
+    """
+
+    now = datetime.now(UTC)
+    max_age_days = max(settings.catalog_max_age_days, 0)
+    ages = [
+        (now - fetched_at).total_seconds() / 86_400
+        for fetched_at in (
+            _parse_timestamp(page.get("fetched_at")) for page in all_pages()
+        )
+        if fetched_at is not None
+    ]
+    oldest_age_days = max(ages) if ages else None
+    evidence_pages = len(_fresh_pages())
+    return {
+        "evidencePages": evidence_pages,
+        "maxAgeDays": max_age_days,
+        "oldestFetchAgeDays": (
+            round(oldest_age_days, 2) if oldest_age_days is not None else None
+        ),
+        "expiresInDays": (
+            round(max_age_days - oldest_age_days, 2)
+            if oldest_age_days is not None
+            else None
+        ),
+        "fresh": evidence_pages > 0,
+    }
+
+
 def _token_list(text: str) -> list[str]:
     tokens = []
     for raw_token in WORD_RE.findall(text.lower()):

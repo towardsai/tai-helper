@@ -1,0 +1,73 @@
+name: Deploy to HF Space
+
+# The Space is a separate git repository, so a merge to main is not a deploy.
+# This pushes a snapshot of the current ref to the Space that serves visitors.
+#
+# Requires the HF_TOKEN repository secret (write-scoped for the Space).
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      HF_TOKEN:
+        required: true
+
+concurrency:
+  group: deploy-space
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Push snapshot to the Space
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Resolve the branch tip rather than the pinned trigger sha, so a
+          # deploy called right after the refresh job commits picks up that
+          # commit instead of redeploying the pre-refresh catalogs.
+          ref: ${{ github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Test before deploying
+        run: |
+          uv run ruff check .
+          node --check static/widget.js
+          uv run pytest -m "not live" -p no:cacheprovider tests
+
+      - name: Deploy
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: scripts/deploy_to_space.sh
+
+      - name: Verify the Space came back healthy
+        env:
+          SPACE_BASE_URL: https://towardsai-tutors-tai-helper.hf.space
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --max-time 60 \
+                 "$SPACE_BASE_URL/healthz" -o health.json &&
+               [ "$(jq -r '.catalog.fresh' health.json)" = "true" ]; then
+              echo "Space healthy with a fresh catalog:"
+              cat health.json
+              exit 0
+            fi
+            echo "Attempt $attempt: Space not ready yet, waiting..."
+            sleep 20
+          done
+          echo "Space did not report a fresh catalog within the rebuild window."
+          cat health.json || true
+          exit 1

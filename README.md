@@ -58,8 +58,31 @@ public pages:
 The widget fetches `/api/helper/config`, checks the current public URL, hides on
 signed-in sessions, and starts as a bottom-right `Ask the helper` bubble.
 
+The panel header carries two controls: a reset button that clears the thread and
+returns to the starter prompts, and the minimize button. Resetting also discards
+any reply still in flight, so a late answer from the previous thread cannot
+appear under a new question.
+
 The `.net` website redirects to `.com` before page JavaScript runs, so installing
 the snippet only on `.net` will not make the helper appear on `.com`.
+
+## Deployment
+
+The helper runs on the Hugging Face Space `towardsai-tutors/tai_helper`, served
+at `https://towardsai-tutors-tai-helper.hf.space`. **The Space is a separate git
+repository from GitHub, so merging to `main` is not a deploy.** Its history is a
+linear series of `Deploy tai-helper <sha>` snapshots.
+
+Deploy with the **Deploy to HF Space** workflow, or locally:
+
+```bash
+HF_TOKEN=hf_... scripts/deploy_to_space.sh
+```
+
+Both run the test suite first, push a snapshot, then poll `/healthz` until the
+Space reports a fresh catalog. The weekly catalog refresh calls the same workflow
+so a refreshed catalog actually reaches visitors. Set `HF_TOKEN` as a repository
+secret (write-scoped for the Space) for either to work from CI.
 
 ## Deployment Domain Settings
 
@@ -100,6 +123,25 @@ The API accepts evidence only while each page's successful fetch is within
 supersede lower-authority Academy mirrors for the same offer. Routing notes are
 never treated as factual evidence.
 
+### The catalog must not be allowed to expire
+
+Past that 14-day window every page is rejected at once, so retrieval returns
+nothing and *every* answer becomes "I couldn't verify that". The API stays up and
+returns 200 throughout, which is why this can run unnoticed. Three things guard
+against it:
+
+- **Refresh Catalog** (`.github/workflows/refresh-catalog.yml`) rebuilds both
+  catalogs every Monday and commits them, keeping two refreshes of headroom
+  before the 14-day boundary. It runs the full test suite first so a partial or
+  misparsed scrape is never committed.
+- **`/healthz`** reports the countdown (see Monitoring below).
+- **HF Space Keepalive** fails when the catalog has expired, when fewer than
+  `CATALOG_WARN_DAYS` remain, or when the deployed Space is too old to report
+  catalog state at all.
+
+Refreshing the catalog on `main` does not by itself change what visitors see:
+the Space is deployed separately (see Deployment below).
+
 For factual answers, the model must return structured sentence-level claims.
 Every claim needs a valid retrieved chunk ID and must copy one complete
 server-defined evidence span. Arbitrary substrings are forbidden, so a model
@@ -113,6 +155,26 @@ to the canonical [Towards AI contact form](https://towardsai.com/academy/contact
 instead of guessing.
 
 ## Monitoring
+
+`GET /healthz` reports liveness and evidence-catalog freshness together:
+
+```json
+{
+  "status": "ok",
+  "catalog": {
+    "evidencePages": 32,
+    "maxAgeDays": 14,
+    "oldestFetchAgeDays": 0.4,
+    "expiresInDays": 13.6,
+    "fresh": true
+  }
+}
+```
+
+`status` becomes `degraded` and `evidencePages` drops to `0` once the catalog
+expires. The endpoint deliberately still returns 200 so the Space is not
+restarted for a container that is running correctly; the scheduled keepalive is
+what turns a degraded catalog into a failed workflow run.
 
 Enable Opik:
 

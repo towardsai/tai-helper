@@ -144,7 +144,7 @@ def test_every_evidence_page_has_fresh_provenance_and_real_chunks() -> None:
         ),
         (
             "https://towardsai.com/academy/agent-engineering/",
-            ("$499 one-time", "35 lessons", "two production agents"),
+            ("$499 one-time", "37 lessons", "two production agents"),
         ),
         (
             "https://towardsai.com/academy/llm-primer/",

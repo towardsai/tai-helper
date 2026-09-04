@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from tai_helper import catalog
 from tai_helper.catalog import (
     allowed_paths_by_host,
     coupon_followup,
@@ -131,6 +132,40 @@ def test_allowed_public_pages_include_sitemap_urls_and_exclude_private_paths() -
     assert not page_is_allowed("https://towardsai.com/academy/?preview=true")
     assert "/b2b" in allowed_paths_by_host()["www.towardsai.net"]
     assert "/academy/mentorship" in allowed_paths_by_host()["www.towardsai.com"]
+
+
+def test_routing_keeps_fetched_sitemap_url_when_canonical_crosses_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    discovered_url = "https://academy.towardsai.net/courses/agent-engineering"
+    monkeypatch.setattr(
+        catalog,
+        "pages_payload",
+        lambda: {
+            "pages": [
+                {
+                    "discovered_url": discovered_url,
+                    "url": "https://towardsai.com/academy/agent-engineering/",
+                    "canonical_url": "https://towardsai.com/academy/agent-engineering/",
+                    "host": "towardsai.com",
+                    "path": "/academy/agent-engineering",
+                    "status": "excluded",
+                    "retrieval_eligible": False,
+                    "http_status": 200,
+                    "excluded_reason": "canonical URL is outside the sitemap authority",
+                }
+            ]
+        },
+    )
+
+    assert allowed_paths_by_host() == {
+        "academy.towardsai.net": ["/courses/agent-engineering"],
+        "towardsai.net": sorted(catalog.LEGACY_PUBLIC_PATHS_BY_HOST["towardsai.net"]),
+        "www.towardsai.net": sorted(
+            catalog.LEGACY_PUBLIC_PATHS_BY_HOST["towardsai.net"]
+        ),
+    }
+    assert page_is_allowed(discovered_url)
 
 
 def test_retrieval_routes_mentorship_b2b_and_bundle_queries() -> None:

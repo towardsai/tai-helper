@@ -7,6 +7,7 @@ from scripts.build_towardsai_com_catalog import (
     ACADEMY_HOSTS,
     ACADEMY_SITEMAP_URL,
     CATALOG_USER_AGENT,
+    JINA_READER_BASE_URL,
     COM_HOSTS,
     PageParser,
     build_catalog,
@@ -24,10 +25,12 @@ class FakeResponse:
         text: str,
         *,
         status_code: int = 200,
+        headers: dict[str, str] | None = None,
     ) -> None:
         self.url = url
         self.text = text
         self.status_code = status_code
+        self.headers = headers or {}
 
     def raise_for_status(self) -> None:
         if self.status_code >= 400:
@@ -39,10 +42,18 @@ class FakeSession:
         self.routes = routes
         self.headers: dict[str, str] = {}
         self.calls: list[str] = []
+        self.request_headers: list[dict[str, str] | None] = []
 
-    def get(self, url: str, *, timeout: int) -> FakeResponse:
-        assert timeout == 30
+    def get(
+        self,
+        url: str,
+        *,
+        timeout: int,
+        headers: dict[str, str] | None = None,
+    ) -> FakeResponse:
+        assert timeout in {30, 60}
         self.calls.append(url)
+        self.request_headers.append(headers)
         if url not in self.routes:
             raise AssertionError(f"unexpected network request: {url}")
         return self.routes[url]
@@ -77,6 +88,53 @@ def page_html(title: str, body: str, *, canonical: str = "") -> str:
           </body>
         </html>
     """
+
+
+def test_academy_403_uses_html_reader_fallback() -> None:
+    academy_url = "https://academy.towardsai.net/courses/agent-engineering"
+    proxy_sitemap = f"{JINA_READER_BASE_URL}{ACADEMY_SITEMAP_URL}"
+    proxy_page = f"{JINA_READER_BASE_URL}{academy_url}"
+    rendered_sitemap = f"""
+        <html><body><div>
+          <a href="{academy_url}">{academy_url}</a>
+          <br><time>2026-09-04T01:00:00Z</time>
+        </div></body></html>
+    """
+    session = FakeSession(
+        {
+            ACADEMY_SITEMAP_URL: FakeResponse(
+                ACADEMY_SITEMAP_URL, "blocked", status_code=403
+            ),
+            proxy_sitemap: FakeResponse(proxy_sitemap, rendered_sitemap),
+            academy_url: FakeResponse(academy_url, "blocked", status_code=403),
+            proxy_page: FakeResponse(
+                proxy_page,
+                page_html("Agent Engineering", "Build reliable production agents."),
+            ),
+        }
+    )
+
+    catalog = build_catalog(
+        session=session,
+        sitemap_url=ACADEMY_SITEMAP_URL,
+        authority="official_academy",
+        allowed_hosts=ACADEMY_HOSTS,
+        fetched_at="2026-09-04T01:00:00+00:00",
+    )
+
+    assert session.calls == [
+        ACADEMY_SITEMAP_URL,
+        proxy_sitemap,
+        academy_url,
+        proxy_page,
+    ]
+    assert session.request_headers[1] == {
+        "X-Return-Format": "html",
+        "X-Timeout": "30",
+    }
+    assert catalog["status_counts"] == {"included": 1}
+    assert catalog["pages"][0]["canonical_url"] == academy_url
+    assert "Build reliable production agents" in catalog["pages"][0]["text"]
 
 
 def test_parser_suppresses_chrome_and_extracts_canonical_hints() -> None:

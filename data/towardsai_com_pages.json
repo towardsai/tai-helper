@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "source": "https://towardsai.com/pages-sitemap.xml",
-  "generated_at": "2026-09-04T02:10:55.249098+00:00",
+  "generated_at": "2026-09-04T02:17:52.912417+00:00",
   "authority": "official_site",
   "status_counts": {
     "excluded": 3,
@@ -754,7 +754,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "2c6d090a66b9f00b11021b9b28facfa137d5b9182fcf11e8041b288351557443",
       "content_hash": "2c6d090a66b9f00b11021b9b28facfa137d5b9182fcf11e8041b288351557443",
       "authority": "official_site",
@@ -767,7 +767,7 @@
         "https://towardsai.com/"
       ],
       "excluded_reason": "homepage offer summaries can conflict with canonical detail pages",
-      "evidence_hash": "997966abead03292698c7c3a99ca93b774183cfe32b8ced7b8bd1bcd2089f16c"
+      "evidence_hash": "cfb9d773de5451344d5199b270dc6cbcbe2bbdd65aebc1f8b4bfa889a23089bc"
     },
     {
       "discovered_url": "https://towardsai.com/academy/",
@@ -1189,7 +1189,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "ff9481d6abf2fd82e7c8b9e6c1fecad4f517cee413f2c66f239d0e9251914d45",
       "content_hash": "ff9481d6abf2fd82e7c8b9e6c1fecad4f517cee413f2c66f239d0e9251914d45",
       "authority": "official_site",
@@ -1202,7 +1202,7 @@
         "https://towardsai.com/academy/"
       ],
       "excluded_reason": "catalog summary can conflict with canonical offer detail pages",
-      "evidence_hash": "c551544444da5cfe47f6add20ed7d692e1db585d6a376ec5a26849f4fbab6eba"
+      "evidence_hash": "8e4afbe4110afc26feb459908263c4e91db412ac10bf21dd75b2d80cdf961d86"
     },
     {
       "discovered_url": "https://towardsai.com/academy/full-stack-ai-engineering/",
@@ -2401,7 +2401,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "9f4a061836aafe0419f3b530f77099ac30d11a8470807512c3c60974d8f1c44b",
       "content_hash": "9f4a061836aafe0419f3b530f77099ac30d11a8470807512c3c60974d8f1c44b",
       "authority": "official_site",
@@ -2413,7 +2413,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/full-stack-ai-engineering/"
       ],
-      "evidence_hash": "0a3ba29b8eec64f9c854f3b392c39b033449c78fe924c4e1bfe50809ba33cd22"
+      "evidence_hash": "b33fdceb74d5ddaca5c1c4c491d33686e13a90188a973f05fc1316141ee60e52"
     },
     {
       "discovered_url": "https://towardsai.com/academy/agent-engineering/",
@@ -3451,7 +3451,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "d63d52f08c098e804b4a9e51eb0e359b3bed47eed732d2ab1588bf942e6eb5b9",
       "content_hash": "d63d52f08c098e804b4a9e51eb0e359b3bed47eed732d2ab1588bf942e6eb5b9",
       "authority": "official_site",
@@ -3463,7 +3463,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/agent-engineering/"
       ],
-      "evidence_hash": "39165dccf9083da9fc45d9d58188d11f5d8b15b609738fa57b0d5cd7688b4ccd"
+      "evidence_hash": "247bd8c81c4eb0c93c04670ac93736e14ad42dd9fc4f5297167b401c7ddf3927"
     },
     {
       "discovered_url": "https://towardsai.com/academy/llm-primer/",
@@ -3918,7 +3918,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "89cba944e62e8b387b042b9a42ac152667c597039fad78d42827a1ac6be9e468",
       "content_hash": "89cba944e62e8b387b042b9a42ac152667c597039fad78d42827a1ac6be9e468",
       "authority": "official_site",
@@ -3930,7 +3930,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/llm-primer/"
       ],
-      "evidence_hash": "7e0c7242c1a6819752c216d575dee2710fde718953918c3a3073b6376e6dae75"
+      "evidence_hash": "be11c484048f79138ddcea687c16cdbda6171b7f6bc10822d29bec89dd7fffc4"
     },
     {
       "discovered_url": "https://towardsai.com/academy/python-for-ai-engineering/",
@@ -4458,7 +4458,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "329c3e18e191d01743922d25bec667949fe6d99d93347e42e4b93cc9de0415f2",
       "content_hash": "329c3e18e191d01743922d25bec667949fe6d99d93347e42e4b93cc9de0415f2",
       "authority": "official_site",
@@ -4470,7 +4470,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/python-for-ai-engineering/"
       ],
-      "evidence_hash": "e8dd5e05af64dc8acb3d9b81461f3d4899a9d85542b7612c5911f08d9c3b4835"
+      "evidence_hash": "abb9f3e02b5e9d0121a5986cd47db58863f153c068273a8395c6180e29b931c3"
     },
     {
       "discovered_url": "https://towardsai.com/academy/ai-for-work/",
@@ -5060,7 +5060,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "2af22f1e27a36e5820001cf868366c46ee05dd2d799a1df4f4386fa74b0c281f",
       "content_hash": "2af22f1e27a36e5820001cf868366c46ee05dd2d799a1df4f4386fa74b0c281f",
       "authority": "official_site",
@@ -5072,7 +5072,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/ai-for-work/"
       ],
-      "evidence_hash": "a9239e7965148ff4e887d073a7329638b3277ea85c03b2f5957dca10b7a4daf5"
+      "evidence_hash": "01a930d1a6843604ba3c2d28c1f16636db92fd35122bcb9439f01088db2127d6"
     },
     {
       "discovered_url": "https://towardsai.com/academy/building-llms-for-production/",
@@ -5825,7 +5825,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "5f94b548eb832daa9243117d965c8a868f8a15e906c162220c5a8a14c57f812e",
       "content_hash": "5f94b548eb832daa9243117d965c8a868f8a15e906c162220c5a8a14c57f812e",
       "authority": "official_site",
@@ -5837,7 +5837,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/building-llms-for-production/"
       ],
-      "evidence_hash": "7495c041e5cb6b756b9be916859280a7e038527f670a7b58261bdb09e9c797bd"
+      "evidence_hash": "d08bf0a40dcefc1c8a3ee904c32349634388f5d4b09db6f5a49e9dc7e7beaacf"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/",
@@ -6227,7 +6227,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "221ebb5e8cb26307aad522475a37c6481ada71512af16b8edde0388de5958694",
       "content_hash": "221ebb5e8cb26307aad522475a37c6481ada71512af16b8edde0388de5958694",
       "authority": "official_site",
@@ -6240,7 +6240,7 @@
         "https://towardsai.com/academy/bundles/"
       ],
       "excluded_reason": "catalog summary can conflict with canonical bundle detail pages",
-      "evidence_hash": "ce40d9ab127852facf6fb3bc8b6548762ddba3490e3a19df550253ce6471c5e3"
+      "evidence_hash": "2ca94f635866da81a4afe28125d710d2390f1c09ccb8656062f87f5c8c3eb3e6"
     },
     {
       "discovered_url": "https://towardsai.com/academy/mentorship/",
@@ -7084,7 +7084,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "5b87b19913db00515b8ed6e44616625512079fd15df8433dab5066e533abd3d7",
       "content_hash": "5b87b19913db00515b8ed6e44616625512079fd15df8433dab5066e533abd3d7",
       "authority": "official_site",
@@ -7096,7 +7096,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/mentorship/"
       ],
-      "evidence_hash": "07e34e8e9c5bb303ddbe575c4eb16deb6f7804d4ce2bc8cbfeff0f9844222cd8"
+      "evidence_hash": "8418acdf7c5596f23abc462f29001ba4026b767280905067fbc4d8fbb8fb0c85"
     },
     {
       "discovered_url": "https://towardsai.com/academy/about/",
@@ -7392,7 +7392,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "95680295d64725d7e837738b6309bc5f5f2cfec675e1e9296a68ab2964853b88",
       "content_hash": "95680295d64725d7e837738b6309bc5f5f2cfec675e1e9296a68ab2964853b88",
       "authority": "official_site",
@@ -7404,7 +7404,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/about/"
       ],
-      "evidence_hash": "444b140a9f0dac7ab8420c4962691d37dcc641254bae01d9256db5da3183c64e"
+      "evidence_hash": "9ae8eb99b54ed29a6dc77f8ddfb4151d0016849cc3a93c7a7d742152a231cfb0"
     },
     {
       "discovered_url": "https://towardsai.com/academy/contact/",
@@ -7565,7 +7565,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "8909fa38b730d4e60c220d96bddf5f3ac24d00de258e3a7a769dec06d1bc4513",
       "content_hash": "8909fa38b730d4e60c220d96bddf5f3ac24d00de258e3a7a769dec06d1bc4513",
       "authority": "official_site",
@@ -7577,7 +7577,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/contact/"
       ],
-      "evidence_hash": "f81a04ea37e4d4da72cacdcab1589322fef5960ab39f549dad8f64ef46905afc"
+      "evidence_hash": "b81ce2d99390fc90b474c10e0a457f28cceb601ced41d4e28c50a16f85b76156"
     },
     {
       "discovered_url": "https://towardsai.com/contribute/",
@@ -7782,7 +7782,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "8672e3c510b6c0c9ea0e19fc0bf626de0072dcbc61a13aee96ea4ff1947c3e88",
       "content_hash": "8672e3c510b6c0c9ea0e19fc0bf626de0072dcbc61a13aee96ea4ff1947c3e88",
       "authority": "official_site",
@@ -7794,7 +7794,7 @@
       "redirect_chain": [
         "https://towardsai.com/contribute/"
       ],
-      "evidence_hash": "940b901e690b58cb6e40a78c2989ce23cdbdcabd200983ff68cb6eec8a90b71f"
+      "evidence_hash": "5799edfbc243cd29758043bc76a3a363eb047369d8f081913a6e77d9435d67ee"
     },
     {
       "discovered_url": "https://towardsai.com/enterprise/software-developer-to-ai-engineer/",
@@ -8691,7 +8691,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "1893dee4e499d146906335d693d624a43e7e136f71d8db89f0f8b0b3001d2fa8",
       "content_hash": "1893dee4e499d146906335d693d624a43e7e136f71d8db89f0f8b0b3001d2fa8",
       "authority": "official_site",
@@ -8703,7 +8703,7 @@
       "redirect_chain": [
         "https://towardsai.com/enterprise/software-developer-to-ai-engineer/"
       ],
-      "evidence_hash": "05c188c70681e1339e37e9c4ccdc6c2d19624cf5c6713a2e64d32e45cdfa945c"
+      "evidence_hash": "15390c1e852f1a22cec7ce702ce1516cd278d622dde7817114fb3f6c420beb31"
     },
     {
       "discovered_url": "https://towardsai.com/enterprise/agentic-developer-conversion/",
@@ -9864,7 +9864,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "b281a82e49c57ea9100e6f4eb969eb32c97ac053b01eb4324ee1a91e402dc154",
       "content_hash": "b281a82e49c57ea9100e6f4eb969eb32c97ac053b01eb4324ee1a91e402dc154",
       "authority": "official_site",
@@ -9876,7 +9876,7 @@
       "redirect_chain": [
         "https://towardsai.com/enterprise/agentic-developer-conversion/"
       ],
-      "evidence_hash": "051c573c1dd662598c4d3568f27d7e4840896e258d75ada3c92ff135cae68cfa"
+      "evidence_hash": "775b578311f7ad6b50e228fd7c611ff3e2a7f7bee6518f74217286a3f7db254c"
     },
     {
       "discovered_url": "https://towardsai.com/academy/affiliate/",
@@ -10193,7 +10193,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "34a26adc8bb120a0bd1d9f8e48fa02e6d8f3e143ce2a5c4d23a2904879dc9e02",
       "content_hash": "34a26adc8bb120a0bd1d9f8e48fa02e6d8f3e143ce2a5c4d23a2904879dc9e02",
       "authority": "official_site",
@@ -10205,7 +10205,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/affiliate/"
       ],
-      "evidence_hash": "17753001109ee223fd27106e05812be52ad347db3895ccb31afa83cf64ed7656"
+      "evidence_hash": "af10f7080b8a7ab482b69b01b23ddf7962593df9ff001fdb0cefdf768fcedff0"
     },
     {
       "discovered_url": "https://towardsai.com/academy/agent-engineering-free-preview/",
@@ -10325,7 +10325,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "aa80b71a5e8ee89883cafbc3d317a99ac768dce060239102d9288416c0436385",
       "content_hash": "aa80b71a5e8ee89883cafbc3d317a99ac768dce060239102d9288416c0436385",
       "authority": "official_site",
@@ -10337,7 +10337,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/agent-engineering-free-preview/"
       ],
-      "evidence_hash": "a40ed1f9be3a325e442a4c9badad0368b137728f0f4099a416344fb3d37013f6"
+      "evidence_hash": "b01d0f372fc500059da82a01d01d714eadf45e3a18ddeb133f23a4fe9d0c25db"
     },
     {
       "discovered_url": "https://towardsai.com/academy/full-stack-ai-engineering-free-preview/",
@@ -10416,7 +10416,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "070a9ebc513ce2254ce3dc463c4b97f2f47de19e1f3f5f58486b54bf14fca711",
       "content_hash": "070a9ebc513ce2254ce3dc463c4b97f2f47de19e1f3f5f58486b54bf14fca711",
       "authority": "official_site",
@@ -10428,7 +10428,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/full-stack-ai-engineering-free-preview/"
       ],
-      "evidence_hash": "14b8ed2ffd4a47e1672892331ad3dae3dd60532c700691a87236de4c7235dc37"
+      "evidence_hash": "2175b002b722ddfb41130e9135410e63853cba615b5b38f69d702bd76b2916f4"
     },
     {
       "discovered_url": "https://towardsai.com/academy/book/",
@@ -12642,7 +12642,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "5f1108913fd28ba4e542e86b97255f8a56bc85dc7090ec8f50439287792a1ff4",
       "content_hash": "5f1108913fd28ba4e542e86b97255f8a56bc85dc7090ec8f50439287792a1ff4",
       "authority": "official_site",
@@ -12654,7 +12654,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/book/"
       ],
-      "evidence_hash": "920e577f9872c6fa5f04baa45f04dd590aa7fe613f97337404f76e3555c87ac7"
+      "evidence_hash": "8db5af99c22c442d2edea755475a85058a8200bb8587eb92b398b645a871091c"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/get-it-all/",
@@ -12955,7 +12955,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "21ec660aa17ad83a4f5ecef7cdf8a7f6270dc043c15e317e346bf211ed4fe157",
       "content_hash": "21ec660aa17ad83a4f5ecef7cdf8a7f6270dc043c15e317e346bf211ed4fe157",
       "authority": "official_site",
@@ -12967,7 +12967,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/bundles/get-it-all/"
       ],
-      "evidence_hash": "637224a65799d255ad5793af88f2d44ae191d4392b077f0745d8be367e51ef19"
+      "evidence_hash": "f31f881b7ace7b5be3134f95aae719fda84a77ae691f9a16004f5a599369701f"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/",
@@ -13298,7 +13298,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "29d9ea5b4a890b2c4f12e96d02fb1142de4df136d65c4c1bc1e2e454ce9d07ff",
       "content_hash": "29d9ea5b4a890b2c4f12e96d02fb1142de4df136d65c4c1bc1e2e454ce9d07ff",
       "authority": "official_site",
@@ -13310,7 +13310,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/"
       ],
-      "evidence_hash": "bdf6a4ab574b2b5338d207f31dfcb2afeb45aaeb18f87fde0fc85616b5db5a33"
+      "evidence_hash": "67ee01f0dc706a7b04b5a13f1b80aa1edf7faa14982096a114246b523cc6f378"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/10-hour-crash-course-into-llm-developer-expert/",
@@ -13602,7 +13602,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "7bffde8978babca7db7c4a13d0f6331771e855d9729c9d604e7a9f047155d309",
       "content_hash": "7bffde8978babca7db7c4a13d0f6331771e855d9729c9d604e7a9f047155d309",
       "authority": "official_site",
@@ -13614,7 +13614,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/bundles/10-hour-crash-course-into-llm-developer-expert/"
       ],
-      "evidence_hash": "d4e1194c685a2a803488f377f32d1df082849b25aa3abd0dfd6345550e26896e"
+      "evidence_hash": "da4206873ddab285dc8cfa481a14b8d052a1bceb418d8ef3de85889e860f41b1"
     },
     {
       "discovered_url": "https://towardsai.com/enterpriseenablement/",
@@ -14362,7 +14362,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "b78a57ad7b25a9770a348d52abc815aa8a57c6370a6cf4a3d9a115778b849ac2",
       "content_hash": "b78a57ad7b25a9770a348d52abc815aa8a57c6370a6cf4a3d9a115778b849ac2",
       "authority": "official_site",
@@ -14374,7 +14374,7 @@
       "redirect_chain": [
         "https://towardsai.com/enterpriseenablement/"
       ],
-      "evidence_hash": "972e752a15a8be7b9f50789dc4529556362daf929a6fc56f0a8f2ed4398a5e85"
+      "evidence_hash": "12e9e91fcfbe8d9e01c41b26918d09b4dddac775892c42f17170103973545187"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/",
@@ -14809,7 +14809,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "dede3b2b533d4814e97f42cee7bfbad75be2e6644684d682166d368bba8024ad",
       "content_hash": "dede3b2b533d4814e97f42cee7bfbad75be2e6644684d682166d368bba8024ad",
       "authority": "official_site",
@@ -14821,7 +14821,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/"
       ],
-      "evidence_hash": "09a473fd3fa65a0aa9266e46247ba2773d18543a6695d2a257d1258fa3abab26"
+      "evidence_hash": "380fe1c4acedbd36d797f0b3c61bff2d64b99e9151214ff0a97b19bd1dcfa22a"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/careers/",
@@ -15440,7 +15440,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "c7fc1f753fec7ea662ea65eaf58fff0098ddafb34cfa4cf11b47c4386a971f58",
       "content_hash": "c7fc1f753fec7ea662ea65eaf58fff0098ddafb34cfa4cf11b47c4386a971f58",
       "authority": "official_site",
@@ -15452,7 +15452,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/careers/"
       ],
-      "evidence_hash": "6a6bff205106a6c1292b21855c1443c5eb277cb78b4cfb177dbe88d53a565c36"
+      "evidence_hash": "4bd4dcd914bc0d7b818caa9d0b6b7b58d0c6db38b281dec74c032bf4a6c5c6ec"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/deployment-strategist/",
@@ -16044,7 +16044,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "031d7ef89f6f75b9915a086ba402809d96816106f8d4693372e4769bb8c8314b",
       "content_hash": "031d7ef89f6f75b9915a086ba402809d96816106f8d4693372e4769bb8c8314b",
       "authority": "official_site",
@@ -16056,7 +16056,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/deployment-strategist/"
       ],
-      "evidence_hash": "b5859e221964b210231e0e8d71b1915befa3a5c7665c26f3f4e23dc3a5e39b45"
+      "evidence_hash": "c1366c775fc55bfa89722a89ff81bef87c2237a6813102b42e28b09c6f1b2ff1"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/junior-ai-engineer/",
@@ -16580,7 +16580,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "abbac204cc4418041d3b7dc7a1babd25b8b697235c63661b574f929ebc855c34",
       "content_hash": "abbac204cc4418041d3b7dc7a1babd25b8b697235c63661b574f929ebc855c34",
       "authority": "official_site",
@@ -16592,7 +16592,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/junior-ai-engineer/"
       ],
-      "evidence_hash": "59e9c31bf7db094ce52ad86998ecca632559856c3d1dc3b1de38e6c215ec901f"
+      "evidence_hash": "c92198b1ee0e440d173364d4f6de2d5a83db9995d7aa137fb27624cb5aabe530"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/senior-ai-engineer/",
@@ -17168,7 +17168,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "40b768e2f7f9a7c2778e7821060560ac7761af1f4a4ff7426efffd5d4e67efb3",
       "content_hash": "40b768e2f7f9a7c2778e7821060560ac7761af1f4a4ff7426efffd5d4e67efb3",
       "authority": "official_site",
@@ -17180,7 +17180,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/senior-ai-engineer/"
       ],
-      "evidence_hash": "9f505680db3222520d152409630c9310ed2c19bdfddcd1e97550ba3c45a1d898"
+      "evidence_hash": "e071bbd9cff8cd9d9f8b620a19cb9cc13a4f19456b426e53f04e860b5f488246"
     },
     {
       "discovered_url": "https://towardsai.com/theaitastegap/",
@@ -18162,7 +18162,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "e1d0346eda71f7781cc15279ac4fca8870c98a76fe99cc4ea5e2989e63c261a8",
       "content_hash": "e1d0346eda71f7781cc15279ac4fca8870c98a76fe99cc4ea5e2989e63c261a8",
       "authority": "official_site",
@@ -18174,7 +18174,7 @@
       "redirect_chain": [
         "https://towardsai.com/theaitastegap/"
       ],
-      "evidence_hash": "21e3c26a68ae9c858b940c5004895303f377c368d93f8f47106ceec504bf9a92"
+      "evidence_hash": "3e6ef2ee69972abe8266521ba662e593eecc4e97b90fadc4354e90b573fad6b1"
     },
     {
       "discovered_url": "https://towardsai.com/webinars/agentengineering/",
@@ -18611,7 +18611,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-04T02:10:55.249098+00:00",
+      "fetched_at": "2026-09-04T02:17:52.912417+00:00",
       "content_sha256": "463aac2b3baa5a120c1a22ff40d009db48b9a8a0f3cba7ed5b1f11df35697a18",
       "content_hash": "463aac2b3baa5a120c1a22ff40d009db48b9a8a0f3cba7ed5b1f11df35697a18",
       "authority": "official_site",
@@ -18623,7 +18623,7 @@
       "redirect_chain": [
         "https://towardsai.com/webinars/agentengineering/"
       ],
-      "evidence_hash": "1a83bbf52bcf1405a0ab754a0ebe7d2cad867ecf3a82306203d1695a62cd7ab7"
+      "evidence_hash": "3d80fe9d39e76a1ae026ab0ffb90fbfce7641d40ed2b3c4d7642f9df5fc0b2e6"
     }
   ]
 }

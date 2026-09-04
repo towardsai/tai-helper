@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import re
+import time
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from html.parser import HTMLParser
@@ -31,6 +32,8 @@ CATALOG_USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
 )
+JINA_READER_BASE_URL = "https://r.jina.ai/"
+JINA_RETRY_DELAYS_SECONDS = (15, 30, 60)
 
 COM_HOSTS = frozenset({"towardsai.com", "www.towardsai.com"})
 ACADEMY_HOSTS = frozenset({"academy.towardsai.net"})
@@ -866,8 +869,21 @@ def _document_text(sections: Iterable[dict[str, str]]) -> str:
 
 
 def _parse_sitemap(response_text: str) -> tuple[str, list[dict[str, str]]]:
-    root = ElementTree.fromstring(response_text)
+    try:
+        root = ElementTree.fromstring(response_text)
+    except ElementTree.ParseError:
+        parser = SitemapHTMLParser()
+        parser.feed(response_text)
+        parser.close()
+        if parser.entries:
+            return "urlset", parser.entries
+        raise
     root_type = _local_name(root.tag)
+    if root_type == "html":
+        parser = SitemapHTMLParser()
+        parser.feed(response_text)
+        parser.close()
+        return "urlset", parser.entries
     entries: list[dict[str, str]] = []
     for child in root:
         if _local_name(child.tag) not in {"url", "sitemap"}:
@@ -876,6 +892,66 @@ def _parse_sitemap(response_text: str) -> tuple[str, list[dict[str, str]]]:
         if values.get("loc"):
             entries.append(values)
     return root_type, entries
+
+
+class SitemapHTMLParser(HTMLParser):
+    """Parse Jina Reader's HTML rendering of a public XML sitemap."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.entries: list[dict[str, str]] = []
+        self._time_parts: list[str] | None = None
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        values = dict(attrs)
+        if tag == "a" and values.get("href"):
+            self.entries.append({"loc": str(values["href"])})
+        elif tag == "time" and self.entries:
+            self._time_parts = []
+
+    def handle_data(self, data: str) -> None:
+        if self._time_parts is not None:
+            self._time_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag != "time" or self._time_parts is None:
+            return
+        lastmod = _clean(" ".join(self._time_parts))
+        if lastmod:
+            self.entries[-1]["lastmod"] = lastmod
+        self._time_parts = None
+
+
+def _get_public_url(session: requests.Session, url: str) -> Any:
+    """Fetch directly, falling back only for Academy's GitHub-runner 403."""
+
+    response = session.get(url, timeout=30)
+    hostname = (urlparse(url).hostname or "").lower()
+    if response.status_code != 403 or hostname not in ACADEMY_HOSTS:
+        return response
+
+    proxy_url = f"{JINA_READER_BASE_URL}{url}"
+    proxy_headers = {"X-Return-Format": "html", "X-Timeout": "30"}
+    delays = (0, *JINA_RETRY_DELAYS_SECONDS)
+    for delay in delays:
+        if delay:
+            time.sleep(delay)
+        proxied = session.get(
+            proxy_url,
+            timeout=60,
+            headers=proxy_headers,
+        )
+        if proxied.status_code == 429:
+            continue
+        proxied.raise_for_status()
+        # Jina returns the target's HTML from its own URL. Downstream canonical,
+        # redirect, and relative-link handling must still use the public target.
+        proxied.url = url
+        return proxied
+    proxied.raise_for_status()
+    raise RuntimeError("Jina Reader retry loop ended without a response")
 
 
 def discover_sitemap_entries(
@@ -893,7 +969,7 @@ def discover_sitemap_entries(
         return []
     visited.add(normalised_sitemap)
 
-    response = session.get(sitemap_url, timeout=30)
+    response = _get_public_url(session, sitemap_url)
     response.raise_for_status()
     root_type, raw_entries = _parse_sitemap(response.text)
     if root_type == "sitemapindex":
@@ -976,7 +1052,7 @@ def _fetch_and_resolve(
     current_url = url
     visited: list[str] = []
     for _hop in range(max_meta_refreshes + 1):
-        response = session.get(current_url, timeout=30)
+        response = _get_public_url(session, current_url)
         response.raise_for_status()
         response_url = _normalise_url(response.url)
         visited.append(response_url)

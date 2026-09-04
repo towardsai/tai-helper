@@ -632,7 +632,7 @@ BUNDLE_OFFER_IDS = frozenset(
 
 TOTAL_LESSON_PATTERNS: dict[str, re.Pattern[str]] = {
     "full-stack-ai-engineering": re.compile(r"\b92\s+lessons\b", re.IGNORECASE),
-    "agent-engineering": re.compile(r"\b35\s+lessons\b", re.IGNORECASE),
+    "agent-engineering": re.compile(r"\b37\s+lessons\b", re.IGNORECASE),
     "python-for-ai-engineering": re.compile(r"\b38\s+lessons\b", re.IGNORECASE),
     "ai-for-work": re.compile(r"\b98\s+lessons\b", re.IGNORECASE),
     "building-llms-for-production": re.compile(
@@ -1059,12 +1059,22 @@ def normalized_path(url: str) -> tuple[str, str]:
 
 def allowed_paths_by_host() -> dict[str, list[str]]:
     result: dict[str, set[str]] = {}
-    for page in all_pages():
-        host = str(
-            page.get("host") or urlparse(str(page.get("url", ""))).hostname or ""
-        ).lower()
-        path = str(page.get("path") or urlparse(str(page.get("url", ""))).path or "/")
-        path = path.rstrip("/") or "/"
+    allowed_hosts = {host.lower() for host in settings.allowed_hosts}
+    for page in pages_payload()["pages"]:
+        # Routing is broader than evidence retrieval. A sitemap URL can safely
+        # host the widget even when its canonical page lives on another Towards
+        # AI host, but excluded or redirected content must never become evidence.
+        if (
+            str(page.get("status", "")).lower() not in {"included", "excluded"}
+            or page.get("http_status") != 200
+        ):
+            continue
+        discovered_url = str(page.get("discovered_url") or page.get("url") or "")
+        parsed = urlparse(discovered_url)
+        host = (parsed.hostname or "").lower()
+        path = parsed.path.rstrip("/") or "/"
+        if host not in allowed_hosts:
+            continue
         if host:
             result.setdefault(host, set()).add(path)
             if host in {"towardsai.com", "towardsai.net"}:
@@ -1232,9 +1242,22 @@ def _routing_boost(query: str, chunk: dict[str, Any]) -> float:
     if (
         chunk_path == "/academy/mentorship"
         and any(term in lowered for term in ("mentor", "mentorship"))
-        and any(term in lowered for term in ("course", "included", "include", "access"))
+        and any(term in lowered for term in ("course", "access", "llm fundamentals"))
         and "llm fundamentals" in evidence_lower
         and "included from day one" in evidence_lower
+    ):
+        score += 30.0
+    if (
+        chunk_path == "/academy/mentorship"
+        and all(term in lowered for term in ("resume", "project", "review"))
+        and any(
+            all(
+                term in str(span.get("text", "")).casefold()
+                for term in ("resume", "project", "review")
+            )
+            for span in chunk.get("evidence_spans", [])
+            if isinstance(span, dict)
+        )
     ):
         score += 30.0
 

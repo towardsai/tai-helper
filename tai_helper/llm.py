@@ -27,7 +27,7 @@ from .settings import settings
 OPENROUTER_PROVIDER = "openrouter"
 GEMINI_PROVIDER = "google_genai"
 DEFAULT_TEMPERATURE = 0.0
-MAX_CONTEXT_CHARS = 18000
+MAX_CONTEXT_CHARS = 24000
 MAX_CHUNK_TEXT_CHARS = 4500
 MAX_EVIDENCE_QUOTE_CHARS = 320
 logger = logging.getLogger(__name__)

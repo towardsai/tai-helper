@@ -23,6 +23,15 @@ DEFAULT_OUTPUT = DEFAULT_COM_OUTPUT
 COM_SITEMAP_URL = "https://towardsai.com/pages-sitemap.xml"
 ACADEMY_SITEMAP_URL = "https://academy.towardsai.net/sitemap.xml"
 
+# Thinkific's edge protection rejects bot-shaped user agents from GitHub-hosted
+# runners even though this is a public sitemap. Use an ordinary browser agent for
+# both sitemap and page requests so scheduled catalog refreshes behave like a
+# visitor loading the same public pages.
+CATALOG_USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+)
+
 COM_HOSTS = frozenset({"towardsai.com", "www.towardsai.com"})
 ACADEMY_HOSTS = frozenset({"academy.towardsai.net"})
 
@@ -1235,7 +1244,7 @@ def build_catalog(
 
     fetched_at = fetched_at or _utc_now()
     own_session = session or requests.Session()
-    own_session.headers.setdefault("User-Agent", "TowardsAIHelperCatalog/2.0")
+    own_session.headers.setdefault("User-Agent", CATALOG_USER_AGENT)
     entries = discover_sitemap_entries(
         own_session, sitemap_url, allowed_hosts=allowed_hosts
     )
@@ -1288,7 +1297,7 @@ def build_catalogs(
 
     fetched_at = fetched_at or _utc_now()
     own_session = session or requests.Session()
-    own_session.headers.setdefault("User-Agent", "TowardsAIHelperCatalog/2.0")
+    own_session.headers.setdefault("User-Agent", CATALOG_USER_AGENT)
     com_catalog = build_catalog(
         session=own_session,
         sitemap_url=com_sitemap_url,

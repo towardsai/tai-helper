@@ -6,6 +6,7 @@ from scripts.build_towardsai_com_catalog import (
     ACADEMY_EXCLUSIONS,
     ACADEMY_HOSTS,
     ACADEMY_SITEMAP_URL,
+    CATALOG_USER_AGENT,
     COM_HOSTS,
     PageParser,
     build_catalog,
@@ -306,6 +307,7 @@ def test_build_both_catalogs_records_exclusions_manual_entries_and_identity() ->
 
     com, academy = build_catalogs(session=session, fetched_at=fetched_at)
 
+    assert session.headers["User-Agent"] == CATALOG_USER_AGENT
     assert [page["discovered_url"] for page in com["pages"]] == [mentorship]
     assert len(academy["pages"]) == 4
     com_offer = com["pages"][0]

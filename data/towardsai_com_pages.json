@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "source": "https://towardsai.com/pages-sitemap.xml",
-  "generated_at": "2026-09-07T12:40:44.572872+00:00",
+  "generated_at": "2026-09-14T12:54:41.823277+00:00",
   "authority": "official_site",
   "status_counts": {
     "excluded": 3,
@@ -754,7 +754,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "cd5481d8d1b4d453da5d5b5b823ba5577e4a7a2bdb97acded191f776ab934017",
       "content_hash": "cd5481d8d1b4d453da5d5b5b823ba5577e4a7a2bdb97acded191f776ab934017",
       "authority": "official_site",
@@ -767,7 +767,7 @@
         "https://towardsai.com/"
       ],
       "excluded_reason": "homepage offer summaries can conflict with canonical detail pages",
-      "evidence_hash": "aa053bc334168a1bd662db36545cd3f3f4a757fd8f5e5dfdbed3ed22fdac1499"
+      "evidence_hash": "145fccc7abfbffb79f7ba33036e6bd8eb1f7f8a483e9bb9e6e8bac0281ad6abe"
     },
     {
       "discovered_url": "https://towardsai.com/academy/",
@@ -1189,7 +1189,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "ff9481d6abf2fd82e7c8b9e6c1fecad4f517cee413f2c66f239d0e9251914d45",
       "content_hash": "ff9481d6abf2fd82e7c8b9e6c1fecad4f517cee413f2c66f239d0e9251914d45",
       "authority": "official_site",
@@ -1202,7 +1202,7 @@
         "https://towardsai.com/academy/"
       ],
       "excluded_reason": "catalog summary can conflict with canonical offer detail pages",
-      "evidence_hash": "78746d74e7fbda21913b7b361b1c8b3e021c31749c23f79a6d2f6a3b0eeb8110"
+      "evidence_hash": "d70736b78f7a3a0849fb3ee9be62b9444a4dcf5f10e5229bdd763ab40d9d365a"
     },
     {
       "discovered_url": "https://towardsai.com/academy/full-stack-ai-engineering/",
@@ -2401,7 +2401,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "9f4a061836aafe0419f3b530f77099ac30d11a8470807512c3c60974d8f1c44b",
       "content_hash": "9f4a061836aafe0419f3b530f77099ac30d11a8470807512c3c60974d8f1c44b",
       "authority": "official_site",
@@ -2413,7 +2413,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/full-stack-ai-engineering/"
       ],
-      "evidence_hash": "90efd8479f92f01737205196b7e3f220393e1900263a8f1db2840b6fc1b27853"
+      "evidence_hash": "e93db1fd38b9da05cccf9fb48cdf8ad3a1d6a2383bf4f1388e753ef03d7bf684"
     },
     {
       "discovered_url": "https://towardsai.com/academy/agent-engineering/",
@@ -3451,7 +3451,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "d63d52f08c098e804b4a9e51eb0e359b3bed47eed732d2ab1588bf942e6eb5b9",
       "content_hash": "d63d52f08c098e804b4a9e51eb0e359b3bed47eed732d2ab1588bf942e6eb5b9",
       "authority": "official_site",
@@ -3463,7 +3463,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/agent-engineering/"
       ],
-      "evidence_hash": "036ea9731a72e687c94e20f3226459211a5c46e773db047c622c651e7b310f21"
+      "evidence_hash": "5ff36da95d858e8a4233c9074562a354f60ca4f089743298163c3d65db740ae1"
     },
     {
       "discovered_url": "https://towardsai.com/academy/llm-primer/",
@@ -3918,7 +3918,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "89cba944e62e8b387b042b9a42ac152667c597039fad78d42827a1ac6be9e468",
       "content_hash": "89cba944e62e8b387b042b9a42ac152667c597039fad78d42827a1ac6be9e468",
       "authority": "official_site",
@@ -3930,7 +3930,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/llm-primer/"
       ],
-      "evidence_hash": "b2750463d8c2a5313ecba99643fd318f7a51a651bfde0c9a362166bd5a75c4ba"
+      "evidence_hash": "7dceff6f437b8a3afe2c641094939bccb93c95c419471c9ea55d663c21ba96b9"
     },
     {
       "discovered_url": "https://towardsai.com/academy/python-for-ai-engineering/",
@@ -4458,7 +4458,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "329c3e18e191d01743922d25bec667949fe6d99d93347e42e4b93cc9de0415f2",
       "content_hash": "329c3e18e191d01743922d25bec667949fe6d99d93347e42e4b93cc9de0415f2",
       "authority": "official_site",
@@ -4470,7 +4470,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/python-for-ai-engineering/"
       ],
-      "evidence_hash": "bf55ce9aa33e750dc89da99e5d9a94c4dd53e5b3511e448e273288498187196b"
+      "evidence_hash": "f8d2f8e5c50b19d59baa7c1374e44b9b64ebe600beae1ad63aeab22d0bd8ebd0"
     },
     {
       "discovered_url": "https://towardsai.com/academy/ai-for-work/",
@@ -5060,7 +5060,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "2af22f1e27a36e5820001cf868366c46ee05dd2d799a1df4f4386fa74b0c281f",
       "content_hash": "2af22f1e27a36e5820001cf868366c46ee05dd2d799a1df4f4386fa74b0c281f",
       "authority": "official_site",
@@ -5072,7 +5072,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/ai-for-work/"
       ],
-      "evidence_hash": "554c25703fccd85bb71350be4a5e29f21771e5c14665028d597441fcfce6d3a9"
+      "evidence_hash": "06abc0eb3a6ac7152a35fdec3e6cfc38a5184d29ada07259a37ee897d173598f"
     },
     {
       "discovered_url": "https://towardsai.com/academy/building-llms-for-production/",
@@ -5825,7 +5825,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "5f94b548eb832daa9243117d965c8a868f8a15e906c162220c5a8a14c57f812e",
       "content_hash": "5f94b548eb832daa9243117d965c8a868f8a15e906c162220c5a8a14c57f812e",
       "authority": "official_site",
@@ -5837,7 +5837,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/building-llms-for-production/"
       ],
-      "evidence_hash": "5595617cc83ff9647083a22694ebb2d6936bcd7b94f63973c07d3106671a56d5"
+      "evidence_hash": "bc47c58ff25ed636bcc50eb2e504e61ebaea82ec344f5fced594db9fde432d08"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/",
@@ -6227,7 +6227,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "221ebb5e8cb26307aad522475a37c6481ada71512af16b8edde0388de5958694",
       "content_hash": "221ebb5e8cb26307aad522475a37c6481ada71512af16b8edde0388de5958694",
       "authority": "official_site",
@@ -6240,7 +6240,7 @@
         "https://towardsai.com/academy/bundles/"
       ],
       "excluded_reason": "catalog summary can conflict with canonical bundle detail pages",
-      "evidence_hash": "2bd79fe0f226e58178415efd5e2659b31cd93bff342d16a4a3aa16e06184ccc5"
+      "evidence_hash": "9fb3e62a4fd3152718989a08fa5e22c1b20ef87240310aef27ce86b0e0985e1a"
     },
     {
       "discovered_url": "https://towardsai.com/academy/mentorship/",
@@ -7084,7 +7084,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "5b87b19913db00515b8ed6e44616625512079fd15df8433dab5066e533abd3d7",
       "content_hash": "5b87b19913db00515b8ed6e44616625512079fd15df8433dab5066e533abd3d7",
       "authority": "official_site",
@@ -7096,7 +7096,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/mentorship/"
       ],
-      "evidence_hash": "7f25b9a4a61aef95b4010b4ee57c48f80a146997cad5b557dce2904d5ad432ea"
+      "evidence_hash": "5b5c37c0d3b9d71c36ff973922157dc2945ac0fd45df71a27201c88880f887a2"
     },
     {
       "discovered_url": "https://towardsai.com/academy/about/",
@@ -7392,7 +7392,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "95680295d64725d7e837738b6309bc5f5f2cfec675e1e9296a68ab2964853b88",
       "content_hash": "95680295d64725d7e837738b6309bc5f5f2cfec675e1e9296a68ab2964853b88",
       "authority": "official_site",
@@ -7404,7 +7404,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/about/"
       ],
-      "evidence_hash": "a82e4fbc6c1e4e92b2305f1aa0822189538b2c2c453588f9855b9b4b28ac6c93"
+      "evidence_hash": "d49f235bdd16852355b3bd0fb121a691d2ce670c8ef3f7cb2ede9209ee95de5f"
     },
     {
       "discovered_url": "https://towardsai.com/academy/contact/",
@@ -7565,7 +7565,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "8909fa38b730d4e60c220d96bddf5f3ac24d00de258e3a7a769dec06d1bc4513",
       "content_hash": "8909fa38b730d4e60c220d96bddf5f3ac24d00de258e3a7a769dec06d1bc4513",
       "authority": "official_site",
@@ -7577,7 +7577,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/contact/"
       ],
-      "evidence_hash": "47db3a6166428b5f18b67d36c8c0a8c1066703149c467ea019208a78dd2bb974"
+      "evidence_hash": "c38810543ac9d2aa159ef9be664f48fc42cbb17d13d0672ecbe7474e82a1cb96"
     },
     {
       "discovered_url": "https://towardsai.com/contribute/",
@@ -7588,63 +7588,75 @@
       "kind": "community",
       "offer_id": null,
       "entity_id": "page:towardsai.com/contribute",
-      "title": "Write for Towards AI · Contribute to the Leading AI Publication",
+      "title": "Write for Towards AI · AI Engineering Articles on Medium",
       "review_title": "",
       "reviewed_summary": "",
-      "meta_description": "Publish your technical writing with Towards AI and reach 500k+ AI practitioners. Submit a draft; we reply within 72 hours. Accepted writers join our network and submit directly.",
+      "meta_description": "Write for Towards AI, an AI publication with 150,000 Medium followers and a focus on AI engineering. Read our guidelines and submit your draft through Medium.",
       "headings": [
-        "Publish with the leading AI publication",
-        "From draft to published",
-        "Read the guidelines, then submit",
-        "We review within 72 hours",
-        "Accepted writers submit directly",
-        "Your name on work that gets read",
-        "500k+ AI practitioners",
-        "A real editorial process",
-        "A public body of technical work",
-        "Send us your draft",
-        "Not ready to publish yet?"
+        "Write for Towards AI",
+        "Help readers put AI to work",
+        "From experiments to working systems",
+        "Clear explanations, grounded in evidence",
+        "Send your first draft through Medium",
+        "Sign in and follow",
+        "Prepare your draft",
+        "Open the submission menu",
+        "Select Towards AI",
+        "Send for review",
+        "Make your article useful and original",
+        "Support what you say",
+        "Make your work easy to follow",
+        "Bring your own knowledge and judgment",
+        "Discuss promotion with us first",
+        "Follow your draft's progress",
+        "Check your submission status",
+        "Up to three active guest submissions",
+        "Reach readers who care about AI",
+        "Share with the AI community",
+        "Show how you think and work",
+        "Keep your rights and earnings",
+        "Ready to submit?"
       ],
-      "text": "Until launch day October 20 Our new book, AI Engineering For Production , launches October 20. New book: AI Engineering For Production , October 20. Join us on launch day → Write for Towards AI\n\nPublish with the leading AI publication\nPut your technical writing in front of 500k+ AI practitioners. Submit a draft below; we reply within 72 hours, and accepted writers join our network with direct submission access. Submit a draft Read the guidelines 01 How it works\n\nFrom draft to published\n01\n\nRead the guidelines, then submit\nMake sure your draft meets our guidelines in full, then send it through the form below with a link to the draft. 02\n\nWe review within 72 hours\nEvery submission is read by our editorial team. We receive several per day, so here's the deal: if you haven't heard from us within 72 hours, consider the piece not accepted this time. Please don't let that discourage future drafts. 03\n\nAccepted writers submit directly\nOnce accepted, you join the Towards AI writers network and can submit articles straight to our queue for future pieces. 02 Why write with us\n\nYour name on work that gets read\nReach\n\n500k+ AI practitioners\nThe Towards AI publication is one of the largest AI publications on Medium, backed by a newsletter and community that put technical writing in front of the people building with AI. Editing\n\nA real editorial process\nAccepted pieces go through our content team's review and editing workflow, so what ships under your name is sharper than what you submitted. Career proof\n\nA public body of technical work\nA few published articles build a discoverable portfolio of technical writing with your name on it, the kind employers and collaborators actually find. 03 Submit\n\nSend us your draft\nShare a link to the draft (Google Docs, Medium draft link, or similar) along with a little about you. We reply within 24 to 72 hours if the piece is a fit. By submitting you confirm you've read the submission guidelines . Full name Email Link to your draft article Twitter / X profile (optional) Link to your CV (optional) Message I agree to be contacted about this submission. Submit draft More ways in\n\nNot ready to publish yet?\nRead what our writers ship, join the community, or sharpen your skills first. Read the publication Join the Discord Browse courses",
+      "text": "Until launch day October 20 Our new book, AI Engineering For Production , launches October 20. New book: AI Engineering For Production , October 20. Join us on launch day → The Towards AI publication\n\nWrite for Towards AI\nShare what you have learned about building and using AI with a Medium publication followed by 150,000 readers. We focus on AI, with particular expertise in AI engineering. Write for developers putting models into products, researchers testing new methods, and practitioners applying AI in their work. Follow Towards AI on Medium How to submit Write for people working with AI Audience 150,000 Medium followers Focus AI, with a strong emphasis on AI engineering First article Submit an unpublished draft directly through Medium Review Our editors review each submission for publication 01 What we publish\n\nHelp readers put AI to work\nWe welcome tutorials, technical explainers, research analysis and accounts of your own work. Show how an approach works and where it falls short. AI engineering\n\nFrom experiments to working systems\nWrite about LLM applications, AI agents, evaluation, deployment or the data pipelines that support them. Share implementation details and tradeoffs, including what failed and what you changed. Understanding AI\n\nClear explanations, grounded in evidence\nWe also cover machine learning, computer vision, data science and AI's social effects. Choose a clear audience. Give tutorials enough detail to follow, and explain the setup and limits of experiments or comparisons. Explore the publication to see what our readers are learning. 02 How to submit\n\nSend your first draft through Medium\nNo application form or prior writer approval is needed. Follow our publication, then submit your unpublished Medium draft. 01\n\nSign in and follow\nSign in to Medium and follow Towards AI . 02\n\nPrepare your draft\nKeep it unpublished and check the submission guidelines below. 03\n\nOpen the submission menu\nIn the draft editor, open the three-dot menu at the top right. Choose Submit to publication . 04\n\nSelect Towards AI\nFind us in Following , or Contributing if you are already an approved writer. 05\n\nSend for review\nConfirm, meet any requirements Medium shows, then click Send for review . On the Medium app: open your draft, then tap Next → Publication → Towards AI → Save → Submit to publication . See Medium's submission instructions for help. 03 Submission guidelines\n\nMake your article useful and original\nSubmit an unpublished Medium draft. Aim for at least five minutes of reading time, roughly 850 words or more. Editors may make exceptions for strong shorter pieces. Sources and accuracy\n\nSupport what you say\nWrite original work, credit your sources and mark quotations clearly. Use numbered references where appropriate. Check facts and links, then proofread before submitting. Images and accessibility\n\nMake your work easy to follow\nUse images you have permission to publish. Credit them in captions and add descriptive alt text. Use clear link labels that tell readers where a link leads. AI use\n\nBring your own knowledge and judgment\nCheck AI output, including code and references. Under Medium's AI content policy , disclose AI-generated text within the first two paragraphs and label AI-generated images in their captions. Spelling, grammar, outlining and fact-checking tools alone need no disclosure. Medium does not allow AI-generated writing behind its Partner Program paywall. Sponsored and promotional content\n\nDiscuss promotion with us first\nArticles promoting a company or product follow our sponsorship process . This includes promotion of open-source software from funded companies. Please discuss these pieces with us before submitting. Outside our scope: we do not accept articles about finance, investing, trading, stock markets, valuation, cryptocurrencies or non-fungible tokens (NFTs). 04 After you submit\n\nFollow your draft's progress\nOur editors review submissions and may request changes. Submitting a draft does not guarantee acceptance.\n\nCheck your submission status\nVisit Stories → Submissions for review updates. “Approved” can mean your article is scheduled.\n\nUp to three active guest submissions\nIf you reach Medium's limit for guest writers, wait for a decision before sending another draft. 05 Why write with us?\n\nReach readers who care about AI\nA relevant audience\n\nShare with the AI community\nPublishing with Towards AI gives your work a place in a publication with 150,000 Medium followers. Reach beyond your own network to readers who want to understand AI and build with it. Your portfolio\n\nShow how you think and work\nBuild a public body of technical writing that future collaborators and employers can read. Our editors may help refine your article before publication. Your authorship\n\nKeep your rights and earnings\nYou retain your rights as the author. Eligible articles may use Medium's paywall; Towards AI takes no share of your Partner Program earnings. You can also submit without a paywall. Write for Towards AI\n\nReady to submit?\nFollow Towards AI on Medium, then send your draft using the steps above. Follow Towards AI on Medium View submission steps Questions about submissions? Contact editor@towardsai.net .",
       "links": [
         {
           "text": "Join us on launch day →",
           "url": "https://www.louisbouchard.ai/book/?utm_source=site-tai&utm_medium=banner&utm_campaign=book"
         },
         {
-          "text": "Read the guidelines",
-          "url": "https://pub.towardsai.net/submit-your-medium-story-to-towards-ai-a4fa7e8b141d"
-        },
-        {
-          "text": "our guidelines",
-          "url": "https://pub.towardsai.net/submit-your-medium-story-to-towards-ai-a4fa7e8b141d"
-        },
-        {
-          "text": "submit articles straight to our queue",
-          "url": "https://ws.towardsai.net/submit"
-        },
-        {
-          "text": "submission guidelines",
-          "url": "https://pub.towardsai.net/submit-your-medium-story-to-towards-ai-a4fa7e8b141d"
-        },
-        {
-          "text": "Read the publication",
+          "text": "Follow Towards AI on Medium",
           "url": "https://pub.towardsai.net/"
         },
         {
-          "text": "Join the Discord",
-          "url": "https://discord.gg/learnaitogether"
+          "text": "Explore the publication",
+          "url": "https://pub.towardsai.net/"
         },
         {
-          "text": "Browse courses",
-          "url": "https://towardsai.com/academy/"
+          "text": "Towards AI",
+          "url": "https://pub.towardsai.net/"
+        },
+        {
+          "text": "Medium's submission instructions",
+          "url": "https://help.medium.com/hc/en-us/articles/213904978-How-to-submit-a-story-to-a-publication"
+        },
+        {
+          "text": "Medium's AI content policy",
+          "url": "https://help.medium.com/hc/en-us/articles/22576852947223-Artificial-Intelligence-AI-content-policy"
+        },
+        {
+          "text": "sponsorship process",
+          "url": "https://sponsors.towardsai.net/"
+        },
+        {
+          "text": "Stories → Submissions",
+          "url": "https://medium.com/me/stories"
         }
       ],
       "chunks": [
         {
           "chunk_id": "tai-9644108d4792ed847049113e",
-          "text": "Until launch day October 20 Our new book, AI Engineering For Production , launches October 20. New book: AI Engineering For Production , October 20. Join us on launch day → Write for Towards AI\n\nPublish with the leading AI publication\nPut your technical writing in front of 500k+ AI practitioners. Submit a draft below; we reply within 72 hours, and accepted writers join our network with direct submission access. Submit a draft Read the guidelines 01 How it works\n\nFrom draft to published\n01\n\nRead the guidelines, then submit\nMake sure your draft meets our guidelines in full, then send it through the form below with a link to the draft. 02\n\nWe review within 72 hours\nEvery submission is read by our editorial team. We receive several per day, so here's the deal: if you haven't heard from us within 72 hours, consider the piece not accepted this time. Please don't let that discourage future drafts. 03\n\nAccepted writers submit directly\nOnce accepted, you join the Towards AI writers network and can submit articles straight to our queue for future pieces. 02 Why write with us\n\nYour name on work that gets read\nReach\n\n500k+ AI practitioners\nThe Towards AI publication is one of the largest AI publications on Medium, backed by a newsletter and community that put technical writing in front of the people building with AI. Editing\n\nA real editorial process\nAccepted pieces go through our content team's review and editing workflow, so what ships under your name is sharper than what you submitted. Career proof\n\nA public body of technical work\nA few published articles build a discoverable portfolio of technical writing with your name on it, the kind employers and collaborators actually find. 03 Submit",
-          "heading": "Publish with the leading AI publication",
+          "text": "Until launch day October 20 Our new book, AI Engineering For Production , launches October 20. New book: AI Engineering For Production , October 20. Join us on launch day → The Towards AI publication\n\nWrite for Towards AI\nShare what you have learned about building and using AI with a Medium publication followed by 150,000 readers. We focus on AI, with particular expertise in AI engineering. Write for developers putting models into products, researchers testing new methods, and practitioners applying AI in their work. Follow Towards AI on Medium How to submit Write for people working with AI Audience 150,000 Medium followers Focus AI, with a strong emphasis on AI engineering First article Submit an unpublished draft directly through Medium Review Our editors review each submission for publication 01 What we publish\n\nHelp readers put AI to work\nWe welcome tutorials, technical explainers, research analysis and accounts of your own work. Show how an approach works and where it falls short. AI engineering\n\nFrom experiments to working systems\nWrite about LLM applications, AI agents, evaluation, deployment or the data pipelines that support them. Share implementation details and tradeoffs, including what failed and what you changed. Understanding AI\n\nClear explanations, grounded in evidence\nWe also cover machine learning, computer vision, data science and AI's social effects. Choose a clear audience. Give tutorials enough detail to follow, and explain the setup and limits of experiments or comparisons. Explore the publication to see what our readers are learning. 02 How to submit",
+          "heading": "Write for Towards AI",
           "index": 0,
           "evidence_spans": [
             {
@@ -7660,131 +7672,339 @@
               "text": "Join us on launch day →"
             },
             {
-              "span_id": "span-4107e5f0324571c7e6365745",
-              "text": "Write for Towards AI"
+              "span_id": "span-1dbe01062fadc0dc31ec8ce0",
+              "text": "The Towards AI publication"
             },
             {
-              "span_id": "span-b58f1168aa5045f15e2e8414",
-              "text": "Put your technical writing in front of 500k+ AI practitioners."
+              "span_id": "span-2954096215676bb778b05668",
+              "text": "Share what you have learned about building and using AI with a Medium publication followed by 150,000 readers."
             },
             {
-              "span_id": "span-c51ca7f70071a3fef16e8afd",
-              "text": "Submit a draft below; we reply within 72 hours, and accepted writers join our network with direct submission access."
+              "span_id": "span-32820d4f70b38230de85f0e3",
+              "text": "We focus on AI, with particular expertise in AI engineering."
             },
             {
-              "span_id": "span-9dece507dfe89160460a1a5c",
-              "text": "Submit a draft Read the guidelines"
+              "span_id": "span-72a0b2f2487e140703967014",
+              "text": "Write for developers putting models into products, researchers testing new methods, and practitioners applying AI in their work."
             },
             {
-              "span_id": "span-de6b9d925a5e2a6b5bf6a014",
-              "text": "01 How it works"
+              "span_id": "span-f83b6f9197e07c39141b466e",
+              "text": "Follow Towards AI on Medium How to submit"
             },
             {
-              "span_id": "span-1bcfdf3aa2d216e78fd80a6f",
-              "text": "From draft to published"
+              "span_id": "span-54602739672c691058625dce",
+              "text": "Write for people working with AI"
             },
             {
-              "span_id": "span-9de9761146a18dca6822f9e8",
-              "text": "Make sure your draft meets our guidelines in full, then send it through the form below with a link to the draft."
+              "span_id": "span-e61126a5cc6a19011b86b002",
+              "text": "150,000 Medium followers"
             },
             {
-              "span_id": "span-20f1e4a2a34c7fc7975b3163",
-              "text": "We review within 72 hours"
+              "span_id": "span-440527359c6002f74098caf8",
+              "text": "AI, with a strong emphasis on AI engineering"
             },
             {
-              "span_id": "span-fca817c835d6c07be6aa737f",
-              "text": "Every submission is read by our editorial team."
+              "span_id": "span-51e7f6b2fc4fdb6293d879f9",
+              "text": "First article"
             },
             {
-              "span_id": "span-d7104cca0fcabd019ec4b1f9",
-              "text": "We receive several per day, so here's the deal: if you haven't heard from us within 72 hours, consider the piece not accepted this time."
+              "span_id": "span-5c1465881286fcfb3facac75",
+              "text": "Submit an unpublished draft directly through Medium"
             },
             {
-              "span_id": "span-2f1041097b402c6951e2effc",
-              "text": "Please don't let that discourage future drafts."
+              "span_id": "span-e413c39764af0f0d7488f812",
+              "text": "Our editors review each submission for publication"
             },
             {
-              "span_id": "span-e428f67b9031e0c8505e0d5d",
-              "text": "Once accepted, you join the Towards AI writers network and can submit articles straight to our queue for future pieces."
+              "span_id": "span-0650185d8ee1cf5cd46a735f",
+              "text": "01 What we publish"
             },
             {
-              "span_id": "span-37ca804f9984f76750e1c69d",
-              "text": "02 Why write with us"
+              "span_id": "span-609d7860c144f3f2ad469b68",
+              "text": "We welcome tutorials, technical explainers, research analysis and accounts of your own work."
             },
             {
-              "span_id": "span-e88960d0adca418a62e1624f",
-              "text": "Your name on work that gets read"
+              "span_id": "span-5f70d9bd854f51b5de2a1a2f",
+              "text": "Show how an approach works and where it falls short."
             },
             {
-              "span_id": "span-10fbb6b0d13daad53b781457",
-              "text": "500k+ AI practitioners"
+              "span_id": "span-18b139d65b6d66db15e9be3a",
+              "text": "AI engineering"
             },
             {
-              "span_id": "span-917084534d3568bcc62fb45c",
-              "text": "The Towards AI publication is one of the largest AI publications on Medium, backed by a newsletter and community that put technical writing in front of the people building with AI."
+              "span_id": "span-5b6e2c6f7ce472cd266c060f",
+              "text": "Write about LLM applications, AI agents, evaluation, deployment or the data pipelines that support them."
             },
             {
-              "span_id": "span-7ae147a88782d90b2b42b592",
-              "text": "Accepted pieces go through our content team's review and editing workflow, so what ships under your name is sharper than what you submitted."
+              "span_id": "span-6c13a3b5f6db270ca4854fbf",
+              "text": "Share implementation details and tradeoffs, including what failed and what you changed."
             },
             {
-              "span_id": "span-fb30cf3b69f64cf0532c863b",
-              "text": "Career proof"
+              "span_id": "span-de458c1806000c4e81995526",
+              "text": "Understanding AI"
             },
             {
-              "span_id": "span-b225c1d79baf287bb2d37c07",
-              "text": "A few published articles build a discoverable portfolio of technical writing with your name on it, the kind employers and collaborators actually find."
+              "span_id": "span-e7a0ab2ec6219353337f4e40",
+              "text": "We also cover machine learning, computer vision, data science and AI's social effects."
             },
             {
-              "span_id": "span-c218bc7279d841d834de7ae8",
-              "text": "03 Submit"
+              "span_id": "span-76b31f31714c9f87707ce431",
+              "text": "Choose a clear audience."
+            },
+            {
+              "span_id": "span-80a123181eb49f05ad795b94",
+              "text": "Give tutorials enough detail to follow, and explain the setup and limits of experiments or comparisons."
+            },
+            {
+              "span_id": "span-b86fcd63cc95150259eb898e",
+              "text": "Explore the publication to see what our readers are learning."
+            },
+            {
+              "span_id": "span-7867ba4f1ec962a887c41758",
+              "text": "02 How to submit"
             }
           ]
         },
         {
           "chunk_id": "tai-d097fb7a2ac5bcbe95cdf477",
-          "text": "Send us your draft\nShare a link to the draft (Google Docs, Medium draft link, or similar) along with a little about you. We reply within 24 to 72 hours if the piece is a fit. By submitting you confirm you've read the submission guidelines . Full name Email Link to your draft article Twitter / X profile (optional) Link to your CV (optional) Message I agree to be contacted about this submission. Submit draft More ways in\n\nNot ready to publish yet?\nRead what our writers ship, join the community, or sharpen your skills first. Read the publication Join the Discord Browse courses",
-          "heading": "Send us your draft",
+          "text": "Send your first draft through Medium\nNo application form or prior writer approval is needed. Follow our publication, then submit your unpublished Medium draft. 01\n\nSign in and follow\nSign in to Medium and follow Towards AI . 02\n\nPrepare your draft\nKeep it unpublished and check the submission guidelines below. 03\n\nOpen the submission menu\nIn the draft editor, open the three-dot menu at the top right. Choose Submit to publication . 04\n\nSelect Towards AI\nFind us in Following , or Contributing if you are already an approved writer. 05\n\nSend for review\nConfirm, meet any requirements Medium shows, then click Send for review . On the Medium app: open your draft, then tap Next → Publication → Towards AI → Save → Submit to publication . See Medium's submission instructions for help. 03 Submission guidelines\n\nMake your article useful and original\nSubmit an unpublished Medium draft. Aim for at least five minutes of reading time, roughly 850 words or more. Editors may make exceptions for strong shorter pieces. Sources and accuracy\n\nSupport what you say\nWrite original work, credit your sources and mark quotations clearly. Use numbered references where appropriate. Check facts and links, then proofread before submitting. Images and accessibility\n\nMake your work easy to follow\nUse images you have permission to publish. Credit them in captions and add descriptive alt text. Use clear link labels that tell readers where a link leads. AI use",
+          "heading": "Send for review",
           "index": 1,
           "evidence_spans": [
             {
-              "span_id": "span-47dfac3a529ced0a97029ce8",
-              "text": "Share a link to the draft (Google Docs, Medium draft link, or similar) along with a little about you."
+              "span_id": "span-b4c6ba2e5432ef9f4206073a",
+              "text": "No application form or prior writer approval is needed."
             },
             {
-              "span_id": "span-0251f0b14161045e4cbfc772",
-              "text": "We reply within 24 to 72 hours if the piece is a fit."
+              "span_id": "span-418c9af25abfc144ed7da556",
+              "text": "Follow our publication, then submit your unpublished Medium draft."
             },
             {
-              "span_id": "span-0f6469c20e9f2e130e2f083c",
-              "text": "By submitting you confirm you've read the submission guidelines ."
+              "span_id": "span-fd9090466f85ddfa6ecaa2f6",
+              "text": "Sign in to Medium and follow Towards AI ."
             },
             {
-              "span_id": "span-924ff3b7f85fd74f6468b7d0",
-              "text": "Full name Email Link to your draft article Twitter / X profile (optional) Link to your CV (optional) Message I agree to be contacted about this submission."
+              "span_id": "span-c0da4a6724309f557024713a",
+              "text": "Keep it unpublished and check the submission guidelines below."
             },
             {
-              "span_id": "span-7bc7bd5c4e80eb39bd43223a",
-              "text": "Submit draft"
+              "span_id": "span-9606d20cd11d6b4020500b11",
+              "text": "In the draft editor, open the three-dot menu at the top right."
             },
             {
-              "span_id": "span-c359e0e54321f51d626de360",
-              "text": "More ways in"
+              "span_id": "span-64cd38c5a8aedb458bd6ecc2",
+              "text": "Choose Submit to publication ."
             },
             {
-              "span_id": "span-15463cce71fd12fd35a61813",
-              "text": "Read what our writers ship, join the community, or sharpen your skills first."
+              "span_id": "span-d71f91b7ffd258896e6d5ee3",
+              "text": "Find us in Following , or Contributing if you are already an approved writer."
             },
             {
-              "span_id": "span-56ac107dd92d560bac69da35",
-              "text": "Read the publication Join the Discord Browse courses"
+              "span_id": "span-daa8254748bcbcafd946d7d0",
+              "text": "Confirm, meet any requirements Medium shows, then click Send for review ."
+            },
+            {
+              "span_id": "span-5fe06f36cee82b9c4867acdc",
+              "text": "On the Medium app: open your draft, then tap Next → Publication → Towards AI → Save → Submit to publication ."
+            },
+            {
+              "span_id": "span-164fd14afac1946e13b5dad2",
+              "text": "See Medium's submission instructions for help."
+            },
+            {
+              "span_id": "span-e775b9287a641ce7a0a33470",
+              "text": "03 Submission guidelines"
+            },
+            {
+              "span_id": "span-d99a2f288e264281fb4d5609",
+              "text": "Submit an unpublished Medium draft."
+            },
+            {
+              "span_id": "span-7f77feeefc9742b06f0d408c",
+              "text": "Aim for at least five minutes of reading time, roughly 850 words or more."
+            },
+            {
+              "span_id": "span-7316542d8fe84f0af89c44b2",
+              "text": "Editors may make exceptions for strong shorter pieces."
+            },
+            {
+              "span_id": "span-c7962768787e658957e794b6",
+              "text": "Sources and accuracy"
+            },
+            {
+              "span_id": "span-b63516e59ba215313aa681a2",
+              "text": "Write original work, credit your sources and mark quotations clearly."
+            },
+            {
+              "span_id": "span-493601b532beac20a1806d17",
+              "text": "Use numbered references where appropriate."
+            },
+            {
+              "span_id": "span-0c55bfb0f81d41a2df7ca97c",
+              "text": "Check facts and links, then proofread before submitting."
+            },
+            {
+              "span_id": "span-4ad14ef9837c6d64c0048181",
+              "text": "Images and accessibility"
+            },
+            {
+              "span_id": "span-2e61d893ce184bf169468e69",
+              "text": "Use images you have permission to publish."
+            },
+            {
+              "span_id": "span-5cccc6fe7ecd50fdc0f7ed36",
+              "text": "Credit them in captions and add descriptive alt text."
+            },
+            {
+              "span_id": "span-553dcaacfb7f6f4da0924f57",
+              "text": "Use clear link labels that tell readers where a link leads."
+            },
+            {
+              "span_id": "span-089ea486138a4422bf040429",
+              "text": "AI use"
+            }
+          ]
+        },
+        {
+          "chunk_id": "tai-76fe0df547414db047dc593e",
+          "text": "Bring your own knowledge and judgment\nCheck AI output, including code and references. Under Medium's AI content policy , disclose AI-generated text within the first two paragraphs and label AI-generated images in their captions. Spelling, grammar, outlining and fact-checking tools alone need no disclosure. Medium does not allow AI-generated writing behind its Partner Program paywall. Sponsored and promotional content\n\nDiscuss promotion with us first\nArticles promoting a company or product follow our sponsorship process . This includes promotion of open-source software from funded companies. Please discuss these pieces with us before submitting. Outside our scope: we do not accept articles about finance, investing, trading, stock markets, valuation, cryptocurrencies or non-fungible tokens (NFTs). 04 After you submit\n\nFollow your draft's progress\nOur editors review submissions and may request changes. Submitting a draft does not guarantee acceptance.\n\nCheck your submission status\nVisit Stories → Submissions for review updates. “Approved” can mean your article is scheduled.\n\nUp to three active guest submissions\nIf you reach Medium's limit for guest writers, wait for a decision before sending another draft. 05 Why write with us?\n\nReach readers who care about AI\nA relevant audience\n\nShare with the AI community\nPublishing with Towards AI gives your work a place in a publication with 150,000 Medium followers. Reach beyond your own network to readers who want to understand AI and build with it. Your portfolio\n\nShow how you think and work\nBuild a public body of technical writing that future collaborators and employers can read. Our editors may help refine your article before publication. Your authorship",
+          "heading": "Bring your own knowledge and judgment",
+          "index": 2,
+          "evidence_spans": [
+            {
+              "span_id": "span-22936e24d1bbc26b1a6fc487",
+              "text": "Check AI output, including code and references."
+            },
+            {
+              "span_id": "span-1dcc9137e53afc34df4d9317",
+              "text": "Under Medium's AI content policy , disclose AI-generated text within the first two paragraphs and label AI-generated images in their captions."
+            },
+            {
+              "span_id": "span-158002f71a9eab1475875fa9",
+              "text": "Spelling, grammar, outlining and fact-checking tools alone need no disclosure."
+            },
+            {
+              "span_id": "span-56b51862fe239fe2c070ece1",
+              "text": "Medium does not allow AI-generated writing behind its Partner Program paywall."
+            },
+            {
+              "span_id": "span-b5f49294783d52865524fe8b",
+              "text": "Sponsored and promotional content"
+            },
+            {
+              "span_id": "span-813d3105b382303b9164f59f",
+              "text": "Articles promoting a company or product follow our sponsorship process ."
+            },
+            {
+              "span_id": "span-cc5c4f21edb4026b9600cba8",
+              "text": "This includes promotion of open-source software from funded companies."
+            },
+            {
+              "span_id": "span-c15c05f8806e4d4af2334d21",
+              "text": "Please discuss these pieces with us before submitting."
+            },
+            {
+              "span_id": "span-cde7a1166b2e68fa1efcbfce",
+              "text": "Outside our scope: we do not accept articles about finance, investing, trading, stock markets, valuation, cryptocurrencies or non-fungible tokens (NFTs)."
+            },
+            {
+              "span_id": "span-80f7741866c66f95a592a858",
+              "text": "04 After you submit"
+            },
+            {
+              "span_id": "span-52c5c6c74b498532db1d7d9d",
+              "text": "Our editors review submissions and may request changes."
+            },
+            {
+              "span_id": "span-47745b4fb3c85a83bd84815a",
+              "text": "Submitting a draft does not guarantee acceptance."
+            },
+            {
+              "span_id": "span-ae331f91dd582ea9733eab96",
+              "text": "Visit Stories → Submissions for review updates. “Approved” can mean your article is scheduled."
+            },
+            {
+              "span_id": "span-fe280f1a60d946d44475874e",
+              "text": "If you reach Medium's limit for guest writers, wait for a decision before sending another draft."
+            },
+            {
+              "span_id": "span-241bc21f56a3f20245c953cf",
+              "text": "05 Why write with us?"
+            },
+            {
+              "span_id": "span-ed364264f4515b9bf41b70bc",
+              "text": "A relevant audience"
+            },
+            {
+              "span_id": "span-8e4d6903b4198a14bf969adb",
+              "text": "Publishing with Towards AI gives your work a place in a publication with 150,000 Medium followers."
+            },
+            {
+              "span_id": "span-4e2da31e46ae5a0e23a8c0ed",
+              "text": "Reach beyond your own network to readers who want to understand AI and build with it."
+            },
+            {
+              "span_id": "span-69953bba1bfb68d57d4b80d8",
+              "text": "Your portfolio"
+            },
+            {
+              "span_id": "span-28a9ab5f7127dc649a70c4c2",
+              "text": "Build a public body of technical writing that future collaborators and employers can read."
+            },
+            {
+              "span_id": "span-7d4d2717d1410f95e2949480",
+              "text": "Our editors may help refine your article before publication."
+            },
+            {
+              "span_id": "span-0fabdbc052e81ee9759cb608",
+              "text": "Your authorship"
+            }
+          ]
+        },
+        {
+          "chunk_id": "tai-d7199d77cfa8e442427edebb",
+          "text": "Keep your rights and earnings\nYou retain your rights as the author. Eligible articles may use Medium's paywall; Towards AI takes no share of your Partner Program earnings. You can also submit without a paywall. Write for Towards AI\n\nReady to submit?\nFollow Towards AI on Medium, then send your draft using the steps above. Follow Towards AI on Medium View submission steps Questions about submissions? Contact editor@towardsai.net .",
+          "heading": "Keep your rights and earnings",
+          "index": 3,
+          "evidence_spans": [
+            {
+              "span_id": "span-2da497c114ed67bcf8a20140",
+              "text": "You retain your rights as the author."
+            },
+            {
+              "span_id": "span-0ebcf16be5e6bfa600613311",
+              "text": "Eligible articles may use Medium's paywall; Towards AI takes no share of your Partner Program earnings."
+            },
+            {
+              "span_id": "span-8fd702eb47e3a233b0728353",
+              "text": "You can also submit without a paywall."
+            },
+            {
+              "span_id": "span-869b9ea95dc3ed6c14ddb20f",
+              "text": "Write for Towards AI"
+            },
+            {
+              "span_id": "span-7b31c7df4a0ab0faff9e5235",
+              "text": "Follow Towards AI on Medium, then send your draft using the steps above."
+            },
+            {
+              "span_id": "span-36ef3fc44a51f91ba0b0cc66",
+              "text": "Follow Towards AI on Medium View submission steps"
+            },
+            {
+              "span_id": "span-5ed1a296ccb11574ece7b1fd",
+              "text": "Questions about submissions?"
+            },
+            {
+              "span_id": "span-86fd053689e45e024cc45544",
+              "text": "Contact editor@towardsai.net ."
             }
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
-      "content_sha256": "8672e3c510b6c0c9ea0e19fc0bf626de0072dcbc61a13aee96ea4ff1947c3e88",
-      "content_hash": "8672e3c510b6c0c9ea0e19fc0bf626de0072dcbc61a13aee96ea4ff1947c3e88",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "content_sha256": "c17d64a7ee00421baec90e5ebba9f72a08f48808d4236de37cd223c3cd183947",
+      "content_hash": "c17d64a7ee00421baec90e5ebba9f72a08f48808d4236de37cd223c3cd183947",
       "authority": "official_site",
       "status": "included",
       "retrieval_eligible": true,
@@ -7794,7 +8014,7 @@
       "redirect_chain": [
         "https://towardsai.com/contribute/"
       ],
-      "evidence_hash": "66b1d7983689f75e15fbda5acf7c6c51ddc1afc93b47735d3f8180772e2cf4bd"
+      "evidence_hash": "0a6c9ee66fe580fdf36d71a9795e9f4a709a880a7077011401e471a57788d387"
     },
     {
       "discovered_url": "https://towardsai.com/enterprise/software-developer-to-ai-engineer/",
@@ -8691,7 +8911,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "1893dee4e499d146906335d693d624a43e7e136f71d8db89f0f8b0b3001d2fa8",
       "content_hash": "1893dee4e499d146906335d693d624a43e7e136f71d8db89f0f8b0b3001d2fa8",
       "authority": "official_site",
@@ -8703,7 +8923,7 @@
       "redirect_chain": [
         "https://towardsai.com/enterprise/software-developer-to-ai-engineer/"
       ],
-      "evidence_hash": "449baee7e8b09d6bd50daaed4b8e44c72d2033a93f8f8b6cfbd2c24364537671"
+      "evidence_hash": "b73e88ac4f97fe4e8502d02432f53bbce43372387d8e4215c1a83828ae3facf9"
     },
     {
       "discovered_url": "https://towardsai.com/enterprise/agentic-developer-conversion/",
@@ -9864,7 +10084,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "b281a82e49c57ea9100e6f4eb969eb32c97ac053b01eb4324ee1a91e402dc154",
       "content_hash": "b281a82e49c57ea9100e6f4eb969eb32c97ac053b01eb4324ee1a91e402dc154",
       "authority": "official_site",
@@ -9876,7 +10096,7 @@
       "redirect_chain": [
         "https://towardsai.com/enterprise/agentic-developer-conversion/"
       ],
-      "evidence_hash": "448954a4a1811cd2ce73422e554e1d916693043536c60b647c5345611951bf73"
+      "evidence_hash": "e692c32778e6098e4037104b190a9aa962a24fd0c0c5b1e25ae026391ee1b58b"
     },
     {
       "discovered_url": "https://towardsai.com/academy/affiliate/",
@@ -10193,7 +10413,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "9d40bae2ac185ed6c15ccf2fc17b7709a499d0f80a39a1fd79eb239310d4f5a8",
       "content_hash": "9d40bae2ac185ed6c15ccf2fc17b7709a499d0f80a39a1fd79eb239310d4f5a8",
       "authority": "official_site",
@@ -10205,7 +10425,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/affiliate/"
       ],
-      "evidence_hash": "57ec111f973619fde6f77e7a7fb3c75b94d139daf24ea81466b142bf8d3a4dad"
+      "evidence_hash": "7fa6636b47ed1566b7f05e79bbfe29cb31e17b605e6b3a866346f2c031076ce9"
     },
     {
       "discovered_url": "https://towardsai.com/academy/agent-engineering-free-preview/",
@@ -10325,7 +10545,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "aa80b71a5e8ee89883cafbc3d317a99ac768dce060239102d9288416c0436385",
       "content_hash": "aa80b71a5e8ee89883cafbc3d317a99ac768dce060239102d9288416c0436385",
       "authority": "official_site",
@@ -10337,7 +10557,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/agent-engineering-free-preview/"
       ],
-      "evidence_hash": "4ef22e6147d56f70fb378458a2b66aad9befd9425c88db2878a17ecb71b61b00"
+      "evidence_hash": "dfb254f98abc45cd44787ad470e239de29660e7bb8f9cd0d50b7317860b9e830"
     },
     {
       "discovered_url": "https://towardsai.com/academy/full-stack-ai-engineering-free-preview/",
@@ -10416,7 +10636,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "070a9ebc513ce2254ce3dc463c4b97f2f47de19e1f3f5f58486b54bf14fca711",
       "content_hash": "070a9ebc513ce2254ce3dc463c4b97f2f47de19e1f3f5f58486b54bf14fca711",
       "authority": "official_site",
@@ -10428,7 +10648,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/full-stack-ai-engineering-free-preview/"
       ],
-      "evidence_hash": "324747704a37fc253e77497b973db5e92c298f131de5dad189ca0ad936fb8178"
+      "evidence_hash": "37fe295ae231dde5b1870c4c98c8aefe581abb7b78dd1e7f509c060b09843794"
     },
     {
       "discovered_url": "https://towardsai.com/academy/book/",
@@ -12642,7 +12862,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "5f1108913fd28ba4e542e86b97255f8a56bc85dc7090ec8f50439287792a1ff4",
       "content_hash": "5f1108913fd28ba4e542e86b97255f8a56bc85dc7090ec8f50439287792a1ff4",
       "authority": "official_site",
@@ -12654,7 +12874,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/book/"
       ],
-      "evidence_hash": "551cf3c86e2875f98ee6827e85b2bd2003f2056eb19976b257faf8f05df258c9"
+      "evidence_hash": "243b32790bdfc1c7eefaaf9b6f550a3626797b8cc0424d595596943fa09841f6"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/get-it-all/",
@@ -12955,7 +13175,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "21ec660aa17ad83a4f5ecef7cdf8a7f6270dc043c15e317e346bf211ed4fe157",
       "content_hash": "21ec660aa17ad83a4f5ecef7cdf8a7f6270dc043c15e317e346bf211ed4fe157",
       "authority": "official_site",
@@ -12967,7 +13187,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/bundles/get-it-all/"
       ],
-      "evidence_hash": "92e48333babce80de3d359e0286e98e321cce637302f294721d3be8734eceddb"
+      "evidence_hash": "b5512e36403f90e8c196404dbb173ad3f6593c74c67d95ea071426fdb4d15008"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/",
@@ -13298,7 +13518,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "29d9ea5b4a890b2c4f12e96d02fb1142de4df136d65c4c1bc1e2e454ce9d07ff",
       "content_hash": "29d9ea5b4a890b2c4f12e96d02fb1142de4df136d65c4c1bc1e2e454ce9d07ff",
       "authority": "official_site",
@@ -13310,7 +13530,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/"
       ],
-      "evidence_hash": "fc7863e8f6c17a8fd9234521d1a9ea70b36c07baed8daedb9774777602241b52"
+      "evidence_hash": "b3a97831a2ddd0f189e2c0f4cc50b2f4d22510f081b209ff2efa24095047109a"
     },
     {
       "discovered_url": "https://towardsai.com/academy/bundles/10-hour-crash-course-into-llm-developer-expert/",
@@ -13602,7 +13822,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "7bffde8978babca7db7c4a13d0f6331771e855d9729c9d604e7a9f047155d309",
       "content_hash": "7bffde8978babca7db7c4a13d0f6331771e855d9729c9d604e7a9f047155d309",
       "authority": "official_site",
@@ -13614,7 +13834,7 @@
       "redirect_chain": [
         "https://towardsai.com/academy/bundles/10-hour-crash-course-into-llm-developer-expert/"
       ],
-      "evidence_hash": "5eef1b8cd899ce271ea640368f0c1bb3d284d7bff3b5f9dcf00cd3e67193d068"
+      "evidence_hash": "fdc561057a1fdf3135879ba56ab5e32189709394cd907eac4a71f659b076355a"
     },
     {
       "discovered_url": "https://towardsai.com/enterpriseenablement/",
@@ -14362,7 +14582,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "810b61b506d7342a066c5146df55a9793d727ad38a39a325657a167bfc16f235",
       "content_hash": "810b61b506d7342a066c5146df55a9793d727ad38a39a325657a167bfc16f235",
       "authority": "official_site",
@@ -14374,7 +14594,7 @@
       "redirect_chain": [
         "https://towardsai.com/enterpriseenablement/"
       ],
-      "evidence_hash": "8bb987d5346b1be02d9e70f5b93aa0f0bf135dfeece53b00a0ec75adf0c36ca1"
+      "evidence_hash": "cf6865c323d7f62ca8979db3f576be2665939af40145661c5ce829e8b58f39e3"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/",
@@ -14809,7 +15029,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "dede3b2b533d4814e97f42cee7bfbad75be2e6644684d682166d368bba8024ad",
       "content_hash": "dede3b2b533d4814e97f42cee7bfbad75be2e6644684d682166d368bba8024ad",
       "authority": "official_site",
@@ -14821,7 +15041,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/"
       ],
-      "evidence_hash": "61ccb337cce56d3198d5cb79eb6852b68f73508bf9076e36ff08ca383ed48425"
+      "evidence_hash": "913aa1b97f07e23d158cf59d19de2430bc9f3784e899ec9e5cf28ecb05852a41"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/careers/",
@@ -15440,7 +15660,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "c7fc1f753fec7ea662ea65eaf58fff0098ddafb34cfa4cf11b47c4386a971f58",
       "content_hash": "c7fc1f753fec7ea662ea65eaf58fff0098ddafb34cfa4cf11b47c4386a971f58",
       "authority": "official_site",
@@ -15452,7 +15672,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/careers/"
       ],
-      "evidence_hash": "7b29a3ec1e2543c76cf8cc435c3644a151d47155d93821685406edf5bcb65f40"
+      "evidence_hash": "41627af7460361abeca8fa25b076522ee7005dd346c0052c492d42dbaced3ba0"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/deployment-strategist/",
@@ -16044,7 +16264,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "031d7ef89f6f75b9915a086ba402809d96816106f8d4693372e4769bb8c8314b",
       "content_hash": "031d7ef89f6f75b9915a086ba402809d96816106f8d4693372e4769bb8c8314b",
       "authority": "official_site",
@@ -16056,7 +16276,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/deployment-strategist/"
       ],
-      "evidence_hash": "9d63009624e1f5b732462bc9535838127a049504ccd6ae03380441a890879f6a"
+      "evidence_hash": "65d06f6e0765a32e3c67da8ec0bd7bec4f69138cd59864e88b5db144bf970eb8"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/junior-ai-engineer/",
@@ -16580,7 +16800,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "abbac204cc4418041d3b7dc7a1babd25b8b697235c63661b574f929ebc855c34",
       "content_hash": "abbac204cc4418041d3b7dc7a1babd25b8b697235c63661b574f929ebc855c34",
       "authority": "official_site",
@@ -16592,7 +16812,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/junior-ai-engineer/"
       ],
-      "evidence_hash": "de0dd61dd6247adf4e4b20501bcc5b55ee9c33f665b990e64adf99b6642d74ba"
+      "evidence_hash": "78dfb4c5d09badcdd7ba7220cec27e49fbd2a1bcb333af4b16e1d1f0962accb0"
     },
     {
       "discovered_url": "https://towardsai.com/valuecreation/senior-ai-engineer/",
@@ -17168,7 +17388,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "40b768e2f7f9a7c2778e7821060560ac7761af1f4a4ff7426efffd5d4e67efb3",
       "content_hash": "40b768e2f7f9a7c2778e7821060560ac7761af1f4a4ff7426efffd5d4e67efb3",
       "authority": "official_site",
@@ -17180,7 +17400,7 @@
       "redirect_chain": [
         "https://towardsai.com/valuecreation/senior-ai-engineer/"
       ],
-      "evidence_hash": "d74e38ec790bd063fe9e2cf94c7481b0338449b82372a5aabbbb6dd9a37e09d8"
+      "evidence_hash": "f00ca4d0775d4f8b9b8bbe973fd103aa9513e0e12b4452f0ad0c29094bafa231"
     },
     {
       "discovered_url": "https://towardsai.com/theaitastegap/",
@@ -18162,7 +18382,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "e1d0346eda71f7781cc15279ac4fca8870c98a76fe99cc4ea5e2989e63c261a8",
       "content_hash": "e1d0346eda71f7781cc15279ac4fca8870c98a76fe99cc4ea5e2989e63c261a8",
       "authority": "official_site",
@@ -18174,7 +18394,7 @@
       "redirect_chain": [
         "https://towardsai.com/theaitastegap/"
       ],
-      "evidence_hash": "d7dd6d64d24f843ab54c3500684627e568ee09e841aa7f9e348ae5149ffc7df6"
+      "evidence_hash": "e5e7ac25b4d513733fdd657f561d055556051cdf7f2a410afab411ad817b7486"
     },
     {
       "discovered_url": "https://towardsai.com/webinars/agentengineering/",
@@ -18611,7 +18831,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-07T12:40:44.572872+00:00",
+      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
       "content_sha256": "463aac2b3baa5a120c1a22ff40d009db48b9a8a0f3cba7ed5b1f11df35697a18",
       "content_hash": "463aac2b3baa5a120c1a22ff40d009db48b9a8a0f3cba7ed5b1f11df35697a18",
       "authority": "official_site",
@@ -18623,7 +18843,7 @@
       "redirect_chain": [
         "https://towardsai.com/webinars/agentengineering/"
       ],
-      "evidence_hash": "2ebe12febad55873b1e30842b9cb267e6520b3b80e5d795272e2c0b6dd372a14"
+      "evidence_hash": "8ba7b4be3f2ddeaee64c8bce08dd96bf0172c10f4ba8deb13f847277a5601150"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "source": "https://academy.towardsai.net/sitemap.xml",
-  "generated_at": "2026-09-14T12:54:41.823277+00:00",
+  "generated_at": "2026-09-21T12:54:36.211517+00:00",
   "authority": "official_academy",
   "status_counts": {
     "excluded": 15,
@@ -428,20 +428,20 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "ff9481d6abf2fd82e7c8b9e6c1fecad4f517cee413f2c66f239d0e9251914d45",
       "content_hash": "ff9481d6abf2fd82e7c8b9e6c1fecad4f517cee413f2c66f239d0e9251914d45",
       "authority": "official_academy",
       "status": "excluded",
       "retrieval_eligible": false,
       "http_status": 200,
-      "lastmod": "2026-09-14T12:54:44Z",
+      "lastmod": "2026-09-21T12:54:38Z",
       "sitemap_url": "https://academy.towardsai.net/sitemap.xml",
       "redirect_chain": [
         "https://academy.towardsai.net/"
       ],
       "excluded_reason": "canonical URL is outside the sitemap authority",
-      "evidence_hash": "15698347975a0c69d183c1e522eac949cd02ab179dd207c97149415d8babc493"
+      "evidence_hash": "e03539a3c85fc1d586b5427603524779c8369b8bd56b04c377b5b7590e63fa36"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections",
@@ -662,20 +662,20 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "content_hash": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "authority": "official_academy",
       "status": "excluded",
       "retrieval_eligible": false,
       "http_status": 200,
-      "lastmod": "2026-09-14T12:54:44Z",
+      "lastmod": "2026-09-21T12:54:38Z",
       "sitemap_url": "https://academy.towardsai.net/sitemap.xml",
       "redirect_chain": [
         "https://academy.towardsai.net/collections"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "f79894b27ecd1f83005ecb5e69c4eec803e0fcf3404aebf8979c436c94bfb400"
+      "evidence_hash": "86e5137543b872c97d00f98bfc4a927402949af87b2ce91a12dc29d3a1a8bf2c"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections/products",
@@ -896,7 +896,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "content_hash": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "authority": "official_academy",
@@ -909,7 +909,7 @@
         "https://academy.towardsai.net/collections/products"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "ace6675466250429dc66325d23c04a28cf66c5a0d06115693a33ec4e691735a3"
+      "evidence_hash": "e95acd8a946a913c185eac32cb02f6956ba24a03f75bf8e7901cec4988f95180"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections/developers",
@@ -1097,7 +1097,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "482196d661f13899ddd9bc5f4aee9d0b868e33dcd13687d69575454644363308",
       "content_hash": "482196d661f13899ddd9bc5f4aee9d0b868e33dcd13687d69575454644363308",
       "authority": "official_academy",
@@ -1110,7 +1110,7 @@
         "https://academy.towardsai.net/collections/developers"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "3ab317d33561313d069cadbb2eeb6c853c31c02053f63b889a251dcc3810c11f"
+      "evidence_hash": "f5f32c3791ed9444d27af6fcadb4dd39cfd50a2dd5f8f51726a9264a91e813aa"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections/professionals",
@@ -1226,7 +1226,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "f9ff096b5a472ef12beadce432db206b9a098f3de7e83eb231956e20d7c649bc",
       "content_hash": "f9ff096b5a472ef12beadce432db206b9a098f3de7e83eb231956e20d7c649bc",
       "authority": "official_academy",
@@ -1239,7 +1239,7 @@
         "https://academy.towardsai.net/collections/professionals"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "bd41803b08be48fde28323109af6860182bef25398745c82c2e73bbd20277a4b"
+      "evidence_hash": "544d5b4524df2dc35fccaba745bf98419671b1835fe55def78f1b04c69698bd8"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/beginner-to-advanced-llm-dev",
@@ -2831,7 +2831,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "403056bec2783bea338b6529b8f53be252221bf677604178c65050679e062747",
       "content_hash": "403056bec2783bea338b6529b8f53be252221bf677604178c65050679e062747",
       "authority": "official_academy",
@@ -2843,7 +2843,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/beginner-to-advanced-llm-dev"
       ],
-      "evidence_hash": "a72a7a15c181f05532a140a2eebdd7d6e54d391bd23ef68d14f07285edb63a5a"
+      "evidence_hash": "3dfda9959873d29c94495f0ae6e9400c8327dbf07e89801885b670e49894600e"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/agent-engineering",
@@ -4423,7 +4423,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "77fbb9ce3cc4e38d02747631e1cb6ba852db591202daa6491b19150c98e4ba07",
       "content_hash": "77fbb9ce3cc4e38d02747631e1cb6ba852db591202daa6491b19150c98e4ba07",
       "authority": "official_academy",
@@ -4435,7 +4435,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/agent-engineering"
       ],
-      "evidence_hash": "e0b271eebaeb55b023899b35854ec3ba13ff6131c84cb772c7ae0b6e8dc9a67c"
+      "evidence_hash": "7663b4d61848a26c11c3043e67e2e2a7f8fa0fd28a28e79be2884f1fa39b6ef8"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/llm-primer",
@@ -5149,7 +5149,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "ea0982643ddc081118e78a990fe1723b78b4ee141f233bc09bc83e6c50f90a28",
       "content_hash": "ea0982643ddc081118e78a990fe1723b78b4ee141f233bc09bc83e6c50f90a28",
       "authority": "official_academy",
@@ -5161,7 +5161,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/llm-primer"
       ],
-      "evidence_hash": "605912ea06d09add80510d4d7f2ff4950c48432188ef3286ac30fd58ca42d8d7"
+      "evidence_hash": "90ed42d1efc2637c007b275d3cb25fedae7499cdc87dda0d37cbef3d22db2758"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/python-for-genai",
@@ -5991,7 +5991,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "690732659c6db9a3c36d9935daf9803d4fac77f60de2ed9edefd0d4df7bf4e2c",
       "content_hash": "690732659c6db9a3c36d9935daf9803d4fac77f60de2ed9edefd0d4df7bf4e2c",
       "authority": "official_academy",
@@ -6003,7 +6003,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/python-for-genai"
       ],
-      "evidence_hash": "5f16a2ee8f8d1df1f53a7aa57bb255b49e4eaae8339e5f65ef891a1324589aa9"
+      "evidence_hash": "b49c6f0fe1dee067296e15f0df16fff01dd9f5e0e3989ad57e8b25e8fdd38761"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/tai-mentorship",
@@ -6829,7 +6829,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "24ab607523dfb53910e3cdce57b3414e19395784be382d6e742ed2a3c4402435",
       "content_hash": "24ab607523dfb53910e3cdce57b3414e19395784be382d6e742ed2a3c4402435",
       "authority": "official_academy",
@@ -6841,7 +6841,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/tai-mentorship"
       ],
-      "evidence_hash": "a89bfeec4e79ee244e57ffccf466de3c2d6fd257b0fbc1d1631e8f197a07e77e"
+      "evidence_hash": "8ed6a390b30fd5c4d1ce45fab249e368524ef49b3f7cc974ac71ef4c7f19d9b9"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/ai-business-professionals",
@@ -7814,7 +7814,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "e4aee1f4dbb47d19da1c487f95291782f42ec147ad6ca34a2aa717f990ac33ae",
       "content_hash": "e4aee1f4dbb47d19da1c487f95291782f42ec147ad6ca34a2aa717f990ac33ae",
       "authority": "official_academy",
@@ -7826,7 +7826,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/ai-business-professionals"
       ],
-      "evidence_hash": "592057fc3bfc894383246a6832431060b93ebb319eea7e22f29da22a7c1b3a36"
+      "evidence_hash": "f00e5b0d04775ffbeffcc98d419763d33d00e0a6ffcf50488447a26768e8ba3e"
     },
     {
       "discovered_url": "https://academy.towardsai.net/products/digital_downloads/agents-cheatsheet",
@@ -7855,12 +7855,12 @@
         "Meet the Experts",
         "Towards AI Academy Courses"
       ],
-      "text": "Digital download\n\nAgent Design Cheatsheet\nTrusted by engineers at Intel, Europol, Thinkific, and more ↓ Get the free decision framework that shows you exactly when to use workflows, single agents, or multi-agent systems. 📩 Bonus 1-hour webinar delivered to your inbox; check your spam so you don't miss it. First name Email If you are a human, ignore this field Download Now Used in architecture reviews at Activeloop, NY Public Library, Police Nationale de France, and more... Updated monthly (last updated in January 2026) Trusted by 100K+ learners building production-grade systems\n\nAre You Making These Costly AI Architecture Mistakes?\nThis cheat sheet helps you stay as simple as possible, because each step toward multi-agent can multiply tokens, latency, and debugging overhead!\n\nInside This Cheatsheet & Webinar\n\n📊 You’ll stop guessing the architecture.\nInstead of defaulting to “agent + tools,” you’ll make a clean decision using constraints: when a workflow is enough, when a single agent is justified, and when multi-agent is truly worth the complexity.\n\n🔧 You’ll stop discovering requirements late.\nYou’ll learn the kickoff questions that force clarity upfront, so cost blowups, tool sprawl, and untestable autonomy don’t show up after you’ve already built half the system.\n\n✅ You’ll build in reliability from day one.\nYou’ll leave with practical rules for making agents production-safe: validate outputs, instrument runs, route edge cases to humans, and keep the agent thin so the system is debuggable.\n\nTrusted by Industry Leaders\n& 100,000+ Learners ” Contains thorough explanations for you to start using and deploying LLMs. Very highly recommended! Luis Serrano PhD, Founder of Serrano Academy Helps learners understand everything from fundamentals to the simple-to-advanced building blocks of constructing LLM applications. Jerry Liu CEO of LlamaIndex A truly wonderful resource that develops understanding of LLMs from the ground up, from theory to code. Pete Huang Co-founder of The Neuron ” This will be valuable to anyone looking to dive into the field quickly and efficiently. Jeremy Pinto Senior Applied Research Scientist at Mila ” Contains thorough explanations for you to start using and deploying LLMs. Very highly recommended! Luis Serrano PhD, Founder of Serrano Academy A truly wonderful resource that develops understanding of LLMs from the ground up, from theory to code. Pete Huang Co-founder of The Neuron Helps learners understand everything from fundamentals to the simple-to-advanced building blocks of constructing LLM applications. Jerry Liu CEO of LlamaIndex ” This will be valuable to anyone looking to dive into the field quickly and efficiently. Jeremy Pinto Senior Applied Research Scientist at Mila\n\nAbout the Agents Cheatsheet and webinar\n1-hour Webinar: Global context behind workflows and agents + how we view them and implement them with clients at Towards AI. Cheatsheet: Page 1: Make the architecture call quickly using the spectrum + autonomy test, so you don’t pay multi-agent costs for workflow problems. Page 2: Know when multi-agent works, when it fails, and what reliable systems always include. Page 3: Run a better kickoff with a repeatable 7-step sequence that prevents rework. Pages 4-5: Use the 12 questions to translate “requirements” into an architecture + system design plan with concrete build outputs. Page 6: Turn the framework into next steps (what to learn next / where to go deeper).\n\nFAQ\n✓ Completely free: no credit card, no hidden costs, no upsell required ✓ Webinar you can watch at anytime ✓ Instant PDF delivery: download immediately, read offline, print for your team ✓ Bonus resources included: we'll personally email you resources trusted by 100K+ AI engineers (check your spam folder so you don't miss them) ✓ Created by Towards AI: 100K+ students, real production experience ✓ Decision-ready format: use it in your next project kickoff this week ✓ Updated January 2026: reflects current best practices and latest thinking ✓ Want to go deeper? Explore our in-depth AI engineering courses: https://academy.towardsai.net/\n\nGet the Framework Top AI Teams Use Daily\nStop building impressive demos that collapse under real users. Use a repeatable framework to choose the right architecture and the reliability patterns that keep it stable. Get your free download now and watch your inbox (or spam) for exclusive resources from our team ↓ First name Email If you are a human, ignore this field Download Now\n\nMeet the Experts\nHi there! I'm Louis-François! My AI journey began in 2019 during my systems engineering degree. In 2020, I pursued a Master’s in AI, became Head of AI at a startup, and launched a YouTube channel to teach AI concepts. These experiences revealed a gap between academia and industry, inspiring me to co-found Towards AI in 2022 to bridge that divide. In 2024, I left my PhD in medical AI to focus on building real-world AI solutions. This is why the TAI team of experts and I have identified the essential tech stack for adapting LLMs to a specific use case and achieving a sufficient threshold of accuracy and reliability for scalable use by paying customers. With Towards AI Academy and some key projects in our pipeline, like our full-stack AI engineering course and our book, we aim to help you develop this toolkit.\n\nTowards AI Academy Courses\nWe offer self-paced, industry-focused courses for developers, AI engineers, professionals, and companies looking to become AI-first!",
+      "text": "Digital download\n\nAgent Design Cheatsheet\nTrusted by engineers at Intel, Europol, Thinkific, and more ↓ Get the free decision framework that shows you exactly when to use workflows, single agents, or multi-agent systems. 📩 Bonus 1-hour webinar delivered to your inbox; check your spam so you don't miss it. First name (required) Email (required) If you are a human, ignore this field Download Now Used in architecture reviews at Activeloop, NY Public Library, Police Nationale de France, and more... Updated monthly (last updated in January 2026) Trusted by 100K+ learners building production-grade systems\n\nAre You Making These Costly AI Architecture Mistakes?\nThis cheat sheet helps you stay as simple as possible, because each step toward multi-agent can multiply tokens, latency, and debugging overhead!\n\nInside This Cheatsheet & Webinar\n\n📊 You’ll stop guessing the architecture.\nInstead of defaulting to “agent + tools,” you’ll make a clean decision using constraints: when a workflow is enough, when a single agent is justified, and when multi-agent is truly worth the complexity.\n\n🔧 You’ll stop discovering requirements late.\nYou’ll learn the kickoff questions that force clarity upfront, so cost blowups, tool sprawl, and untestable autonomy don’t show up after you’ve already built half the system.\n\n✅ You’ll build in reliability from day one.\nYou’ll leave with practical rules for making agents production-safe: validate outputs, instrument runs, route edge cases to humans, and keep the agent thin so the system is debuggable.\n\nTrusted by Industry Leaders\n& 100,000+ Learners ” Contains thorough explanations for you to start using and deploying LLMs. Very highly recommended! Luis Serrano PhD, Founder of Serrano Academy Helps learners understand everything from fundamentals to the simple-to-advanced building blocks of constructing LLM applications. Jerry Liu CEO of LlamaIndex A truly wonderful resource that develops understanding of LLMs from the ground up, from theory to code. Pete Huang Co-founder of The Neuron ” This will be valuable to anyone looking to dive into the field quickly and efficiently. Jeremy Pinto Senior Applied Research Scientist at Mila ” Contains thorough explanations for you to start using and deploying LLMs. Very highly recommended! Luis Serrano PhD, Founder of Serrano Academy A truly wonderful resource that develops understanding of LLMs from the ground up, from theory to code. Pete Huang Co-founder of The Neuron Helps learners understand everything from fundamentals to the simple-to-advanced building blocks of constructing LLM applications. Jerry Liu CEO of LlamaIndex ” This will be valuable to anyone looking to dive into the field quickly and efficiently. Jeremy Pinto Senior Applied Research Scientist at Mila\n\nAbout the Agents Cheatsheet and webinar\n1-hour Webinar: Global context behind workflows and agents + how we view them and implement them with clients at Towards AI. Cheatsheet: Page 1: Make the architecture call quickly using the spectrum + autonomy test, so you don’t pay multi-agent costs for workflow problems. Page 2: Know when multi-agent works, when it fails, and what reliable systems always include. Page 3: Run a better kickoff with a repeatable 7-step sequence that prevents rework. Pages 4-5: Use the 12 questions to translate “requirements” into an architecture + system design plan with concrete build outputs. Page 6: Turn the framework into next steps (what to learn next / where to go deeper).\n\nFAQ\n✓ Completely free: no credit card, no hidden costs, no upsell required ✓ Webinar you can watch at anytime ✓ Instant PDF delivery: download immediately, read offline, print for your team ✓ Bonus resources included: we'll personally email you resources trusted by 100K+ AI engineers (check your spam folder so you don't miss them) ✓ Created by Towards AI: 100K+ students, real production experience ✓ Decision-ready format: use it in your next project kickoff this week ✓ Updated January 2026: reflects current best practices and latest thinking ✓ Want to go deeper? Explore our in-depth AI engineering courses: https://academy.towardsai.net/\n\nGet the Framework Top AI Teams Use Daily\nStop building impressive demos that collapse under real users. Use a repeatable framework to choose the right architecture and the reliability patterns that keep it stable. Get your free download now and watch your inbox (or spam) for exclusive resources from our team ↓ First name (required) Email (required) If you are a human, ignore this field Download Now\n\nMeet the Experts\nHi there! I'm Louis-François! My AI journey began in 2019 during my systems engineering degree. In 2020, I pursued a Master’s in AI, became Head of AI at a startup, and launched a YouTube channel to teach AI concepts. These experiences revealed a gap between academia and industry, inspiring me to co-found Towards AI in 2022 to bridge that divide. In 2024, I left my PhD in medical AI to focus on building real-world AI solutions. This is why the TAI team of experts and I have identified the essential tech stack for adapting LLMs to a specific use case and achieving a sufficient threshold of accuracy and reliability for scalable use by paying customers. With Towards AI Academy and some key projects in our pipeline, like our full-stack AI engineering course and our book, we aim to help you develop this toolkit.\n\nTowards AI Academy Courses\nWe offer self-paced, industry-focused courses for developers, AI engineers, professionals, and companies looking to become AI-first!",
       "links": [],
       "chunks": [
         {
           "chunk_id": "tai-205705fd604284dc51ee3a07",
-          "text": "Digital download\n\nAgent Design Cheatsheet\nTrusted by engineers at Intel, Europol, Thinkific, and more ↓ Get the free decision framework that shows you exactly when to use workflows, single agents, or multi-agent systems. 📩 Bonus 1-hour webinar delivered to your inbox; check your spam so you don't miss it. First name Email If you are a human, ignore this field Download Now Used in architecture reviews at Activeloop, NY Public Library, Police Nationale de France, and more... Updated monthly (last updated in January 2026) Trusted by 100K+ learners building production-grade systems\n\nAre You Making These Costly AI Architecture Mistakes?\nThis cheat sheet helps you stay as simple as possible, because each step toward multi-agent can multiply tokens, latency, and debugging overhead!\n\nInside This Cheatsheet & Webinar\n\n📊 You’ll stop guessing the architecture.\nInstead of defaulting to “agent + tools,” you’ll make a clean decision using constraints: when a workflow is enough, when a single agent is justified, and when multi-agent is truly worth the complexity.\n\n🔧 You’ll stop discovering requirements late.\nYou’ll learn the kickoff questions that force clarity upfront, so cost blowups, tool sprawl, and untestable autonomy don’t show up after you’ve already built half the system.\n\n✅ You’ll build in reliability from day one.\nYou’ll leave with practical rules for making agents production-safe: validate outputs, instrument runs, route edge cases to humans, and keep the agent thin so the system is debuggable.",
+          "text": "Digital download\n\nAgent Design Cheatsheet\nTrusted by engineers at Intel, Europol, Thinkific, and more ↓ Get the free decision framework that shows you exactly when to use workflows, single agents, or multi-agent systems. 📩 Bonus 1-hour webinar delivered to your inbox; check your spam so you don't miss it. First name (required) Email (required) If you are a human, ignore this field Download Now Used in architecture reviews at Activeloop, NY Public Library, Police Nationale de France, and more... Updated monthly (last updated in January 2026) Trusted by 100K+ learners building production-grade systems\n\nAre You Making These Costly AI Architecture Mistakes?\nThis cheat sheet helps you stay as simple as possible, because each step toward multi-agent can multiply tokens, latency, and debugging overhead!\n\nInside This Cheatsheet & Webinar\n\n📊 You’ll stop guessing the architecture.\nInstead of defaulting to “agent + tools,” you’ll make a clean decision using constraints: when a workflow is enough, when a single agent is justified, and when multi-agent is truly worth the complexity.\n\n🔧 You’ll stop discovering requirements late.\nYou’ll learn the kickoff questions that force clarity upfront, so cost blowups, tool sprawl, and untestable autonomy don’t show up after you’ve already built half the system.\n\n✅ You’ll build in reliability from day one.\nYou’ll leave with practical rules for making agents production-safe: validate outputs, instrument runs, route edge cases to humans, and keep the agent thin so the system is debuggable.",
           "heading": "Agent Design Cheatsheet",
           "index": 0,
           "evidence_spans": [
@@ -7877,8 +7877,12 @@
               "text": "Get the free decision framework that shows you exactly when to use workflows, single agents, or multi-agent systems. 📩 Bonus 1-hour webinar delivered to your inbox; check your spam so you don't miss it."
             },
             {
-              "span_id": "span-f582b2b07973a88450de713b",
-              "text": "First name"
+              "span_id": "span-cf58618f92831d68edc28b0a",
+              "text": "First name (required)"
+            },
+            {
+              "span_id": "span-355b3da52200194ee3b49788",
+              "text": "Email (required)"
             },
             {
               "span_id": "span-aee61dabefff4f5b12a35df9",
@@ -7972,7 +7976,7 @@
         },
         {
           "chunk_id": "tai-2ff68a3ec6f7b8e0110a854f",
-          "text": "About the Agents Cheatsheet and webinar\n1-hour Webinar: Global context behind workflows and agents + how we view them and implement them with clients at Towards AI. Cheatsheet: Page 1: Make the architecture call quickly using the spectrum + autonomy test, so you don’t pay multi-agent costs for workflow problems. Page 2: Know when multi-agent works, when it fails, and what reliable systems always include. Page 3: Run a better kickoff with a repeatable 7-step sequence that prevents rework. Pages 4-5: Use the 12 questions to translate “requirements” into an architecture + system design plan with concrete build outputs. Page 6: Turn the framework into next steps (what to learn next / where to go deeper).\n\nFAQ\n✓ Completely free: no credit card, no hidden costs, no upsell required ✓ Webinar you can watch at anytime ✓ Instant PDF delivery: download immediately, read offline, print for your team ✓ Bonus resources included: we'll personally email you resources trusted by 100K+ AI engineers (check your spam folder so you don't miss them) ✓ Created by Towards AI: 100K+ students, real production experience ✓ Decision-ready format: use it in your next project kickoff this week ✓ Updated January 2026: reflects current best practices and latest thinking ✓ Want to go deeper? Explore our in-depth AI engineering courses: https://academy.towardsai.net/\n\nGet the Framework Top AI Teams Use Daily\nStop building impressive demos that collapse under real users. Use a repeatable framework to choose the right architecture and the reliability patterns that keep it stable. Get your free download now and watch your inbox (or spam) for exclusive resources from our team ↓ First name Email If you are a human, ignore this field Download Now",
+          "text": "About the Agents Cheatsheet and webinar\n1-hour Webinar: Global context behind workflows and agents + how we view them and implement them with clients at Towards AI. Cheatsheet: Page 1: Make the architecture call quickly using the spectrum + autonomy test, so you don’t pay multi-agent costs for workflow problems. Page 2: Know when multi-agent works, when it fails, and what reliable systems always include. Page 3: Run a better kickoff with a repeatable 7-step sequence that prevents rework. Pages 4-5: Use the 12 questions to translate “requirements” into an architecture + system design plan with concrete build outputs. Page 6: Turn the framework into next steps (what to learn next / where to go deeper).\n\nFAQ\n✓ Completely free: no credit card, no hidden costs, no upsell required ✓ Webinar you can watch at anytime ✓ Instant PDF delivery: download immediately, read offline, print for your team ✓ Bonus resources included: we'll personally email you resources trusted by 100K+ AI engineers (check your spam folder so you don't miss them) ✓ Created by Towards AI: 100K+ students, real production experience ✓ Decision-ready format: use it in your next project kickoff this week ✓ Updated January 2026: reflects current best practices and latest thinking ✓ Want to go deeper? Explore our in-depth AI engineering courses: https://academy.towardsai.net/\n\nGet the Framework Top AI Teams Use Daily\nStop building impressive demos that collapse under real users. Use a repeatable framework to choose the right architecture and the reliability patterns that keep it stable. Get your free download now and watch your inbox (or spam) for exclusive resources from our team ↓ First name (required) Email (required) If you are a human, ignore this field Download Now",
           "heading": "About the Agents Cheatsheet and webinar",
           "index": 2,
           "evidence_spans": [
@@ -8017,8 +8021,12 @@
               "text": "Get your free download now and watch your inbox (or spam) for exclusive resources from our team ↓"
             },
             {
-              "span_id": "span-6de26411669ec94712acc6c7",
-              "text": "First name"
+              "span_id": "span-64a78b69f7867dc1f1e9050c",
+              "text": "First name (required)"
+            },
+            {
+              "span_id": "span-4b58f8f55e96bb91b57451d1",
+              "text": "Email (required)"
             },
             {
               "span_id": "span-901ac24bc60d9362c1bcc316",
@@ -8075,9 +8083,9 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
-      "content_sha256": "7a791989b33ca304cf369e774a2b16298674ce03ead52dfc92b5c7992d5cf697",
-      "content_hash": "7a791989b33ca304cf369e774a2b16298674ce03ead52dfc92b5c7992d5cf697",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
+      "content_sha256": "5d48b33c53396e51aea4efaad2d54a38f308ae5a90792113d1fb5a8f7a963cfa",
+      "content_hash": "5d48b33c53396e51aea4efaad2d54a38f308ae5a90792113d1fb5a8f7a963cfa",
       "authority": "official_academy",
       "status": "included",
       "retrieval_eligible": true,
@@ -8087,7 +8095,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/products/digital_downloads/agents-cheatsheet"
       ],
-      "evidence_hash": "0677248c6584d8d948b2115610a255f3e7db94bb25b1f3f6b1e42fbbb17b80a5"
+      "evidence_hash": "d9e26a32bcd76e80709b8a4193b58334b9b8404c5b7376e4d287a21b64de8312"
     },
     {
       "discovered_url": "https://academy.towardsai.net/products/digital_downloads/anti-slop-framework",
@@ -8112,12 +8120,12 @@
         "Ready to Clean Up Your AI Writing?",
         "Created by Louis-François Bouchard"
       ],
-      "text": "Digital download\n\nTurn AI Writing Into Professional Work Output\nThe most comprehensive Anti-Slop Framework for eliminating AI slop + bonus in-depth video Remove robotic phrases, generic structures, and marketing fluff from emails, reports, and business writing. Copy-paste ready • Instant PDF download • Works with all LLMs 📩 Bonus in-depth video delivered to your inbox; check your spam. First name Email If you are a human, ignore this field Download Now Used by 4000+ professionals generating content at scale Includes 50+ banned AI phrases and style constraints Complete 7-section framework with two-model workflow\n\nThree Ways This Changes How You Write\n\nWrite 10x Faster Without Compromising Quality\nThe prompt framework tells AI exactly how to write, not just what. It defines structure, tone, and vocabulary upfront, so you get professional output immediately.\n\nEliminate the \"Does This Sound Like AI?\" Anxiety\n50+ banned phrases plus style constraints block every AI tell: the dramatic adjectives, generic transitions, marketing fluff. Two-model workflow catches what you miss.\n\nScale Content Production Without Scaling Your Team\nUniversal anti-slop rules that work on any content type. You can apply the same framework whether you're writing emails, blog posts, reports, or proposals.\n\nAt a Glance\n✓ No technical skills needed, just copy-paste. ✓ Bonus in-depth video sent to your inbox (check spam!). ✓ Works with ChatGPT, Claude, and all LLMs. ✓ Complete framework, not just word lists. ✓ Use all sections or pick what you need.\n\nReady to Clean Up Your AI Writing?\nInstant PDF download • Copy-Paste Ready • 5-page prompt framework 📩 We'll also send you what's working for 100,000+ AI practitioners, straight to your inbox. Check spam so you don't miss it. First name Email If you are a human, ignore this field Get Template\n\nCreated by Louis-François Bouchard\nLouis-François is Co-founder and CTO of Towards AI, where they create courses for AI engineers and have taught 100,000+ students. For the past three years, Towards AI has used this exact framework to eliminate AI slop from every piece of content they publish, including course materials, articles, documentation, and student resources.",
+      "text": "Digital download\n\nTurn AI Writing Into Professional Work Output\nThe most comprehensive Anti-Slop Framework for eliminating AI slop + bonus in-depth video Remove robotic phrases, generic structures, and marketing fluff from emails, reports, and business writing. Copy-paste ready • Instant PDF download • Works with all LLMs 📩 Bonus in-depth video delivered to your inbox; check your spam. First name (required) Email (required) If you are a human, ignore this field Download Now Used by 4000+ professionals generating content at scale Includes 50+ banned AI phrases and style constraints Complete 7-section framework with two-model workflow\n\nThree Ways This Changes How You Write\n\nWrite 10x Faster Without Compromising Quality\nThe prompt framework tells AI exactly how to write, not just what. It defines structure, tone, and vocabulary upfront, so you get professional output immediately.\n\nEliminate the \"Does This Sound Like AI?\" Anxiety\n50+ banned phrases plus style constraints block every AI tell: the dramatic adjectives, generic transitions, marketing fluff. Two-model workflow catches what you miss.\n\nScale Content Production Without Scaling Your Team\nUniversal anti-slop rules that work on any content type. You can apply the same framework whether you're writing emails, blog posts, reports, or proposals.\n\nAt a Glance\n✓ No technical skills needed, just copy-paste. ✓ Bonus in-depth video sent to your inbox (check spam!). ✓ Works with ChatGPT, Claude, and all LLMs. ✓ Complete framework, not just word lists. ✓ Use all sections or pick what you need.\n\nReady to Clean Up Your AI Writing?\nInstant PDF download • Copy-Paste Ready • 5-page prompt framework 📩 We'll also send you what's working for 100,000+ AI practitioners, straight to your inbox. Check spam so you don't miss it. First name (required) Email (required) If you are a human, ignore this field Get Template\n\nCreated by Louis-François Bouchard\nLouis-François is Co-founder and CTO of Towards AI, where they create courses for AI engineers and have taught 100,000+ students. For the past three years, Towards AI has used this exact framework to eliminate AI slop from every piece of content they publish, including course materials, articles, documentation, and student resources.",
       "links": [],
       "chunks": [
         {
           "chunk_id": "tai-f36f15f243d0fdea4a417a72",
-          "text": "Digital download\n\nTurn AI Writing Into Professional Work Output\nThe most comprehensive Anti-Slop Framework for eliminating AI slop + bonus in-depth video Remove robotic phrases, generic structures, and marketing fluff from emails, reports, and business writing. Copy-paste ready • Instant PDF download • Works with all LLMs 📩 Bonus in-depth video delivered to your inbox; check your spam. First name Email If you are a human, ignore this field Download Now Used by 4000+ professionals generating content at scale Includes 50+ banned AI phrases and style constraints Complete 7-section framework with two-model workflow\n\nThree Ways This Changes How You Write\n\nWrite 10x Faster Without Compromising Quality\nThe prompt framework tells AI exactly how to write, not just what. It defines structure, tone, and vocabulary upfront, so you get professional output immediately.\n\nEliminate the \"Does This Sound Like AI?\" Anxiety\n50+ banned phrases plus style constraints block every AI tell: the dramatic adjectives, generic transitions, marketing fluff. Two-model workflow catches what you miss.\n\nScale Content Production Without Scaling Your Team\nUniversal anti-slop rules that work on any content type. You can apply the same framework whether you're writing emails, blog posts, reports, or proposals.\n\nAt a Glance\n✓ No technical skills needed, just copy-paste. ✓ Bonus in-depth video sent to your inbox (check spam!). ✓ Works with ChatGPT, Claude, and all LLMs. ✓ Complete framework, not just word lists. ✓ Use all sections or pick what you need.",
+          "text": "Digital download\n\nTurn AI Writing Into Professional Work Output\nThe most comprehensive Anti-Slop Framework for eliminating AI slop + bonus in-depth video Remove robotic phrases, generic structures, and marketing fluff from emails, reports, and business writing. Copy-paste ready • Instant PDF download • Works with all LLMs 📩 Bonus in-depth video delivered to your inbox; check your spam. First name (required) Email (required) If you are a human, ignore this field Download Now Used by 4000+ professionals generating content at scale Includes 50+ banned AI phrases and style constraints Complete 7-section framework with two-model workflow\n\nThree Ways This Changes How You Write\n\nWrite 10x Faster Without Compromising Quality\nThe prompt framework tells AI exactly how to write, not just what. It defines structure, tone, and vocabulary upfront, so you get professional output immediately.\n\nEliminate the \"Does This Sound Like AI?\" Anxiety\n50+ banned phrases plus style constraints block every AI tell: the dramatic adjectives, generic transitions, marketing fluff. Two-model workflow catches what you miss.\n\nScale Content Production Without Scaling Your Team\nUniversal anti-slop rules that work on any content type. You can apply the same framework whether you're writing emails, blog posts, reports, or proposals.\n\nAt a Glance\n✓ No technical skills needed, just copy-paste. ✓ Bonus in-depth video sent to your inbox (check spam!). ✓ Works with ChatGPT, Claude, and all LLMs. ✓ Complete framework, not just word lists. ✓ Use all sections or pick what you need.",
           "heading": "Turn AI Writing Into Professional Work Output",
           "index": 0,
           "evidence_spans": [
@@ -8138,8 +8146,12 @@
               "text": "Copy-paste ready • Instant PDF download • Works with all LLMs 📩 Bonus in-depth video delivered to your inbox; check your spam."
             },
             {
-              "span_id": "span-574138628fdea821f3dd490d",
-              "text": "First name"
+              "span_id": "span-8776bce6e00b2fb7519f726a",
+              "text": "First name (required)"
+            },
+            {
+              "span_id": "span-ef074d074ec8d9768cc752b2",
+              "text": "Email (required)"
             },
             {
               "span_id": "span-0e0638d892851d7386dbd2f0",
@@ -8201,7 +8213,7 @@
         },
         {
           "chunk_id": "tai-a4b08dcffa6c2de33eb50155",
-          "text": "Ready to Clean Up Your AI Writing?\nInstant PDF download • Copy-Paste Ready • 5-page prompt framework 📩 We'll also send you what's working for 100,000+ AI practitioners, straight to your inbox. Check spam so you don't miss it. First name Email If you are a human, ignore this field Get Template\n\nCreated by Louis-François Bouchard\nLouis-François is Co-founder and CTO of Towards AI, where they create courses for AI engineers and have taught 100,000+ students. For the past three years, Towards AI has used this exact framework to eliminate AI slop from every piece of content they publish, including course materials, articles, documentation, and student resources.",
+          "text": "Ready to Clean Up Your AI Writing?\nInstant PDF download • Copy-Paste Ready • 5-page prompt framework 📩 We'll also send you what's working for 100,000+ AI practitioners, straight to your inbox. Check spam so you don't miss it. First name (required) Email (required) If you are a human, ignore this field Get Template\n\nCreated by Louis-François Bouchard\nLouis-François is Co-founder and CTO of Towards AI, where they create courses for AI engineers and have taught 100,000+ students. For the past three years, Towards AI has used this exact framework to eliminate AI slop from every piece of content they publish, including course materials, articles, documentation, and student resources.",
           "heading": "Created by Louis-François Bouchard",
           "index": 1,
           "evidence_spans": [
@@ -8218,8 +8230,12 @@
               "text": "Check spam so you don't miss it."
             },
             {
-              "span_id": "span-1ab251d1ff05111904b40175",
-              "text": "First name"
+              "span_id": "span-3146fe537d5c9bf8d20b5c1a",
+              "text": "First name (required)"
+            },
+            {
+              "span_id": "span-ebc3f5a1a5c9277a4cd09a84",
+              "text": "Email (required)"
             },
             {
               "span_id": "span-fb2f06d3294121f025b81179",
@@ -8240,9 +8256,9 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
-      "content_sha256": "9f5c7cb8df7e8c29e3927ae07cbde1176f2e4bd5f821fc81691da857da14e56d",
-      "content_hash": "9f5c7cb8df7e8c29e3927ae07cbde1176f2e4bd5f821fc81691da857da14e56d",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
+      "content_sha256": "fd9657a0e685c388a00e11933f1a996e0afab500f7c35c1afc153d1fbef7c245",
+      "content_hash": "fd9657a0e685c388a00e11933f1a996e0afab500f7c35c1afc153d1fbef7c245",
       "authority": "official_academy",
       "status": "included",
       "retrieval_eligible": true,
@@ -8252,7 +8268,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/products/digital_downloads/anti-slop-framework"
       ],
-      "evidence_hash": "1c5d1d58bf941b2dd23cb21163a45e0ff23e48654d48cb841532e07d2a708fa0"
+      "evidence_hash": "98d5606f723cd925ebd2bd0c2ffb2331a24ebbdca07fc1bf03395240bd725e40"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/get-it-all",
@@ -8584,7 +8600,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "d194dc98ab2d94efbcba2d920aaaded5d459d89a3c4adbf3b0ff7db5ad33f902",
       "content_hash": "d194dc98ab2d94efbcba2d920aaaded5d459d89a3c4adbf3b0ff7db5ad33f902",
       "authority": "official_academy",
@@ -8596,7 +8612,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/get-it-all"
       ],
-      "evidence_hash": "c67b17b4bb4101745c4b8034b28ae476b29714a2bb1950eb8b08218b4952faea"
+      "evidence_hash": "cf5cf8d3a03394ff163144ac6369ea871008cbb87f755471728426c94a690c3b"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/buildingllmsforproduction",
@@ -9837,7 +9853,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "e57d75ea753295f10240b50c56a038ddb826cf765887c9345c936686a33f98da",
       "content_hash": "e57d75ea753295f10240b50c56a038ddb826cf765887c9345c936686a33f98da",
       "authority": "official_academy",
@@ -9849,7 +9865,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/buildingllmsforproduction"
       ],
-      "evidence_hash": "f7c7bd6756c4cf69de01f9a345ddf2610b5b522f4f84db3bf373208d63ffe625"
+      "evidence_hash": "3be5171b11c8ff23036e513ca50ea3da4f72246ba870037e7c3e53cb334694ba"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/10-hour-crash-course-into-llm-developer-expert",
@@ -10186,7 +10202,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "2f52ed125e2b89c07de077e0b5e52394de45827717e898afa673e8e3d7a6c164",
       "content_hash": "2f52ed125e2b89c07de077e0b5e52394de45827717e898afa673e8e3d7a6c164",
       "authority": "official_academy",
@@ -10198,7 +10214,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/10-hour-crash-course-into-llm-developer-expert"
       ],
-      "evidence_hash": "ed35bcc954ceac7e88437e1d3f716eec0b578b4334456a29bc85b79fdb605fe3"
+      "evidence_hash": "0c9c3a860fe2e3acdf3533783be74c56ecc5c050e0a38d10b18517caef94ba30"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/from-coding-novice-to-advanced-llm-developer",
@@ -10654,7 +10670,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "ce9710a2e522e19675f07287fb0da2c5bcc806c139c1dbbc92ba4e21b09ee932",
       "content_hash": "ce9710a2e522e19675f07287fb0da2c5bcc806c139c1dbbc92ba4e21b09ee932",
       "authority": "official_academy",
@@ -10666,7 +10682,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/from-coding-novice-to-advanced-llm-developer"
       ],
-      "evidence_hash": "9e2560c2f23ac15165882a83bb3f70d78371638b4627a3b5fa0375eeeab78868"
+      "evidence_hash": "265a5bdc5b0167e53df309bd95da04186c6a45571e642dc976fca91e6abeceff"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/agent-engineering-free-preview",
@@ -10740,7 +10756,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "04e260a75ed8a909053af6e967dba21efb7f33c19f47baff29be5150362a4081",
       "content_hash": "04e260a75ed8a909053af6e967dba21efb7f33c19f47baff29be5150362a4081",
       "authority": "official_academy",
@@ -10752,7 +10768,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/agent-engineering-free-preview"
       ],
-      "evidence_hash": "9cddbc7fbb5a48bb29018024f86532deedf5551d735ca1096c6102330e9c5e2f"
+      "evidence_hash": "e4282ff6db261986b753eb223f5d1dea02a1b2201a5608d69664337a449a1078"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/full-stack-ai-engineering-free-preview",
@@ -10807,7 +10823,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "8a226c428d794b56d366bec5279d254abc70f696a009826938161648c9160843",
       "content_hash": "8a226c428d794b56d366bec5279d254abc70f696a009826938161648c9160843",
       "authority": "official_academy",
@@ -10819,7 +10835,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/full-stack-ai-engineering-free-preview"
       ],
-      "evidence_hash": "d0a6525ad0aa5c72537ef45f69403ee52109d443289fba9d63823838a6350899"
+      "evidence_hash": "901244559ff0aec6141e7613255121654eb652759323821b3b9a533a38f8f4db"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/agent-course-landing-page",
@@ -11951,7 +11967,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "42516887079c99f37040d1e1a18c0bc790e0c412ec4fc76de2dc49bbdb3375f6",
       "content_hash": "42516887079c99f37040d1e1a18c0bc790e0c412ec4fc76de2dc49bbdb3375f6",
       "authority": "official_academy",
@@ -11964,7 +11980,7 @@
         "https://academy.towardsai.net/pages/agent-course-landing-page"
       ],
       "excluded_reason": "legacy duplicate of the Agent Engineering course page",
-      "evidence_hash": "8bdbe50659e5d4f840859b05dce2a1ea9b807d2e9b9133e2cee7cd2da5bea90f"
+      "evidence_hash": "3a3b24b3e54ad3bb3dddaeb4f4785e6a54ecca9fc44c1f157890a4c97e1fe950"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/towards-ai-insider",
@@ -12085,7 +12101,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "24c918273f0e5fffbb0266c57b529ab16031fef1d94bbd2933c85585dedd2196",
       "content_hash": "24c918273f0e5fffbb0266c57b529ab16031fef1d94bbd2933c85585dedd2196",
       "authority": "official_academy",
@@ -12098,7 +12114,7 @@
         "https://academy.towardsai.net/pages/towards-ai-insider"
       ],
       "excluded_reason": "unfinished template content",
-      "evidence_hash": "e4936403ff0dc3eef93aab01ed92972db8d98282f3925e33833e7992b00cd98c"
+      "evidence_hash": "ceb830f7d8191e7347b2889d95e6edc23b4fb79bd5d2194550cb3f7b8a0154fc"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/agent-course-new-page-cro",
@@ -12799,7 +12815,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "98c1fd17fdcd9c45a7025bd85ad4582f2f1dd2a5aa288e31b55e4045920a364b",
       "content_hash": "98c1fd17fdcd9c45a7025bd85ad4582f2f1dd2a5aa288e31b55e4045920a364b",
       "authority": "official_academy",
@@ -12812,7 +12828,7 @@
         "https://academy.towardsai.net/pages/agent-course-new-page-cro"
       ],
       "excluded_reason": "alternate sales copy duplicates the Agent Engineering course page",
-      "evidence_hash": "74e1de4cdf33a3425989aa4b7a26ec359dde5d3b75fef698632eb2c81dd98b45"
+      "evidence_hash": "6114ccab6e8148684387698078e10b10c859765d371261b50cfae338173fbc3e"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/webinar",
@@ -12879,7 +12895,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "358d9e276a9ad3605453b7fcfbf3adc7718ec9993617616c7887f4fa02f1decd",
       "content_hash": "358d9e276a9ad3605453b7fcfbf3adc7718ec9993617616c7887f4fa02f1decd",
       "authority": "official_academy",
@@ -12892,7 +12908,7 @@
         "https://academy.towardsai.net/pages/webinar"
       ],
       "excluded_reason": "unfinished template content",
-      "evidence_hash": "03a3d453d0e05d6e99311a34840ada114c24c39cfa3d9905f4f98459558b2455"
+      "evidence_hash": "356dd584fdc5e4c4d89822603448baeec2e44f03daf444c402ecc62f660ef37b"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/new-home-page",
@@ -13783,7 +13799,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "aab65325e9efc0be097f74a6f76a0611dfe3247e8920f4fccf3cef71e52edf18",
       "content_hash": "aab65325e9efc0be097f74a6f76a0611dfe3247e8920f4fccf3cef71e52edf18",
       "authority": "official_academy",
@@ -13796,7 +13812,7 @@
         "https://academy.towardsai.net/pages/new-home-page"
       ],
       "excluded_reason": "legacy duplicate of the Academy home page",
-      "evidence_hash": "ec246406bfad244363a25796fccd9916891d9915d8cb6cf190274ae3a61d21de"
+      "evidence_hash": "e248fc8d6fbafbf09891caf861a57a3f2f0bee2cf574bebb6d5f1715d5858bae"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/landing-page-free-email-course",
@@ -13830,7 +13846,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "cb47c56ce8cd4d4c3e7aaf14fff58e3d55ee7b2ef0901f6c3538e9ae548cd535",
       "content_hash": "cb47c56ce8cd4d4c3e7aaf14fff58e3d55ee7b2ef0901f6c3538e9ae548cd535",
       "authority": "official_academy",
@@ -13843,7 +13859,7 @@
         "https://academy.towardsai.net/pages/landing-page-free-email-course"
       ],
       "excluded_reason": "unfinished template content",
-      "evidence_hash": "b52cd95caf100bbc658f07d942fb783a20287bb7b027bf86bb398037e0bf56d8"
+      "evidence_hash": "19f6a6302c907ebdd82849ff3ccf3717112b1aff23e680189c76347475bcc7c1"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/contact-us",
@@ -13934,7 +13950,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "7e9c30576db465aa1d258ad7552f2db9d5f7f71bdec84e9a2b09641a236c6cf6",
       "content_hash": "7e9c30576db465aa1d258ad7552f2db9d5f7f71bdec84e9a2b09641a236c6cf6",
       "authority": "official_academy",
@@ -13946,7 +13962,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/contact-us"
       ],
-      "evidence_hash": "a5dd44c59417f31f3bf273f9e4b3b7f4a76c13a147dd21623747e3327f4b4919"
+      "evidence_hash": "e9c795e1dbba8b9c5a6cf8816ceb97349c573db4d6105bc7df1c4bffbea826fb"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/about-us",
@@ -14248,7 +14264,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "15d2b0b9c5fc34fcfeef2328e227139b00ab69f7aec51355dc24addb758a90ae",
       "content_hash": "15d2b0b9c5fc34fcfeef2328e227139b00ab69f7aec51355dc24addb758a90ae",
       "authority": "official_academy",
@@ -14260,7 +14276,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/about-us"
       ],
-      "evidence_hash": "d3b57e5f48719e14c08ae8ca73cf2d29e0c6eeded4de86e027348986cd237fec"
+      "evidence_hash": "5f470f36038f02f67e860ec05ef4606aa745de185d84d27310439ea8502fab63"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/affiliate",
@@ -14585,7 +14601,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "c86cf56daa5bf312134fb7db5b89b27048537cbdb24973714b1ad72bdb193359",
       "content_hash": "c86cf56daa5bf312134fb7db5b89b27048537cbdb24973714b1ad72bdb193359",
       "authority": "official_academy",
@@ -14597,7 +14613,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/affiliate"
       ],
-      "evidence_hash": "b3046818761c0037fa69fcca26bbffafeab9df6510d102d9e8864efa3670a3fb"
+      "evidence_hash": "8c002ed74ce273610a557ea65d898420612e0cb27b2eb04ceba011ec6872b8b0"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/choose-your-course",
@@ -14716,7 +14732,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "db5f355f9bd03a3d47a30ffc1639b476e66c803268c7bfd41f734161018893f4",
       "content_hash": "db5f355f9bd03a3d47a30ffc1639b476e66c803268c7bfd41f734161018893f4",
       "authority": "official_academy",
@@ -14729,7 +14745,7 @@
         "https://academy.towardsai.net/pages/choose-your-course"
       ],
       "excluded_reason": "legacy duplicate of the courses collection",
-      "evidence_hash": "ddb78e497479a1106e92fd35b0c413f92ae25ac765de8a38e993484aaa34751b"
+      "evidence_hash": "7555d0a8899229716c9cec3ec5b396305c15ba0ec0977b2c448647fec9aaf4a1"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/free-resources",
@@ -14946,7 +14962,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "03a45d19871c9a0cfeefa020d9ce6fc2f13c951dd4161cfe0d9bb0dbcc804bdd",
       "content_hash": "03a45d19871c9a0cfeefa020d9ce6fc2f13c951dd4161cfe0d9bb0dbcc804bdd",
       "authority": "official_academy",
@@ -14959,7 +14975,7 @@
         "https://academy.towardsai.net/pages/free-resources"
       ],
       "excluded_reason": "legacy resource summary conflicts with the current LLM Fundamentals offer",
-      "evidence_hash": "b35c9b4fe5c864eb38557d7ffc430617d47f76c0f91637222e77b59b278d4c56"
+      "evidence_hash": "ac8d8a49fa23014d35049fe354031ad82bc0b8e7becd2a3577b2040bc0d8698e"
     },
     {
       "discovered_url": "https://www.amazon.com/s?k=Towards+AI+Building+LLMs+for+Production",
@@ -14983,7 +14999,7 @@
         }
       ],
       "chunks": [],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "b1d5a4e8b2325fdff3c88789efff963602b5367567bff80ddd8ab9db20418634",
       "content_hash": "b1d5a4e8b2325fdff3c88789efff963602b5367567bff80ddd8ab9db20418634",
       "authority": "curated_external",
@@ -14994,7 +15010,7 @@
       "lastmod": "",
       "sitemap_url": "manual_allowlist",
       "redirect_chain": [],
-      "evidence_hash": "c4d0c26c85b742063184ded25aead6597584e012bc8ed06b802d6755a77dbbb1"
+      "evidence_hash": "59a11d8fa2b55498da1273ea4fb10e59959017a7dd5ddd1cbc471b329ae52334"
     },
     {
       "discovered_url": "https://www.youtube.com/channel/UCQNjFuhOJM1YqFTPY1Q_kYQ",
@@ -15018,7 +15034,7 @@
         }
       ],
       "chunks": [],
-      "fetched_at": "2026-09-14T12:54:41.823277+00:00",
+      "fetched_at": "2026-09-21T12:54:36.211517+00:00",
       "content_sha256": "0f599f6c1d60cc11b2fb6603f85def4a8eee7d202bdae240eede6dd704eb94e4",
       "content_hash": "0f599f6c1d60cc11b2fb6603f85def4a8eee7d202bdae240eede6dd704eb94e4",
       "authority": "curated_external",
@@ -15029,7 +15045,7 @@
       "lastmod": "",
       "sitemap_url": "manual_allowlist",
       "redirect_chain": [],
-      "evidence_hash": "4f8bf76d238fe341ecdee3139f7fccff12972e37e674d0c3522d2156ec5f7f24"
+      "evidence_hash": "853018c37d832dba5a199e38ec9666ad436650cc611f1b9df8bab5a1d00acdd5"
     }
   ]
 }

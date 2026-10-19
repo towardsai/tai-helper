@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "source": "https://academy.towardsai.net/sitemap.xml",
-  "generated_at": "2026-10-12T15:34:10.332970+00:00",
+  "generated_at": "2026-10-19T13:25:13.364493+00:00",
   "authority": "official_academy",
   "status_counts": {
     "excluded": 15,
@@ -43,7 +43,7 @@
         "Ready to become an AI engineer?",
         "Frequently asked questions"
       ],
-      "text": "Until launch day November 10 Our new book, AI Engineering For Production , launches November 10. New book: AI Engineering For Production , Nov 10. Join us on launch day → Towards AI Academy\n\nBuild a career in AI engineering\nThrough project-based courses built by engineers who do this for a living. Become an AI Engineer Explore the pathway 10,000+ engineers enrolled across our courses 100k+ members in our Discord community 15+ senior AI engineers behind the curriculum 01 Trusted voices\n\nIndustry leaders on our resources\n02 Why this matters\n\nThe AI industry has a people problem\nWe're training the engineers it needs. Foundation models are just the starting point\n\nLearn to engineer what goes on top\nMaster prompting, RAG, fine-tuning, tool use, and agents, and build the scalable systems foundation models alone can't deliver. The skill gap is widening every quarter\n\nBuild judgment that outlasts any framework\nEvery program is built around production-grade projects. You learn to handle failures, optimize at scale, and ship reliably. Enterprises want AI. Engineers are the bottleneck.\n\nGet trained in exactly what they're hiring for\nA deployed product and a certified portfolio are built into every course, matched to the roles enterprises are hiring for. Get the AI training the industry needs 03 Is this for you?\n\nYou're in the right place if\n01 You want to ship a production-grade LLM product, and a notebook demo won't cut it. 02 You want to be the AI engineer your company can't afford to lose. 03 You want a project, a portfolio, and certification you can stand behind. 04 You want to master LLMs, RAG, fine-tuning, and agents, end-to-end. 05 You're building toward a role, a product, or an AI initiative worth leading. 06 You're willing to put in the work that most developers won't. 04 Student outcomes\n\nHear from our alumni\n05 Our difference\n\nWhy developers choose Towards AI\nTraining built for the industry\n\nCreated by 15+ senior AI engineers\nBuilt from what we implement for enterprise clients. You graduate with a deployed product, a certified portfolio, and the production experience to back it up. Designed to make developers AI-first\n\nTraining the engineers the AI economy needs\nSince 2019, our learners have moved into six-figure roles and led AI-first transformations, with a certified portfolio that proves what they can build. Created for working professionals\n\nCommunity, lifetime access, ongoing support\nSelf-paced with lifetime access, live kick-off calls, weekly updates, and a 100k+ Discord community, so you can learn on your schedule without falling behind. 06 The courses\n\nYour AI engineering pathway\nWhether you're new to coding, new to AI, or among the 10 million building with LLM APIs, this is your path to production-grade AI systems that actually work. 1 / 5 Flagship certification\n\nFull Stack AI Engineering\nBest for Python developers ready to master the full AI stack Taught by experts who do this for a living, our flagship, 60-hour, code-heavy program covers every layer of modern AI engineering. With a central 60-lesson context engineering project, it spans prompting, advanced RAG, fine-tuning, agents, and full system design. Weekly updates make this the only course you'll ever need. Learn more 2 / 5 Production agents\n\nAgent Engineering\nBest for Python developers ready to build fully autonomous agents A production-focused program covering the complete agent engineering stack. Through two capstone projects, a Research Agent and a Writing Workflow, you'll master agentic design, reasoning loops, tool orchestration, evaluation, and deployment. Created in partnership with Paul Iusztin. Learn more 3 / 5 Crash course\n\nFully Video LLM Primer\nBest for busy software professionals needing an LLM crash course Learn how to understand, build, evaluate, automate, and maintain robust LLM systems without getting bogged down in theory. In five focused video sessions, you'll learn when to use prompting, RAG, fine-tuning, or agents to build production-grade LLM applications. Learn more 4 / 5 Foundations\n\nBeginner Python for AI Engineering\nBest for non-coders and Python beginners starting with AI engineering Learn the Python skills for building and integrating AI applications, focused on what matters for LLMs. Ideal for those who need Python before our AI Engineering course, so you can create, test, and deploy faster. Learn more 5 / 5 No code required\n\nMaster AI for Productivity\nBest for professionals using AI for high-value tasks without coding Discover how to integrate AI safely and effectively into your daily work to save time, improve output quality, and open new opportunities. Work through practical, real-world scenarios across research, communication, analysis, and automation. Learn more Organizations we have worked with Start today\n\nReady to become an AI engineer?\nSelf-paced, project-based, and updated as fast as the field moves. Join 10,000+ engineers who made the leap. Begin your transition Try the free email course 07 Questions\n\nFrequently asked questions\nDo the courses come with a certification? + Yes, all courses come with a certificate of completion from Towards AI. What are the prerequisites for the resources? + Our Full Stack and Agentic Engineering courses require Python understanding. If you are a complete beginner, you can start with our Python course. What makes Towards AI different? + Every course is built directly from what our engineers implement for enterprise clients, so the curriculum reflects real production constraints. You learn by building production-grade systems end-to-end, graduate with a deployed product and certified portfolio, and join a curriculum that updates every month as the field evolves. How can I apply what I learn in my career? + The hands-on projects you complete during the course will help you build a portfolio that showcases your abilities to potential employers. Many of our learners have moved into high-paying AI roles or launched their own products. Can I get a discount? + Yes, there are three ways to receive a discount on our courses. If you're a student, we offer a 50% discount on all courses. If you've previously purchased our book or another course, you're eligible for a discount. We also provide a bundle discount for groups of two or more people. Email Louis-François at louis@towardsai.net for a follow-up. Does Towards AI offer an Affiliate or Referral Program? + Yes. Towards AI offers an Affiliate Program and Referral Program, enabling you to earn up to 30% per sale and free access to our courses. See the Affiliate page for tiers and payouts. Do I get additional support throughout my learning journey? + Yes, you will get access to dedicated course channels in our Discord community, exclusive Slack access, and an AI Tutor chatbot. When were the courses last updated? + All our courses are updated every two weeks with new lessons, tools, and techniques as the AI landscape evolves, so the material keeps pace with the field instead of freezing at launch.",
+      "text": "Until launch day November 10 Our new book, AI Engineering For Production , launches November 10. New book: AI Engineering For Production , Nov 10. Join us on launch day → Towards AI Academy\n\nBuild a career in AI engineering\nThrough project-based courses built by engineers who do this for a living. Become an AI Engineer Explore the pathway 10,000+ engineers enrolled across our courses 100k+ members in our Discord community 15+ senior AI engineers behind the curriculum 01 Trusted voices\n\nIndustry leaders on our resources\n02 Why this matters\n\nThe AI industry has a people problem\nWe're training the engineers it needs. Foundation models are just the starting point\n\nLearn to engineer what goes on top\nMaster prompting, RAG, fine-tuning, tool use, and agents, and build the scalable systems foundation models alone can't deliver. The skill gap is widening every quarter\n\nBuild judgment that outlasts any framework\nEvery program is built around production-grade projects. You learn to handle failures, optimize at scale, and ship reliably. Enterprises want AI. Engineers are the bottleneck.\n\nGet trained in exactly what they're hiring for\nA deployed product and a certified portfolio are built into every course, matched to the roles enterprises are hiring for. Get the AI training the industry needs 03 Is this for you?\n\nYou're in the right place if\n01 You want to ship a production-grade LLM product, and a notebook demo won't cut it. 02 You want to be the AI engineer your company can't afford to lose. 03 You want a project, a portfolio, and certification you can stand behind. 04 You want to master LLMs, RAG, fine-tuning, and agents, end-to-end. 05 You're building toward a role, a product, or an AI initiative worth leading. 06 You're willing to put in the work that most developers won't. 04 Student outcomes\n\nHear from our alumni\n05 Our difference\n\nWhy developers choose Towards AI\nTraining built for the industry\n\nCreated by 15+ senior AI engineers\nBuilt from what we implement for enterprise clients. You graduate with a deployed product, a certified portfolio, and the production experience to back it up. Designed to make developers AI-first\n\nTraining the engineers the AI economy needs\nSince 2019, our learners have moved into six-figure roles and led AI-first transformations, with a certified portfolio that proves what they can build. Created for working professionals\n\nCommunity, lifetime access, ongoing support\nSelf-paced with lifetime access, live kick-off calls, weekly updates, and a 100k+ Discord community, so you can learn on your schedule without falling behind. We test the models we teach ToneBench, our public writing benchmark, ranks 80 AI models on how well they write in a real creator’s voice. See the leaderboard → 06 The courses\n\nYour AI engineering pathway\nWhether you're new to coding, new to AI, or among the 10 million building with LLM APIs, this is your path to production-grade AI systems that actually work. 1 / 5 Flagship certification\n\nFull Stack AI Engineering\nBest for Python developers ready to master the full AI stack Taught by experts who do this for a living, our flagship, 60-hour, code-heavy program covers every layer of modern AI engineering. With a central 60-lesson context engineering project, it spans prompting, advanced RAG, fine-tuning, agents, and full system design. Weekly updates make this the only course you'll ever need. Learn more 2 / 5 Production agents\n\nAgent Engineering\nBest for Python developers ready to build fully autonomous agents A production-focused program covering the complete agent engineering stack. Through two capstone projects, a Research Agent and a Writing Workflow, you'll master agentic design, reasoning loops, tool orchestration, evaluation, and deployment. Created in partnership with Paul Iusztin. Learn more 3 / 5 Crash course\n\nFully Video LLM Primer\nBest for busy software professionals needing an LLM crash course Learn how to understand, build, evaluate, automate, and maintain robust LLM systems without getting bogged down in theory. In five focused video sessions, you'll learn when to use prompting, RAG, fine-tuning, or agents to build production-grade LLM applications. Learn more 4 / 5 Foundations\n\nBeginner Python for AI Engineering\nBest for non-coders and Python beginners starting with AI engineering Learn the Python skills for building and integrating AI applications, focused on what matters for LLMs. Ideal for those who need Python before our AI Engineering course, so you can create, test, and deploy faster. Learn more 5 / 5 No code required\n\nMaster AI for Productivity\nBest for professionals using AI for high-value tasks without coding Discover how to integrate AI safely and effectively into your daily work to save time, improve output quality, and open new opportunities. Work through practical, real-world scenarios across research, communication, analysis, and automation. Learn more Organizations we have worked with Start today\n\nReady to become an AI engineer?\nSelf-paced, project-based, and updated as fast as the field moves. Join 10,000+ engineers who made the leap. Begin your transition Try the free email course 07 Questions\n\nFrequently asked questions\nDo the courses come with a certification? + Yes, all courses come with a certificate of completion from Towards AI. What are the prerequisites for the resources? + Our Full Stack and Agentic Engineering courses require Python understanding. If you are a complete beginner, you can start with our Python course. What makes Towards AI different? + Every course is built directly from what our engineers implement for enterprise clients, so the curriculum reflects real production constraints. You learn by building production-grade systems end-to-end, graduate with a deployed product and certified portfolio, and join a curriculum that updates every month as the field evolves. How can I apply what I learn in my career? + The hands-on projects you complete during the course will help you build a portfolio that showcases your abilities to potential employers. Many of our learners have moved into high-paying AI roles or launched their own products. Can I get a discount? + Yes, there are three ways to receive a discount on our courses. If you're a student, we offer a 50% discount on all courses. If you've previously purchased our book or another course, you're eligible for a discount. We also provide a bundle discount for groups of two or more people. Email Louis-François at louis@towardsai.net for a follow-up. Does Towards AI offer an Affiliate or Referral Program? + Yes. Towards AI offers an Affiliate Program and Referral Program, enabling you to earn up to 30% per sale and free access to our courses. See the Affiliate page for tiers and payouts. Do I get additional support throughout my learning journey? + Yes, you will get access to dedicated course channels in our Discord community, exclusive Slack access, and an AI Tutor chatbot. When were the courses last updated? + All our courses are updated every two weeks with new lessons, tools, and techniques as the AI landscape evolves, so the material keeps pace with the field instead of freezing at launch.",
       "links": [
         {
           "text": "Join us on launch day →",
@@ -52,6 +52,10 @@
         {
           "text": "Become an AI Engineer",
           "url": "https://academy.towardsai.net/academy/full-stack-ai-engineering/"
+        },
+        {
+          "text": "See the leaderboard →",
+          "url": "https://benchmark.towardsai.com/?utm_source=site-tai&utm_medium=text&utm_campaign=tonebench"
         },
         {
           "text": "Learn more",
@@ -181,7 +185,7 @@
         },
         {
           "chunk_id": "tai-8a682c0ccf315793aa8390ae",
-          "text": "You're in the right place if\n01 You want to ship a production-grade LLM product, and a notebook demo won't cut it. 02 You want to be the AI engineer your company can't afford to lose. 03 You want a project, a portfolio, and certification you can stand behind. 04 You want to master LLMs, RAG, fine-tuning, and agents, end-to-end. 05 You're building toward a role, a product, or an AI initiative worth leading. 06 You're willing to put in the work that most developers won't. 04 Student outcomes\n\nHear from our alumni\n05 Our difference\n\nWhy developers choose Towards AI\nTraining built for the industry\n\nCreated by 15+ senior AI engineers\nBuilt from what we implement for enterprise clients. You graduate with a deployed product, a certified portfolio, and the production experience to back it up. Designed to make developers AI-first\n\nTraining the engineers the AI economy needs\nSince 2019, our learners have moved into six-figure roles and led AI-first transformations, with a certified portfolio that proves what they can build. Created for working professionals\n\nCommunity, lifetime access, ongoing support\nSelf-paced with lifetime access, live kick-off calls, weekly updates, and a 100k+ Discord community, so you can learn on your schedule without falling behind. 06 The courses\n\nYour AI engineering pathway\nWhether you're new to coding, new to AI, or among the 10 million building with LLM APIs, this is your path to production-grade AI systems that actually work. 1 / 5 Flagship certification",
+          "text": "You're in the right place if\n01 You want to ship a production-grade LLM product, and a notebook demo won't cut it. 02 You want to be the AI engineer your company can't afford to lose. 03 You want a project, a portfolio, and certification you can stand behind. 04 You want to master LLMs, RAG, fine-tuning, and agents, end-to-end. 05 You're building toward a role, a product, or an AI initiative worth leading. 06 You're willing to put in the work that most developers won't. 04 Student outcomes\n\nHear from our alumni\n05 Our difference\n\nWhy developers choose Towards AI\nTraining built for the industry\n\nCreated by 15+ senior AI engineers\nBuilt from what we implement for enterprise clients. You graduate with a deployed product, a certified portfolio, and the production experience to back it up. Designed to make developers AI-first\n\nTraining the engineers the AI economy needs\nSince 2019, our learners have moved into six-figure roles and led AI-first transformations, with a certified portfolio that proves what they can build. Created for working professionals\n\nCommunity, lifetime access, ongoing support\nSelf-paced with lifetime access, live kick-off calls, weekly updates, and a 100k+ Discord community, so you can learn on your schedule without falling behind. We test the models we teach ToneBench, our public writing benchmark, ranks 80 AI models on how well they write in a real creator’s voice. See the leaderboard → 06 The courses\n\nYour AI engineering pathway\nWhether you're new to coding, new to AI, or among the 10 million building with LLM APIs, this is your path to production-grade AI systems that actually work. 1 / 5 Flagship certification",
           "heading": "You're in the right place if",
           "index": 1,
           "evidence_spans": [
@@ -248,6 +252,14 @@
             {
               "span_id": "span-4bbb4b13f8465638766ccd2b",
               "text": "Self-paced with lifetime access, live kick-off calls, weekly updates, and a 100k+ Discord community, so you can learn on your schedule without falling behind."
+            },
+            {
+              "span_id": "span-a1dabdac173844ded3b5edd7",
+              "text": "We test the models we teach ToneBench, our public writing benchmark, ranks 80 AI models on how well they write in a real creator’s voice."
+            },
+            {
+              "span_id": "span-0cef5548bbbb4313184066a7",
+              "text": "See the leaderboard →"
             },
             {
               "span_id": "span-5da8f66fb56f31acfa066c82",
@@ -428,20 +440,20 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
-      "content_sha256": "c9ad3ae99596fbf1a00adfadf25a2b8e996dac706f678a60792a6d630da6a8ab",
-      "content_hash": "c9ad3ae99596fbf1a00adfadf25a2b8e996dac706f678a60792a6d630da6a8ab",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
+      "content_sha256": "7c9a6c9c5b9d2d690f3c6b0f8addf389b9b50235a4c209aadac63e905a0eba17",
+      "content_hash": "7c9a6c9c5b9d2d690f3c6b0f8addf389b9b50235a4c209aadac63e905a0eba17",
       "authority": "official_academy",
       "status": "excluded",
       "retrieval_eligible": false,
       "http_status": 200,
-      "lastmod": "2026-10-12T15:34:14Z",
+      "lastmod": "2026-10-19T13:25:19Z",
       "sitemap_url": "https://academy.towardsai.net/sitemap.xml",
       "redirect_chain": [
         "https://academy.towardsai.net/"
       ],
       "excluded_reason": "canonical URL is outside the sitemap authority",
-      "evidence_hash": "bedc5f9f3c3aa640c07883bcb8041fe8243df995927eb08cdae3f2dd546f1906"
+      "evidence_hash": "1c0ad973ce2584ff570b6ae43239d08dafa00b2cc488e9a6aa33e2d33a177017"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections",
@@ -662,20 +674,20 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "content_hash": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "authority": "official_academy",
       "status": "excluded",
       "retrieval_eligible": false,
       "http_status": 200,
-      "lastmod": "2026-10-12T15:34:14Z",
+      "lastmod": "2026-10-19T13:25:19Z",
       "sitemap_url": "https://academy.towardsai.net/sitemap.xml",
       "redirect_chain": [
         "https://academy.towardsai.net/collections"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "ad8fc44689a322166b64b58f19c4c00a0778b53895c29e812de4294f4d15a16d"
+      "evidence_hash": "731324f6cc609336e45af6260cb0a5d9b4f2c65931cdaed920e28473788b65a5"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections/products",
@@ -896,7 +908,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "content_hash": "5e6d2e0fa9d650aabb8dccdac52bfbd48f92be8c8145dbb5a035f9e33c9f5592",
       "authority": "official_academy",
@@ -909,7 +921,7 @@
         "https://academy.towardsai.net/collections/products"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "c7fe58309e895610d5e60b2d246a56a411af5b858d7daa6089760387323661db"
+      "evidence_hash": "beec7ddc0e948bec8e30e0584d432d68e1bd901afc5b8ce77593b157943f24df"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections/developers",
@@ -1097,7 +1109,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "482196d661f13899ddd9bc5f4aee9d0b868e33dcd13687d69575454644363308",
       "content_hash": "482196d661f13899ddd9bc5f4aee9d0b868e33dcd13687d69575454644363308",
       "authority": "official_academy",
@@ -1110,7 +1122,7 @@
         "https://academy.towardsai.net/collections/developers"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "61d0f70cde19f1d5a62dbe7af2882058325922c320a35568deda3cf118cf905c"
+      "evidence_hash": "7f59cacd77e248333a096cae804810b3a3c199b2c46e418e3d173c8dc7d676bf"
     },
     {
       "discovered_url": "https://academy.towardsai.net/collections/professionals",
@@ -1226,7 +1238,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "f9ff096b5a472ef12beadce432db206b9a098f3de7e83eb231956e20d7c649bc",
       "content_hash": "f9ff096b5a472ef12beadce432db206b9a098f3de7e83eb231956e20d7c649bc",
       "authority": "official_academy",
@@ -1239,7 +1251,7 @@
         "https://academy.towardsai.net/collections/professionals"
       ],
       "excluded_reason": "catalog summary can lag behind canonical offer detail pages",
-      "evidence_hash": "53db46b518b4afc0d708679d30c085219a07b626b5d4aa09a293da7619c373a7"
+      "evidence_hash": "5b49eca2f357db33e1a3b6aa071c2ddfc60ca8abc68e8b733d6da80fbcec205a"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/beginner-to-advanced-llm-dev",
@@ -2831,7 +2843,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "403056bec2783bea338b6529b8f53be252221bf677604178c65050679e062747",
       "content_hash": "403056bec2783bea338b6529b8f53be252221bf677604178c65050679e062747",
       "authority": "official_academy",
@@ -2843,7 +2855,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/beginner-to-advanced-llm-dev"
       ],
-      "evidence_hash": "4653165df9c9b684494b1bcfd923e35e8cc31ab7ee2bfb42af841dbd7335a13d"
+      "evidence_hash": "59108e29b54d39cd281a7208f25a2a733f2bd95ce4446d4437d2d4651078e379"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/agent-engineering",
@@ -4423,7 +4435,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "77fbb9ce3cc4e38d02747631e1cb6ba852db591202daa6491b19150c98e4ba07",
       "content_hash": "77fbb9ce3cc4e38d02747631e1cb6ba852db591202daa6491b19150c98e4ba07",
       "authority": "official_academy",
@@ -4435,7 +4447,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/agent-engineering"
       ],
-      "evidence_hash": "256032973c2c0d7a47e3ee7965187cb7053aabf464b03a7e9aac324700e8d30f"
+      "evidence_hash": "9dcccfd8a7a118e001c6cf4643d184b719876749fc016d4c0a263e21ce8174f4"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/llm-primer",
@@ -5149,7 +5161,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "ea0982643ddc081118e78a990fe1723b78b4ee141f233bc09bc83e6c50f90a28",
       "content_hash": "ea0982643ddc081118e78a990fe1723b78b4ee141f233bc09bc83e6c50f90a28",
       "authority": "official_academy",
@@ -5161,7 +5173,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/llm-primer"
       ],
-      "evidence_hash": "d7ffa7567f1bafe3db079a5540ce21729cea99f0074b525dd78cda1a2a723b42"
+      "evidence_hash": "4fda5ff09332067a4992c5a3a567de156f73c8718bd39f7008fcf290c0707576"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/python-for-genai",
@@ -5991,7 +6003,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "690732659c6db9a3c36d9935daf9803d4fac77f60de2ed9edefd0d4df7bf4e2c",
       "content_hash": "690732659c6db9a3c36d9935daf9803d4fac77f60de2ed9edefd0d4df7bf4e2c",
       "authority": "official_academy",
@@ -6003,7 +6015,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/python-for-genai"
       ],
-      "evidence_hash": "f82c823c53a99e8b59bc07e43ce2c91161ba7f37666ab5e22a70c72f78d004c1"
+      "evidence_hash": "25c3477038cca830655abc28e7cc62e974732e736e10495a03d6f892eddbf4eb"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/tai-mentorship",
@@ -6829,7 +6841,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "24ab607523dfb53910e3cdce57b3414e19395784be382d6e742ed2a3c4402435",
       "content_hash": "24ab607523dfb53910e3cdce57b3414e19395784be382d6e742ed2a3c4402435",
       "authority": "official_academy",
@@ -6841,7 +6853,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/tai-mentorship"
       ],
-      "evidence_hash": "c4f7bdac9104b844cdf0c0f509e6b59e4c1b4788ba3882802aff4bcc62f41ae6"
+      "evidence_hash": "01af716faf5ad23dfccf4295088e506a3b85e1a2e5f57f4c0e86c34e3bdef17b"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/ai-business-professionals",
@@ -7814,7 +7826,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "e4aee1f4dbb47d19da1c487f95291782f42ec147ad6ca34a2aa717f990ac33ae",
       "content_hash": "e4aee1f4dbb47d19da1c487f95291782f42ec147ad6ca34a2aa717f990ac33ae",
       "authority": "official_academy",
@@ -7826,7 +7838,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/ai-business-professionals"
       ],
-      "evidence_hash": "9309adde2608da45141da2c405571eb7ccdd67a0250600ed309e3df89c015d78"
+      "evidence_hash": "3bcf175f3b3a747a1e5fdbfdc97c92725bfc600787c302a4b3c45f22ae715a67"
     },
     {
       "discovered_url": "https://academy.towardsai.net/products/digital_downloads/agents-cheatsheet",
@@ -8083,7 +8095,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "5d48b33c53396e51aea4efaad2d54a38f308ae5a90792113d1fb5a8f7a963cfa",
       "content_hash": "5d48b33c53396e51aea4efaad2d54a38f308ae5a90792113d1fb5a8f7a963cfa",
       "authority": "official_academy",
@@ -8095,7 +8107,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/products/digital_downloads/agents-cheatsheet"
       ],
-      "evidence_hash": "2a4f5d4b829e66a635d972f54f20a7b999c90cdb93ab66658fa11cdabfc4ba98"
+      "evidence_hash": "ba7191fd742708e7034625d5eadfa13b06a81b01d6b32ec73182186c69261adf"
     },
     {
       "discovered_url": "https://academy.towardsai.net/products/digital_downloads/anti-slop-framework",
@@ -8256,7 +8268,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "fd9657a0e685c388a00e11933f1a996e0afab500f7c35c1afc153d1fbef7c245",
       "content_hash": "fd9657a0e685c388a00e11933f1a996e0afab500f7c35c1afc153d1fbef7c245",
       "authority": "official_academy",
@@ -8268,7 +8280,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/products/digital_downloads/anti-slop-framework"
       ],
-      "evidence_hash": "e3b878c6ef3ff01d45cc7f7a340ac90ce061f7d93ea2c2cbb5ef7cb1e0e9529c"
+      "evidence_hash": "f3de52d7c9ee84438394c848151985bcd529c47e846b4e698a3f3c35680538cb"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/get-it-all",
@@ -8600,7 +8612,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "d194dc98ab2d94efbcba2d920aaaded5d459d89a3c4adbf3b0ff7db5ad33f902",
       "content_hash": "d194dc98ab2d94efbcba2d920aaaded5d459d89a3c4adbf3b0ff7db5ad33f902",
       "authority": "official_academy",
@@ -8612,7 +8624,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/get-it-all"
       ],
-      "evidence_hash": "bca48c6d58e073a58d8c5f2f1215c3b70292c8379a61ffa144c1a6e6d0d81842"
+      "evidence_hash": "53d939c75585bb1fa715b30b686ac75e0051cfcc07e01b6c4f3c3b8cee6c9795"
     },
     {
       "discovered_url": "https://academy.towardsai.net/courses/buildingllmsforproduction",
@@ -9853,7 +9865,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "e57d75ea753295f10240b50c56a038ddb826cf765887c9345c936686a33f98da",
       "content_hash": "e57d75ea753295f10240b50c56a038ddb826cf765887c9345c936686a33f98da",
       "authority": "official_academy",
@@ -9865,7 +9877,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/courses/buildingllmsforproduction"
       ],
-      "evidence_hash": "379c9a736ff4d0d2d7701cc8e0574f7f05428eb2c4637c3d7a16c6f478b533ff"
+      "evidence_hash": "7fdbc8350ad1442d7d71901b8e3ba7657216577dc9c45543945a318bee079055"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/10-hour-crash-course-into-llm-developer-expert",
@@ -10202,7 +10214,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "2f52ed125e2b89c07de077e0b5e52394de45827717e898afa673e8e3d7a6c164",
       "content_hash": "2f52ed125e2b89c07de077e0b5e52394de45827717e898afa673e8e3d7a6c164",
       "authority": "official_academy",
@@ -10214,7 +10226,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/10-hour-crash-course-into-llm-developer-expert"
       ],
-      "evidence_hash": "48e930358546c65ec3612ab795c1b95a39fc21f34ecbc47cf9dd1c48a90f6c91"
+      "evidence_hash": "700ae9fda7f42c2471d2506b2d7e59107bb80afd333bec973b5cc92285538489"
     },
     {
       "discovered_url": "https://academy.towardsai.net/bundles/from-coding-novice-to-advanced-llm-developer",
@@ -10670,7 +10682,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "ce9710a2e522e19675f07287fb0da2c5bcc806c139c1dbbc92ba4e21b09ee932",
       "content_hash": "ce9710a2e522e19675f07287fb0da2c5bcc806c139c1dbbc92ba4e21b09ee932",
       "authority": "official_academy",
@@ -10682,7 +10694,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/bundles/from-coding-novice-to-advanced-llm-developer"
       ],
-      "evidence_hash": "5807be90ee944970a7eaa7fdea7a1511e1aa9ae075e4bc771f2620d546e1f2dc"
+      "evidence_hash": "716bde6a107799cdf68a4cae746c3ce582e55187c85e7bd735fa51aa2a56b00f"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/agent-engineering-free-preview",
@@ -10756,7 +10768,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "04e260a75ed8a909053af6e967dba21efb7f33c19f47baff29be5150362a4081",
       "content_hash": "04e260a75ed8a909053af6e967dba21efb7f33c19f47baff29be5150362a4081",
       "authority": "official_academy",
@@ -10768,7 +10780,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/agent-engineering-free-preview"
       ],
-      "evidence_hash": "646fd6e3e9127c6b273be1c23dd9692a6c0f2ff3071303453eafa95f16a165e2"
+      "evidence_hash": "0d8c6be4e319fc1c39f1809202c49645987e5544e0af371a62e42a992ab7848c"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/full-stack-ai-engineering-free-preview",
@@ -10823,7 +10835,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "8a226c428d794b56d366bec5279d254abc70f696a009826938161648c9160843",
       "content_hash": "8a226c428d794b56d366bec5279d254abc70f696a009826938161648c9160843",
       "authority": "official_academy",
@@ -10835,7 +10847,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/full-stack-ai-engineering-free-preview"
       ],
-      "evidence_hash": "3b653ed5bc65e0341980aaa9cfc06330872c305e393c02c6e37161cf117e1d24"
+      "evidence_hash": "1ffc5cb098a55ce30489906acf6860cb403c3301dffc7a64c7b46815b1cc36da"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/agent-course-landing-page",
@@ -11967,7 +11979,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "42516887079c99f37040d1e1a18c0bc790e0c412ec4fc76de2dc49bbdb3375f6",
       "content_hash": "42516887079c99f37040d1e1a18c0bc790e0c412ec4fc76de2dc49bbdb3375f6",
       "authority": "official_academy",
@@ -11980,7 +11992,7 @@
         "https://academy.towardsai.net/pages/agent-course-landing-page"
       ],
       "excluded_reason": "legacy duplicate of the Agent Engineering course page",
-      "evidence_hash": "e4d9d3114e961487d686532659f365fabcdf4ed858a004dcbc6f354e381748aa"
+      "evidence_hash": "257b8af7e8e067be902d74f29901552aa67a474a512e2bb0d21705bc145cf6ce"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/towards-ai-insider",
@@ -12101,7 +12113,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "24c918273f0e5fffbb0266c57b529ab16031fef1d94bbd2933c85585dedd2196",
       "content_hash": "24c918273f0e5fffbb0266c57b529ab16031fef1d94bbd2933c85585dedd2196",
       "authority": "official_academy",
@@ -12114,7 +12126,7 @@
         "https://academy.towardsai.net/pages/towards-ai-insider"
       ],
       "excluded_reason": "unfinished template content",
-      "evidence_hash": "033d9f636c0b14896e8f1e483a8a1cd50675653dce72afb1868b04c8b65f2b1c"
+      "evidence_hash": "97e1451836296ec443732c4ad30444e827e7f523f56f4d090ce9e1993b654235"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/agent-course-new-page-cro",
@@ -12815,7 +12827,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "98c1fd17fdcd9c45a7025bd85ad4582f2f1dd2a5aa288e31b55e4045920a364b",
       "content_hash": "98c1fd17fdcd9c45a7025bd85ad4582f2f1dd2a5aa288e31b55e4045920a364b",
       "authority": "official_academy",
@@ -12828,7 +12840,7 @@
         "https://academy.towardsai.net/pages/agent-course-new-page-cro"
       ],
       "excluded_reason": "alternate sales copy duplicates the Agent Engineering course page",
-      "evidence_hash": "90be9db1b1ce6580ccd23330c0af016aa909cffc690a9370618e118840114c54"
+      "evidence_hash": "ce6a81260b70a94b3891a5991a5dc0e07108ff41bda18e5c9998a922ac1bf2e2"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/webinar",
@@ -12895,7 +12907,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "358d9e276a9ad3605453b7fcfbf3adc7718ec9993617616c7887f4fa02f1decd",
       "content_hash": "358d9e276a9ad3605453b7fcfbf3adc7718ec9993617616c7887f4fa02f1decd",
       "authority": "official_academy",
@@ -12908,7 +12920,7 @@
         "https://academy.towardsai.net/pages/webinar"
       ],
       "excluded_reason": "unfinished template content",
-      "evidence_hash": "4c1a151ea12ebc56f6d28d7e632f27ce6c63fcc4aea793c79378da1663cb6bfa"
+      "evidence_hash": "237d1fb9809555a614deff40ca154007a4882828b68b27a5372220fb17877f7d"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/new-home-page",
@@ -13799,7 +13811,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "aab65325e9efc0be097f74a6f76a0611dfe3247e8920f4fccf3cef71e52edf18",
       "content_hash": "aab65325e9efc0be097f74a6f76a0611dfe3247e8920f4fccf3cef71e52edf18",
       "authority": "official_academy",
@@ -13812,7 +13824,7 @@
         "https://academy.towardsai.net/pages/new-home-page"
       ],
       "excluded_reason": "legacy duplicate of the Academy home page",
-      "evidence_hash": "da5f5b559ea38c4be3a9757835c8a5437b9906b90f8eb6cf196f960870b457d7"
+      "evidence_hash": "8192b668da73259aa484cb4e259a9e5e37b899c782750c107d80c82da22f497f"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/landing-page-free-email-course",
@@ -13846,7 +13858,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "cb47c56ce8cd4d4c3e7aaf14fff58e3d55ee7b2ef0901f6c3538e9ae548cd535",
       "content_hash": "cb47c56ce8cd4d4c3e7aaf14fff58e3d55ee7b2ef0901f6c3538e9ae548cd535",
       "authority": "official_academy",
@@ -13859,7 +13871,7 @@
         "https://academy.towardsai.net/pages/landing-page-free-email-course"
       ],
       "excluded_reason": "unfinished template content",
-      "evidence_hash": "317b0b9e0a1097a2ad3de36fd4df85ae5790f38839c3f12563879e56f80843e6"
+      "evidence_hash": "544b054638101fe50598f3050543da121d880c5ad3cea8fee56195a67ab763af"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/contact-us",
@@ -13950,7 +13962,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "7e9c30576db465aa1d258ad7552f2db9d5f7f71bdec84e9a2b09641a236c6cf6",
       "content_hash": "7e9c30576db465aa1d258ad7552f2db9d5f7f71bdec84e9a2b09641a236c6cf6",
       "authority": "official_academy",
@@ -13962,7 +13974,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/contact-us"
       ],
-      "evidence_hash": "d237ae6fe85d57644d49ed9f77f0eae5bb707ed6ad5a0515b953412f90255c69"
+      "evidence_hash": "2746dcaf8ee9ebd85e7cda81f1e183dcd855d534da9541d6977e606103a91656"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/about-us",
@@ -14264,7 +14276,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "15d2b0b9c5fc34fcfeef2328e227139b00ab69f7aec51355dc24addb758a90ae",
       "content_hash": "15d2b0b9c5fc34fcfeef2328e227139b00ab69f7aec51355dc24addb758a90ae",
       "authority": "official_academy",
@@ -14276,7 +14288,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/about-us"
       ],
-      "evidence_hash": "a24b169f6a8e25be1fdb6fd6302cbb97948db78d023ca66f7a9061846d82c9bd"
+      "evidence_hash": "a184a21d537176b91355c99a1780f6463469a8882e818511788463277bf0fd16"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/affiliate",
@@ -14601,7 +14613,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "c86cf56daa5bf312134fb7db5b89b27048537cbdb24973714b1ad72bdb193359",
       "content_hash": "c86cf56daa5bf312134fb7db5b89b27048537cbdb24973714b1ad72bdb193359",
       "authority": "official_academy",
@@ -14613,7 +14625,7 @@
       "redirect_chain": [
         "https://academy.towardsai.net/pages/affiliate"
       ],
-      "evidence_hash": "af3aa5b7b1945e89dea578afecfe2593348334a2faceb31f0522aa3808f93a1c"
+      "evidence_hash": "286ba3fc46cde9b1aa38cdd335cac2313214ae60d33e7277de895d3b3c887eec"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/choose-your-course",
@@ -14732,7 +14744,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "db5f355f9bd03a3d47a30ffc1639b476e66c803268c7bfd41f734161018893f4",
       "content_hash": "db5f355f9bd03a3d47a30ffc1639b476e66c803268c7bfd41f734161018893f4",
       "authority": "official_academy",
@@ -14745,7 +14757,7 @@
         "https://academy.towardsai.net/pages/choose-your-course"
       ],
       "excluded_reason": "legacy duplicate of the courses collection",
-      "evidence_hash": "6a6f12a03ca7436aa925c591da3407c0942fb2a34c69ba30f2dd290eb1e07abb"
+      "evidence_hash": "2be425566c34d016763868ee1081ed7146b4a9f37767fe45b937a1d3115e2c62"
     },
     {
       "discovered_url": "https://academy.towardsai.net/pages/free-resources",
@@ -14962,7 +14974,7 @@
           ]
         }
       ],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "03a45d19871c9a0cfeefa020d9ce6fc2f13c951dd4161cfe0d9bb0dbcc804bdd",
       "content_hash": "03a45d19871c9a0cfeefa020d9ce6fc2f13c951dd4161cfe0d9bb0dbcc804bdd",
       "authority": "official_academy",
@@ -14975,7 +14987,7 @@
         "https://academy.towardsai.net/pages/free-resources"
       ],
       "excluded_reason": "legacy resource summary conflicts with the current LLM Fundamentals offer",
-      "evidence_hash": "5cd0c07617c59a8af56220bba282be70bafe6448fb4184e5a3a5cd7da1bf6745"
+      "evidence_hash": "0a0e3eb77c400cbad4119caa4606754bc9c837767941710ea48d94f1ebc9ba78"
     },
     {
       "discovered_url": "https://www.amazon.com/s?k=Towards+AI+Building+LLMs+for+Production",
@@ -14999,7 +15011,7 @@
         }
       ],
       "chunks": [],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "b1d5a4e8b2325fdff3c88789efff963602b5367567bff80ddd8ab9db20418634",
       "content_hash": "b1d5a4e8b2325fdff3c88789efff963602b5367567bff80ddd8ab9db20418634",
       "authority": "curated_external",
@@ -15010,7 +15022,7 @@
       "lastmod": "",
       "sitemap_url": "manual_allowlist",
       "redirect_chain": [],
-      "evidence_hash": "cd6545aaed2c1b68fa9b201d4b718862294a780bba209bc7ca7bfad3477db52d"
+      "evidence_hash": "d192a015c6e895e516db42e91cb02b7ab3db05c2e7aa7cf373b47d8d0b659670"
     },
     {
       "discovered_url": "https://www.youtube.com/channel/UCQNjFuhOJM1YqFTPY1Q_kYQ",
@@ -15034,7 +15046,7 @@
         }
       ],
       "chunks": [],
-      "fetched_at": "2026-10-12T15:34:10.332970+00:00",
+      "fetched_at": "2026-10-19T13:25:13.364493+00:00",
       "content_sha256": "0f599f6c1d60cc11b2fb6603f85def4a8eee7d202bdae240eede6dd704eb94e4",
       "content_hash": "0f599f6c1d60cc11b2fb6603f85def4a8eee7d202bdae240eede6dd704eb94e4",
       "authority": "curated_external",
@@ -15045,7 +15057,7 @@
       "lastmod": "",
       "sitemap_url": "manual_allowlist",
       "redirect_chain": [],
-      "evidence_hash": "56a9d6be1a5c9f491250530548501ce0ea112b5062e71bebe918ddeff0f22988"
+      "evidence_hash": "cc46ba3fb0df80d24f5e410af49e55d18153a21e25c4cc9efd43e34abc790558"
     }
   ]
 }

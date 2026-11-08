@@ -239,7 +239,9 @@ def test_chat_abstains_on_model_not_found_or_validation_failure(monkeypatch) -> 
             "generate_grounded_answer",
             lambda *_args, result=grounded: result,
         )
-        response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
+        request_payload = payload("Does this course require Python?")
+        request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+        response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
 
         assert response.status_code == 200
         assert_contact_handoff(response.json())
@@ -270,11 +272,29 @@ def test_chat_abstains_when_model_omits_negation_from_an_evidence_span(
         lambda _prompt: api.llm.LLMResult(answer=raw),
     )
 
-    response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
+    request_payload = payload("Does AI for Work require code?")
+    request_payload["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+    response = client.post("/api/helper/chat", json=request_payload, headers=HEADERS)
 
     assert response.status_code == 200
     assert_contact_handoff(response.json())
     assert "don't want to guess" in response.json()["answer"]
+
+
+@pytest.mark.parametrize("status", ["not_found", "validation_failure"])
+def test_course_choice_starter_asks_about_goals_when_no_claim_is_verified(monkeypatch, status):
+    reset_limiters()
+    monkeypatch.setattr(
+        api.llm, "generate_grounded_answer",
+        lambda *_args, **_kwargs: GroundingResult(valid=status == "not_found", status=status),
+    )
+    response = client.post("/api/helper/chat", json=payload(), headers=HEADERS)
+    body = response.json()
+    assert response.status_code == 200
+    assert body["status"] == "policy"
+    assert body["sources"] == []
+    assert "build or achieve" in body["answer"]
+    assert "Python?" in body["answer"]
 
 
 @pytest.mark.parametrize(

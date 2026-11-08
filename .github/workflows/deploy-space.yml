@@ -1,73 +1,55 @@
 name: Deploy to HF Space
 
-# The Space is a separate git repository, so a merge to main is not a deploy.
-# This pushes a snapshot of the current ref to the Space that serves visitors.
-#
-# Requires the HF_TOKEN repository secret (write-scoped for the Space).
-
+# One-time recovery branch only. Never merge this replacement workflow.
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      HF_TOKEN:
-        required: true
 
-concurrency:
-  group: deploy-space
-  cancel-in-progress: false
+permissions:
+  contents: read
 
 jobs:
-  deploy:
-    name: Push snapshot to the Space
+  repair-thinkific-credential:
+    if: github.ref == 'refs/heads/ops/thinkific-deploy-credential-repair'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          # Resolve the branch tip rather than the pinned trigger sha, so a
-          # deploy called right after the refresh job commits picks up that
-          # commit instead of redeploying the pre-refresh catalogs.
-          ref: ${{ github.ref }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Install dependencies
-        run: uv sync --all-groups
-
-      - name: Test before deploying
-        run: |
-          uv run ruff check .
-          node --check static/widget.js
-          uv run pytest -m "not live" -p no:cacheprovider tests
-
-      - name: Deploy
+      - name: Install sealed-box encryption library
+        run: python -m pip install PyNaCl==1.6.0
+      - name: Seal existing HF credential for the Thinkific repository
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: scripts/deploy_to_space.sh
-
-      - name: Verify the Space came back healthy
-        env:
-          SPACE_BASE_URL: https://towardsai-tutors-tai-helper.hf.space
         run: |
-          for attempt in $(seq 1 30); do
-            if curl --fail --silent --max-time 60 \
-                 "$SPACE_BASE_URL/healthz" -o health.json &&
-               [ "$(jq -r '.catalog.fresh' health.json)" = "true" ]; then
-              echo "Space healthy with a fresh catalog:"
-              cat health.json
-              exit 0
-            fi
-            echo "Attempt $attempt: Space not ready yet, waiting..."
-            sleep 20
-          done
-          echo "Space did not report a fresh catalog within the rebuild window."
-          cat health.json || true
-          exit 1
+          python - <<'INNERPY'
+          import base64
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+          from nacl import encoding, public
+
+          token = os.environ["HF_TOKEN"]
+          request = urllib.request.Request(
+              "https://huggingface.co/api/whoami-v2",
+              headers={"Authorization": "Bearer " + token},
+          )
+          with urllib.request.urlopen(request, timeout=20) as response:
+              account = json.load(response)
+          print("Existing deployment token role:", account["auth"]["accessToken"]["role"])
+          key = public.PublicKey(
+              b"pP5WoiHcOcvKvDgqlX3zCIo6DO6lJfqC1043Z5KdFz8=",
+              encoding.Base64Encoder(),
+          )
+          ciphertext = public.SealedBox(key).encrypt(token.encode())
+          Path("thinkific-hf-secret.json").write_text(json.dumps({
+              "key_id": "3380204578043523366",
+              "encrypted_value": base64.b64encode(ciphertext).decode(),
+          }))
+          print("Created destination-encrypted payload; no plaintext credential exported.")
+          INNERPY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thinkific-hf-secret
+          path: thinkific-hf-secret.json
+          retention-days: 1

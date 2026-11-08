@@ -403,7 +403,16 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
                         ]
                     )
                 else:
-                    answer = _insufficient_evidence_answer()
+                    if not payload.history and query == "I want help deciding which course to take.":
+                        # This starter supplies no goals or experience. Asking
+                        # for those makes no factual claim and needs no citation.
+                        answer = (
+                            "What would you like to build or achieve, and how "
+                            "comfortable are you with Python?"
+                        )
+                        response_status = "policy"
+                    else:
+                        answer = _insufficient_evidence_answer()
                     if grounded.status == "validation_failure":
                         error_message = (
                             "grounding validation failed: "

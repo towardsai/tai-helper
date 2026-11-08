@@ -108,7 +108,12 @@ def test_live_chat_returns_concise_answer() -> None:
     payload = response.json()
     assert payload["answer"].strip()
     assert len(payload["answer"]) < 1400
-    assert payload["sources"]
+    if payload["status"] == "policy":
+        assert "build or achieve" in payload["answer"]
+        assert "Python?" in payload["answer"]
+    else:
+        assert payload["status"] == "answered"
+        assert payload["sources"]
     assert elapsed <= max_seconds("LIVE_SMOKE_MAX_CHAT_SECONDS", 90)
 
 

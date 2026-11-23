@@ -697,6 +697,7 @@ def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> 
     second_response = client.post("/api/helper/chat", json=second, headers=HEADERS)
 
     assert first_response.status_code == 200
+    assert "student or need a special discount" in first_response.json()["answer"]
     assert "louis@towardsai.net" in first_response.json()["answer"]
     assert first_response.json()["status"] == "policy"
     assert second_response.status_code == 200

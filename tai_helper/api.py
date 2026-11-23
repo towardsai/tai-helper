@@ -327,7 +327,7 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
 
     try:
         if coupon_intent(query):
-            answer = "For discount requests, please email Louis at louis@towardsai.net with the course you’re interested in."
+            answer = "If you’re a student or need a special discount, please email Louis at louis@towardsai.net. Include the course you’re interested in and a brief note about your circumstances."
             response_status = "policy"
         elif _contact_intent(query):
             answer = _contact_answer()

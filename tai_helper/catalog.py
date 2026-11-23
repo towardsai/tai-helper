@@ -1668,7 +1668,7 @@ def in_scope(text: str, history: list[str] | None = None) -> bool:
 
 def coupon_intent(text: str) -> bool:
     lowered = text.lower()
-    return any(term in lowered for term in ("coupon", "promo code", "discount", "student pricing", "student rate"))
+    return any(term in lowered for term in ("coupon", "promo code", "discount", "student pricing", "student rate", "student price", "financial aid", "financial hardship", "can't afford", "cannot afford", "can’t afford", "scholarship"))
 
 
 def coupon_followup(text: str, history: list[str]) -> bool:

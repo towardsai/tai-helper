@@ -771,3 +771,15 @@ def test_healthz_reports_degraded_when_the_catalog_has_expired(monkeypatch) -> N
     assert payload["catalog"]["fresh"] is False
     assert payload["catalog"]["evidencePages"] == 0
     assert payload["catalog"]["expiresInDays"] <= 0
+
+
+def test_out_of_scope_chat_offers_community_and_professional_help() -> None:
+    reset_limiters()
+    request = payload(query="hello ka jowab to de do")
+    request["history"] = [{"role": "user", "content": FIRST_PROMPT}]
+    response = client.post("/api/helper/chat", json=request, headers=HEADERS)
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "out_of_scope"
+    assert "https://discord.gg/learnaitogether" in body["answer"]
+    assert "https://towardsai.com/academy/mentorship/" in body["answer"]

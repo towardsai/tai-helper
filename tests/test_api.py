@@ -310,7 +310,6 @@ def test_course_choice_starter_asks_about_goals_when_no_claim_is_verified(monkey
         ),
         "Do the 7 lessons in the Agent Engineering preview give a certificate?",
         "Do the 7 lessons in the Agent Engineering preview cost $499?",
-        "Do the 7 lessons in the Agent Engineering preview get a 50% discount?",
     ],
 )
 def test_preview_count_cannot_borrow_other_paid_course_facts(
@@ -655,7 +654,6 @@ def test_direct_contact_requests_bypass_retrieval_and_model(monkeypatch) -> None
         "Does mentorship include a certificate?",
         "Does the Get It All bundle get 50% off?",
         "What is the Get It All bundle price?",
-        "Does monthly mentorship have a discount?",
     ],
 )
 def test_absent_offer_facts_go_directly_to_contact_form(
@@ -685,7 +683,7 @@ def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> 
         raise AssertionError("model should not be called for coupon intent")
 
     monkeypatch.setattr(api.llm, "generate_grounded_answer", unexpected_generate_answer)
-    first = payload(query="Do you have a coupon code?")
+    first = payload(query="Do you offer student discounts?")
     first["selectedPrompt"] = FIRST_PROMPT
     first["history"] = [{"role": "user", "content": FIRST_PROMPT}]
     second = payload(query="Please I really need a coupon code")
@@ -699,10 +697,10 @@ def test_coupon_answer_is_deterministic_and_does_not_call_model(monkeypatch) -> 
     second_response = client.post("/api/helper/chat", json=second, headers=HEADERS)
 
     assert first_response.status_code == 200
-    assert api.CONTACT_FORM_URL in first_response.json()["answer"]
+    assert "louis@towardsai.net" in first_response.json()["answer"]
     assert first_response.json()["status"] == "policy"
     assert second_response.status_code == 200
-    assert api.CONTACT_FORM_URL in second_response.json()["answer"]
+    assert "louis@towardsai.net" in second_response.json()["answer"]
 
 
 def test_rate_limit_is_hard(monkeypatch) -> None:

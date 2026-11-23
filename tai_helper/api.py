@@ -15,7 +15,6 @@ from fastapi.staticfiles import StaticFiles
 from . import llm
 from .catalog import (
     allowed_paths_by_host,
-    coupon_followup,
     coupon_intent,
     evidence_offer_ids_for_query,
     forced_prompts,
@@ -212,19 +211,6 @@ def _validate_payload(payload: HelperChatRequest) -> None:
         )
 
 
-def _fixed_coupon_answer(payload: HelperChatRequest) -> str:
-    history = _history_text(payload)
-    if coupon_followup(payload.query, history):
-        return (
-            "I can't provide a coupon code here. If you have specific context, "
-            f"[contact the Towards AI team]({CONTACT_FORM_URL}) with what you need."
-        )
-    return (
-        "I can't provide a coupon code here. For pricing help based on your "
-        f"circumstances, [contact the Towards AI team]({CONTACT_FORM_URL})."
-    )
-
-
 def _contact_intent(text: str) -> bool:
     lowered = text.casefold()
     return any(
@@ -340,11 +326,11 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
     response_status = "insufficient_evidence"
 
     try:
-        if _contact_intent(query):
-            answer = _contact_answer()
+        if coupon_intent(query):
+            answer = "For discount requests, please email Louis at louis@towardsai.net with the course you’re interested in."
             response_status = "policy"
-        elif coupon_intent(query):
-            answer = _fixed_coupon_answer(payload)
+        elif _contact_intent(query):
+            answer = _contact_answer()
             response_status = "policy"
         elif not in_scope(query, _history_text(payload)):
             answer = _out_of_scope_answer()

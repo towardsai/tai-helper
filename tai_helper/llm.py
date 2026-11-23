@@ -1261,7 +1261,10 @@ def extract_mentorship_course_access(
     )
     if cancellation_intent:
         active = find_span("course access is active while")
-        upgrade = find_span("if you cancel", "lifetime access")
+        active = active or find_span("while your mentorship is active", "course")
+        upgrade = find_span("if you cancel", "lifetime access") or find_span(
+            "if you cancel", "keep access for life"
+        )
         if active is None or upgrade is None:
             return GroundingResult(valid=True, status="not_found")
         return validated_extraction([active, upgrade])

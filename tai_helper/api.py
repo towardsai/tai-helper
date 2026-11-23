@@ -237,9 +237,10 @@ def _contact_answer() -> str:
 
 def _out_of_scope_answer() -> str:
     return (
-        "I can only help with choosing Towards AI courses, bundles, mentorship, "
-        "free resources, the book, or B2B training. Tell me your background and goal, "
-        "and I can point you to the right option."
+        "For free help with your AI questions, ask the "
+        "[Learn AI Together community on Discord](https://discord.gg/learnaitogether). "
+        "For personalized, professional guidance on your project, "
+        "[join the paid Towards AI mentorship](https://towardsai.com/academy/mentorship/)."
     )
 
 

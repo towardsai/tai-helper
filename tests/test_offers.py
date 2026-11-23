@@ -630,8 +630,8 @@ def test_mentorship_cancellation_retrieves_only_the_exact_access_policy() -> Non
 
     assert selected
     assert {chunk["offer_id"] for chunk in selected} == {"mentorship"}
-    assert any("Course access is active while" in span for span in spans)
-    assert any("If you cancel" in span and "lifetime access" in span for span in spans)
+    assert any("While your mentorship is active" in span for span in spans)
+    assert any("If you cancel" in span and "keep access for life" in span for span in spans)
     assert all("Included from day one" not in span for span in spans)
 
 
@@ -754,7 +754,7 @@ def test_mentorship_access_and_features_exclude_comparison_entities() -> None:
 
     assert access
     assert all("retainers" not in span.casefold() for span in access)
-    assert any("lifetime access" in span.casefold() for span in access)
+    assert any("keep access for life" in span.casefold() for span in access)
     assert reviews
     assert any(
         "resume" in span.casefold()

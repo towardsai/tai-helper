@@ -968,6 +968,7 @@ def _span_supports_fact(
             if re.search(r"\bcancel|\bcancell|\bafter\b", lowered_query):
                 return (
                     "course access is active while" in text
+                    or "while your mentorship is active" in text
                     or "if you cancel" in text
                 )
             if permanent_access_requested:

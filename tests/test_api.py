@@ -473,9 +473,9 @@ def test_mentorship_cancellation_uses_exact_current_access_policy(
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "answered"
-    assert "Course access is active while your mentorship is active" in body["answer"]
+    assert "While your mentorship is active" in body["answer"]
     assert "If you cancel" in body["answer"]
-    assert "lifetime access at a reduced price" in body["answer"]
+    assert "keep access for life by paying only the remaining $100 fee" in body["answer"]
     assert "Included from day one" not in body["answer"]
     assert {source["url"] for source in body["sources"]} == {
         "https://towardsai.com/academy/mentorship/"

@@ -1,0 +1,11 @@
+{
+  "name": "tutor-engagement",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-07-09",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": {"enabled": false},
+  "triggers": {"crons": ["15 10 * * *"]},
+  "ratelimits": [{"name":"INGEST_LIMIT","namespace_id":"6812","simple":{"limit":180,"period":60}}],
+  "d1_databases": [{"binding":"DB","database_name":"tutor-engagement","database_id":"d293e080-bb06-4398-9d30-8ff4c3abee76"}]
+}

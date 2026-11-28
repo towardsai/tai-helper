@@ -648,7 +648,7 @@ def test_direct_contact_requests_bypass_retrieval_and_model(monkeypatch) -> None
         "Does Agent Engineering free preview include lifetime access and require no card?",
         "Does the Full Stack free preview give me a certificate?",
         "Does Building LLMs for Production have a refund guarantee?",
-        "How long is Agent Engineering?",
+        "How long is the Agent Engineering free preview?",
         "How many hours does Python for AI Engineering take?",
         "How many lessons are in LLM Fundamentals?",
         "Does mentorship include a certificate?",

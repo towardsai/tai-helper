@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import llm
@@ -25,6 +25,7 @@ from .catalog import (
     sources_from_pages,
 )
 from .monitoring import HelperMonitor
+from .program_faq import FAQ_URL, program_answer, public_page
 from .rate_limiter import FixedWindowRateLimiter, RateLimit
 from .schemas import HelperChatRequest, HelperChatResponse, SourceOut
 from .settings import repo_root, settings
@@ -270,6 +271,11 @@ def _schedule_monitor(monitor: HelperMonitor) -> None:
     task.add_done_callback(log_failure)
 
 
+@app.get("/program-faq", response_class=HTMLResponse)
+def program_faq() -> str:
+    return public_page()
+
+
 @app.get("/healthz")
 def healthcheck() -> dict[str, Any]:
     # Stays 200 even when degraded: this is the Space liveness probe, and
@@ -333,6 +339,10 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
         elif _contact_intent(query):
             answer = _contact_answer()
             response_status = "policy"
+        elif program := program_answer(query, _user_history_text(payload), payload.context.url):
+            answer, topic = program
+            sources = [{"title": "Towards AI program FAQ", "url": f"{FAQ_URL}#{topic}", "kind": "program_faq"}]
+            response_status = "answered"
         elif not in_scope(query, _history_text(payload)):
             answer = _out_of_scope_answer()
             response_status = "out_of_scope"

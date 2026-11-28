@@ -1,0 +1,1 @@
+{"name":"academy-helper-guidance","main":"worker.mjs","compatibility_date":"2026-07-09","workers_dev":true,"preview_urls":false,"observability":{"enabled":false},"d1_databases":[{"binding":"DB","database_name":"academy-helper-guidance","database_id":"6e1cc0c1-dbab-429b-b402-84e49d6f3d2a"}]}

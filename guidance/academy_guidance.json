@@ -1,0 +1,189 @@
+[
+  {
+    "id": "gift",
+    "pattern": "\\b(gift(?:ing|ed|s)?|cadeaux?|offrir (?:un|le|ce) (?:cours|forfait)|extra seat|second seat|buy one get one)\\b",
+    "en": "There is no automatic free +1 seat. Buy the course or bundle as a gift first. Then email Louis-François at louis@towardsai.net with the package you bought. He’ll email you a 50% discount code for your own purchase of that same package. At eligible one-time checkouts, select “This is a gift” and enter the recipient’s email. You receive the receipt and they receive an invitation to redeem their access. For an already-owned product, use My Account → Order History → Buy again. If the gift option is missing, check the individual one-time checkout or email Louis before paying.",
+    "fr": "Il n’y a pas de deuxième place gratuite automatique. Achetez d’abord le cours ou le forfait en cadeau. Écrivez ensuite à Louis-François à louis@towardsai.net en indiquant le produit acheté. Il vous enverra un code de 50 % pour votre propre achat du même produit. À la caisse, si l’option cadeau est proposée, sélectionnez-la et indiquez le courriel du destinataire. Vous recevez le reçu et la personne reçoit une invitation. Si vous possédez déjà le produit, ouvrez Mon compte → Historique des commandes → Acheter à nouveau. Si l’option cadeau manque, vérifiez la caisse pour achat unique ou écrivez à Louis avant de payer.",
+    "sources": [
+      {
+        "title": "Towards AI gift policy",
+        "url": "https://academy-helper-guidance.bouchard-lf.workers.dev/#gift"
+      },
+      {
+        "title": "Thinkific gifting",
+        "url": "https://support.thinkific.com/hc/en-us/articles/17911685455127-TCommerce-Gifting"
+      },
+      {
+        "title": "Academy bundles",
+        "url": "https://towardsai.com/academy/bundles/"
+      }
+    ],
+    "exclude": "\\b(gifted (?:child|student)|gift card (?:scam|fraud)|gift wrapping algorithm)\\b"
+  },
+  {
+    "id": "black-friday",
+    "pattern": "\\b(black[ -]?friday(?:40)?|vendredi fou|cyber monday|holiday sale)\\b|\\b(?:are all (?:the )?(?:courses|bundles) (?:discounted|on sale)|(?:discount|coupon|promo code) (?:on|for) all (?:courses|bundles))\\b|\\b(?:current|public|holiday|seasonal) (?:promo(?:tion)?|sale|coupon|discount)\\b",
+    "en": "Use blackfriday40 at checkout for 40% off all Towards AI courses and bundles through Sunday, December 6, 2026, at 11:59 p.m. Montréal time. The yearly Mentorship + Agent Engineering package is the featured offer. Browse all bundles at https://towardsai.com/academy/bundles/.",
+    "fr": "Utilisez blackfriday40 à la caisse pour obtenir 40 % de réduction sur tous les cours et forfaits Towards AI jusqu’au dimanche 6 décembre 2026 à 23 h 59, heure de Montréal. L’offre mise en avant associe un an de mentorat et Agent Engineering. Tous les forfaits sont sur https://towardsai.com/academy/bundles/.",
+    "sources": [
+      {
+        "title": "Academy bundles",
+        "url": "https://towardsai.com/academy/bundles/"
+      },
+      {
+        "title": "Towards AI promotion details",
+        "url": "https://academy-helper-guidance.bouchard-lf.workers.dev/#black-friday"
+      },
+      {
+        "title": "Black Friday offer",
+        "url": "https://towardsai.com/academy/black-friday/"
+      }
+    ],
+    "starts": "2026-11-01T04:00:00Z",
+    "ends": "2026-12-07T05:00:00Z",
+    "expired_en": "The 2026 Black Friday course and bundle promotion ended on December 6, 2026. Check the Academy bundles page for current offers.",
+    "expired_fr": "La promotion du Vendredi fou 2026 a pris fin le 6 décembre 2026. Consultez la page des forfaits pour les offres actuelles."
+  },
+  {
+    "id": "career-beginner",
+    "pattern": "(?:\\b(?:become|transition|switch|moving|pivot|devenir|reconversion|career|carrière|what course|which course|recommend|quel cours|best course|best bundle|comfortable (?:with|in) python)\\b.{0,100}\\b(?:ai|ia|engineer\\w*|python|course|cours|bundle|developer|agents?|mcp|rag)\\b|\\b(?:software|senior|senir|backend|full.stack|python|développeur)\\b.{0,90}\\b(?:ai engineer|career|course|cours|transition|bundle)\\b|\\b(?:become|devenir) (?:an? )?(?:ai|ia)\\b)",
+    "en": "Start with Beginner Python for AI Engineering to build coding fluency. The From Coding Novice to Advanced LLM Developer bundle adds the full LLM product path: https://towardsai.com/academy/bundles/from-coding-novice-to-advanced-llm-developer/. For broader coverage, compare the Get It All bundle. If you’d like a more precise recommendation, Louis-François, our founder, is happy to help through the contact form.",
+    "fr": "Commencez par Beginner Python for AI Engineering pour acquérir les bases. Le forfait From Coding Novice to Advanced LLM Developer prolonge ce parcours jusqu’au développement de produits LLM. Pour un parcours plus large, comparez le forfait Get It All. Pour un conseil plus personnalisé, Louis-François, notre cofondateur, est heureux de vous aider via le formulaire de contact.",
+    "sources": [
+      {
+        "title": "Python for AI Engineering",
+        "url": "https://towardsai.com/academy/python-for-ai-engineering/"
+      },
+      {
+        "title": "Get It All bundle",
+        "url": "https://towardsai.com/academy/bundles/get-it-all/"
+      },
+      {
+        "title": "Contact Louis-François",
+        "url": "https://towardsai.com/academy/contact/#contact"
+      }
+    ],
+    "focus": "(no python|new to (?:coding|python)|never coded|beginner (?:in |at )?python|sans expérience en python|débutant en python)",
+    "exclude": "\\b(our (?:team|staff|company|developers|software developers)|our employees|enterprise training|corporate training|notre entreprise|nos employés)\\b"
+  },
+  {
+    "id": "career-agents",
+    "pattern": "(?:\\b(?:become|transition|switch|moving|pivot|devenir|reconversion|career|carrière|what course|which course|recommend|quel cours|best course|best bundle|comfortable (?:with|in) python)\\b.{0,100}\\b(?:ai|ia|engineer\\w*|python|course|cours|bundle|developer|agents?|mcp|rag)\\b|\\b(?:software|senior|senir|backend|full.stack|python|développeur)\\b.{0,90}\\b(?:ai engineer|career|course|cours|transition|bundle)\\b|\\b(?:become|devenir) (?:an? )?(?:ai|ia)\\b)",
+    "en": "For a developer focused on agents, choose Agent Engineering. Build the research agent and writing workflow, connect them with MCP, evaluate them and ship your own MCP capstone. For broader coverage, compare the Get It All bundle. If you’d like a more precise recommendation, Louis-François, our founder, is happy to help through the contact form.",
+    "fr": "Pour développer des agents, choisissez Agent Engineering. Vous construirez un agent de recherche et un workflow de rédaction, les relierez via MCP et réaliserez votre propre projet MCP. Pour un parcours plus large, comparez le forfait Get It All. Pour un conseil plus personnalisé, Louis-François, notre cofondateur, est heureux de vous aider via le formulaire de contact.",
+    "sources": [
+      {
+        "title": "Agent Engineering",
+        "url": "https://towardsai.com/academy/agent-engineering/"
+      },
+      {
+        "title": "Get It All bundle",
+        "url": "https://towardsai.com/academy/bundles/get-it-all/"
+      },
+      {
+        "title": "Contact Louis-François",
+        "url": "https://towardsai.com/academy/contact/#contact"
+      }
+    ],
+    "focus": "\\b(agents?|multi-agent|mcp|agentic|agentique)\\b",
+    "exclude": "\\b(our (?:team|staff|company|developers|software developers)|our employees|enterprise training|corporate training|notre entreprise|nos employés)\\b"
+  },
+  {
+    "id": "career-full-stack",
+    "pattern": "(?:\\b(?:become|transition|switch|moving|pivot|devenir|reconversion|career|carrière|what course|which course|recommend|quel cours|best course|best bundle|comfortable (?:with|in) python)\\b.{0,100}\\b(?:ai|ia|engineer\\w*|python|course|cours|bundle|developer|agents?|mcp|rag)\\b|\\b(?:software|senior|senir|backend|full.stack|python|développeur)\\b.{0,90}\\b(?:ai engineer|career|course|cours|transition|bundle)\\b|\\b(?:become|devenir) (?:an? )?(?:ai|ia)\\b)|\\b(?:transition from sen[i]?r dev to ai engineer|(?:fairly |already )?comfortable (?:in|with) python)\\b",
+    "en": "For a software developer moving into AI engineering, I recommend Full Stack AI Engineering if you’re comfortable with Python. You build and deploy a RAG tutor, learn data preparation, retrieval and evaluation, and finish with your own LLM product for your portfolio. For broader coverage, compare the Get It All bundle. If you’d like a more precise recommendation, Louis-François, our founder, is happy to help through the contact form.",
+    "fr": "Pour une transition du développement logiciel vers l’ingénierie IA, je conseille Full Stack AI Engineering si vous êtes à l’aise en Python. Vous construirez et déploierez un tuteur RAG, étudierez les données, la recherche et l’évaluation, puis réaliserez votre propre produit LLM. Pour un parcours plus large, comparez le forfait Get It All. Pour un conseil plus personnalisé, Louis-François, notre cofondateur, est heureux de vous aider via le formulaire de contact.",
+    "sources": [
+      {
+        "title": "Full Stack AI Engineering",
+        "url": "https://towardsai.com/academy/full-stack-ai-engineering/"
+      },
+      {
+        "title": "Get It All bundle",
+        "url": "https://towardsai.com/academy/bundles/get-it-all/"
+      },
+      {
+        "title": "Contact Louis-François",
+        "url": "https://towardsai.com/academy/contact/#contact"
+      }
+    ],
+    "focus": "",
+    "exclude": "\\b(our (?:team|staff|company|developers|software developers)|our employees|enterprise training|corporate training|notre entreprise|nos employés)\\b"
+  },
+  {
+    "id": "orders",
+    "pattern": "\\b(order history|my receipt|download (?:my |a )?receipt|find my order|historique des commandes|mon reçu)\\b",
+    "en": "Sign in to the Academy, open My Account → Order History and select the order to view or print its details.",
+    "fr": "Connectez-vous à l’Académie, puis ouvrez Mon compte → Historique des commandes et sélectionnez la commande pour consulter ou imprimer le reçu.",
+    "sources": [
+      {
+        "title": "Student account help",
+        "url": "https://support.thinkific.com/hc/en-us/articles/1500001728061-Student-Profile-and-Account-Settings"
+      }
+    ]
+  },
+  {
+    "id": "certificates",
+    "pattern": "\\b((?:download|find|access|print|télécharger|trouver).{0,24}(?:certificate|certificat))\\b",
+    "en": "For an issued certificate, sign in and choose your name → My Account → Certificates → View. You can download a PDF or share the certificate link. Course certification may also require a reviewed capstone.",
+    "fr": "Pour un certificat déjà délivré, ouvrez Mon compte → Certificats → Voir. Vous pouvez télécharger le PDF ou partager le lien. Une certification de cours peut nécessiter la validation du projet final.",
+    "sources": [
+      {
+        "title": "Student account help",
+        "url": "https://support.thinkific.com/hc/en-us/articles/1500001728061-Student-Profile-and-Account-Settings"
+      }
+    ]
+  },
+  {
+    "id": "account",
+    "pattern": "\\b(reset (?:my |the |a )?password|forgot (?:my )?password|mot de passe oublié|change my email|modifier mon courriel|change my time ?zone|change my notification)\\b",
+    "en": "Use Forgot password on the Academy sign-in page to reset access. Once signed in, My Account lets you edit your profile, password, timezone and notification preferences.",
+    "fr": "Pour réinitialiser votre mot de passe, utilisez le lien sur la page de connexion de l’Académie. Une fois connecté, Mon compte permet de modifier le profil, le mot de passe, le fuseau horaire et les notifications.",
+    "sources": [
+      {
+        "title": "Student account help",
+        "url": "https://support.thinkific.com/hc/en-us/articles/1500001728061-Student-Profile-and-Account-Settings"
+      }
+    ]
+  },
+  {
+    "id": "billing",
+    "pattern": "\\b(update my (?:card|billing)|manage (?:my )?(?:billing|subscription)|change my credit card|modifier ma carte|gérer mon abonnement)\\b",
+    "en": "For recurring payments, sign in and go to My Account → Billing to review your subscription or update the card. Eligibility for any refund depends on the purchased offer.",
+    "fr": "Pour les paiements récurrents, ouvrez Mon compte → Facturation afin de consulter votre abonnement ou de modifier la carte. Les remboursements dépendent de l’offre achetée.",
+    "sources": [
+      {
+        "title": "Student account help",
+        "url": "https://support.thinkific.com/hc/en-us/articles/1500001728061-Student-Profile-and-Account-Settings"
+      }
+    ]
+  },
+  {
+    "id": "dashboard",
+    "pattern": "\\b(where (?:is|are) my courses?|find my (?:purchased |enrolled )?course|student dashboard|accéder à mon cours|retrouver mes cours)\\b",
+    "en": "Sign in to the Towards AI Academy with the account used for enrollment and open your Student Dashboard. If someone bought the course for you, first redeem the invitation sent to your email.",
+    "fr": "Connectez-vous à l’Académie avec le compte utilisé pour l’inscription et ouvrez votre tableau de bord. Pour un cours reçu en cadeau, utilisez d’abord l’invitation envoyée par courriel.",
+    "sources": [
+      {
+        "title": "Thinkific student experience",
+        "url": "https://support.thinkific.com/hc/en-us/articles/360030353834-The-Thinkific-Student-Experience"
+      }
+    ]
+  },
+  {
+    "id": "group-orders",
+    "pattern": "\\b(?:group order|bulk (?:purchase|enrollment)|buy (?:multiple|several) seats|commande de groupe)\\b",
+    "en": "If group checkout is offered for the selected product, choose the number of seats there. After purchase, the seat manager distributes invitations. For team training or a checkout without group ordering, contact Towards AI to arrange enrollment.",
+    "fr": "Si la caisse propose l’achat groupé pour ce produit, sélectionnez le nombre de places. Après le paiement, le responsable distribue les invitations. Pour une formation en équipe ou si l’option est absente, contactez Towards AI.",
+    "sources": [
+      {
+        "title": "Thinkific group orders",
+        "url": "https://support.thinkific.com/hc/en-us/articles/20508209851671-TCommerce-Group-Orders"
+      },
+      {
+        "title": "Towards AI contact",
+        "url": "https://towardsai.com/academy/contact/#contact"
+      }
+    ]
+  }
+]

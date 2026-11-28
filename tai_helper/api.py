@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import llm
+from .academy_guidance import guidance_answer
 from .catalog import (
     allowed_paths_by_host,
     coupon_intent,
@@ -333,7 +334,12 @@ async def chat(request: Request, payload: HelperChatRequest) -> HelperChatRespon
     response_status = "insufficient_evidence"
 
     try:
-        if coupon_intent(query):
+        guide = await asyncio.to_thread(guidance_answer, query, _user_history_text(payload))
+        if guide:
+            answer, links = guide
+            sources = [dict(link, kind="academy_guidance") for link in links]
+            response_status = "answered"
+        elif coupon_intent(query):
             answer = "If you’re a student or need a special discount, please email Louis at louis@towardsai.net. Include the course you’re interested in and a brief note about your circumstances."
             response_status = "policy"
         elif _contact_intent(query):
